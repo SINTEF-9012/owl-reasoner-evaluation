@@ -1,7 +1,6 @@
 package no.sintef.skytrack.owl;
 
 import org.apache.jena.graph.Graph;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shacl.Shapes;
 import org.apache.jena.shacl.ValidationReport;
