@@ -29,9 +29,9 @@ public class Evaluation {
 		// String SOURCE = "http://www.co-ode.org/ontologies/galen";
 		//String FILENAME = "file:ontologies/full-galen.owl";
 		String FILENAME = "file:../ontologies/pizza.owl";
-		String SOURCE = "http://www.co-ode.org/ontologies/galen";
+		//String SOURCE = "http://www.co-ode.org/ontologies/galen";
 		
-		//String SOURCE = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
+		String SOURCE = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
 		
 		
 		if(args != null && args.length > 1)
