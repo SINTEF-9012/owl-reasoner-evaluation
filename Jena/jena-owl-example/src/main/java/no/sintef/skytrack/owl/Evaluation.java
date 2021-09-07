@@ -27,12 +27,23 @@ public class Evaluation {
 		// String FILENAME = "file:ontologies/fma.owl";
 
 		// String SOURCE = "http://www.co-ode.org/ontologies/galen";
-		// String FILENAME = "file:ontologies/full-galen.owl";
+		//String FILENAME = "file:ontologies/full-galen.owl";
+		String FILENAME = "file:../ontologies/pizza.owl";
+		String SOURCE = "http://www.co-ode.org/ontologies/galen";
+		
+		//String SOURCE = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
 		
 		
-
-		String SOURCE = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
-		String FILENAME = "file:ontologies/pizza.owl";
+		if(args != null && args.length > 1)
+		{
+			SOURCE = args[0];
+			FILENAME = "file:" + args[1];
+		}
+		
+		//String SOURCE = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
+		//String FILENAME = "file:ontologies/pizza.owl";
+		
+		
 		String NS = SOURCE + "#";
 		
 		OntModel base = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
