@@ -1,0 +1,54 @@
+@prefix :      <http://www.co-ode.org/ontologies/pizza/pizza.owl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix pizza: <http://www.co-ode.org/ontologies/pizza/pizza.owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+pizza:Capricciosa  rdfs:label  "Capricciosa"@en .
+
+pizza:PolloAdAstra  rdfs:label  "PolloAdAstra"@en .
+
+pizza:Margherita  rdfs:label  "Margherita"@en .
+
+pizza:Giardiniera  rdfs:label  "Giardiniera"@en .
+
+pizza:Siciliana  rdfs:label  "Siciliana"@en .
+
+pizza:QuattroFormaggi
+        rdfs:label  "QuattroFormaggi"@en .
+
+pizza:Mushroom  rdfs:label  "Mushroom"@en .
+
+pizza:Soho  rdfs:label  "Soho"@en .
+
+pizza:LaReine  rdfs:label  "LaReine"@en .
+
+pizza:Caprina  rdfs:label  "Caprina"@en .
+
+pizza:SloppyGiuseppe  rdfs:label  "SloppyGiuseppe"@en .
+
+pizza:FruttiDiMare  rdfs:label  "FruttiDiMare"@en .
+
+pizza:Parmense  rdfs:label  "Parmense"@en .
+
+pizza:FourSeasons  rdfs:label  "FourSeasons"@en .
+
+pizza:Veneziana  rdfs:label  "Veneziana"@en .
+
+pizza:PrinceCarlo  rdfs:label  "PrinceCarlo"@en .
+
+pizza:Napoletana  rdfs:label  "Napoletana"@en .
+
+pizza:Rosa  rdfs:label  "Rosa"@en .
+
+pizza:Fiorentina  rdfs:label  "Fiorentina"@en .
+
+pizza:American  rdfs:label  "American"@en .
+
+pizza:AmericanHot  rdfs:label  "AmericanHot"@en .
+
+pizza:Cajun  rdfs:label  "Cajun"@en .

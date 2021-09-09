@@ -1,0 +1,79 @@
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Capricciosa>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#PolloAdAstra>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Margherita>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Giardiniera>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Siciliana>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#QuattroFormaggi>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Mushroom>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Soho>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#LaReine>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Caprina>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#SloppyGiuseppe>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#FruttiDiMare>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Parmense>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#FourSeasons>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Veneziana>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Napoletana>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Rosa>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Fiorentina>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#American>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .
+
+<http://www.co-ode.org/ontologies/pizza/pizza.owl#Cajun>
+        <http://www.co-ode.org/ontologies/pizza/pizza.owl#myFavPizza>
+                "true" .

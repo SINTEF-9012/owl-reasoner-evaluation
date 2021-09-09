@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>no.sintef.skytrack</groupId>
+	<artifactId>owl-api-example</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>owl-api-example</name>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.32</version>
+			<scope>runtime</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.github.galigator.openllet</groupId>
+			<artifactId>openllet-jena</artifactId>
+			<version>2.6.5</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+
+
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-distribution</artifactId>
+			<version>5.1.19</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.galigator.openllet</groupId>
+			<artifactId>openllet-owlapi</artifactId>
+			<version>2.6.5</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/jfact -->
+<dependency>
+    <groupId>net.sourceforge.owlapi</groupId>
+    <artifactId>jfact</artifactId>
+    <version>5.0.3</version>
+</dependency>
+		
+
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/org.semanticweb.hermit -->
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>org.semanticweb.hermit</artifactId>
+			<version>1.4.5.519</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		  <dependency>
+      <groupId>au.csiro</groupId>
+      <artifactId>ontology-model</artifactId>
+      <version>2.10.0</version>
+    </dependency>
+    <dependency>
+      <groupId>au.csiro</groupId>
+      <artifactId>ontology-import</artifactId>
+      <version>2.10.0</version>
+    </dependency>
+
+
+
+
+		<!-- mvn assembly:assembly -DdescriptorId=jar-with-dependencies -->
+	</dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+							<manifest>
+								<mainClass>no.sintef.skytrack.owl.OntologyLoader</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
