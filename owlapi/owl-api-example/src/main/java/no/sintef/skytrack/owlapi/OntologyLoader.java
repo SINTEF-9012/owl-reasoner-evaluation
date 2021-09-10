@@ -1,11 +1,13 @@
 package no.sintef.skytrack.owlapi;
 
 import java.io.File;
+import java.util.Set;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.OWLXMLDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -74,32 +76,55 @@ public class OntologyLoader {
 			} else {
 				logger.info("The Model is consitent");
 			}
-			
-			
-			 OWLDataFactory fac = manager.getOWLDataFactory();
-			 OWLClass individualClass = fac.getOWLClass(NS + "Individual");
-			 OWLObjectProperty hasRole = fac.getOWLObjectProperty(NS + "hasCategory");
-			 
-			 NodeSet<OWLNamedIndividual> individuals = reasoner.getInstances(individualClass, false);
-			 for(Node<OWLNamedIndividual> ind : individuals)
-			 {
-				 //System.out.println(ind.toString());
-				 ind.getEntities().forEach(x -> reasoner.getObjectPropertyValues(x, hasRole).forEach(y -> System.out.println(ind.toString() + " -> " + y)));
-			 }
 
-		}		
+			OWLDataFactory fac = manager.getOWLDataFactory();
+			OWLClass individualClass = fac.getOWLClass(NS + "Individual");
+			OWLClass professsorClass = fac.getOWLClass(NS + "Professor");
+			OWLObjectProperty hasRole = fac.getOWLObjectProperty(NS + "hasRole");
+			
+			
+			System.out.println("Printing superclasses of the Professor");
+			reasoner.getSuperClasses(professsorClass, false).forEach(x -> System.out.println( " -> " + x.toString()));
+			
+			
+			//Printing the name of Professor
+
+			//a:Individual(?i), a:hasRole(?i, ?r), a:Professor(?r)
+			
+			System.out.println("Printing names of the Professors");
+			
+			NodeSet<OWLNamedIndividual> individuals = reasoner.getInstances(individualClass, false);
+			for (Node<OWLNamedIndividual> ind : individuals) {
+				// System.out.println(ind.toString());
+				ind.getEntities().forEach(x -> reasoner.getObjectPropertyValues(x, hasRole).forEach(y -> {
+					
+					
+					//System.out.println(ind.toString() + " -> " + y.toString());
+					OWLNamedIndividual role = y.getEntities().iterator().next();
+					if(role != null)
+					{
+					
+						OWLAxiom axiom = fac.getOWLClassAssertionAxiom(professsorClass, role);
+						if(reasoner.isEntailed(axiom))
+							System.out.println( " -> " + ind.getEntities().iterator().next().getIRI().getShortForm());
+					}
+				}));
+			}
+		}
 		
+		
+
 		logger.info("Saving ontology");
-		
+
 		File file = new File("../../ontologies/vicodi_saving.owl");
 		try {
-			//manager.saveOntology(ontology,  new OWLXMLDocumentFormat(), IRI.create(file.toURI()));
-			manager.saveOntology(ontology,  new ManchesterSyntaxDocumentFormat(), IRI.create(file.toURI()));
+			// manager.saveOntology(ontology, new OWLXMLDocumentFormat(),
+			// IRI.create(file.toURI()));
+			manager.saveOntology(ontology, new ManchesterSyntaxDocumentFormat(), IRI.create(file.toURI()));
 		} catch (OWLOntologyStorageException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
 	}
 
