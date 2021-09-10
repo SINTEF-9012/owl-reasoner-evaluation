@@ -10,7 +10,6 @@ import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.reasoner.ValidityReport.Report;
 import org.slf4j.Logger;

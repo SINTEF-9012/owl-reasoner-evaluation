@@ -2,10 +2,8 @@ package no.sintef.skytrack.owlapi;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
@@ -102,12 +100,12 @@ public class Evaluation {
 
 		try {
 
-			//logger.info("Loading the ontology " + source);
+			logger.info("Loading the ontology " + source);
 			long startTime = System.currentTimeMillis();
 			ontology = manager.loadOntology(iri);
 			long endTime = System.currentTimeMillis();
 
-			//logger.info("Loading takes " + (endTime - startTime) + " ms");
+			logger.info("Loading takes " + (endTime - startTime) + " ms");
 
 		} catch (OWLOntologyCreationException e) {
 			
@@ -148,7 +146,7 @@ public class Evaluation {
 		}
 		
 		int numClassses = ontology.getClassesInSignature(Imports.INCLUDED).size();
-		//System.out.println("Number of Classes " + numClassses);
+		System.out.println("Number of Classes " + numClassses);
 		
 		return (endTime - startTime);
 	}

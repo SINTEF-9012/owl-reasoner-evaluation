@@ -2,7 +2,6 @@ package no.sintef.skytrack.jena;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Iterator;
 
 import org.apache.jena.ontology.OntDocumentManager;
@@ -33,14 +32,8 @@ public class OntologyLoader {
 
 	public static void main(String[] args) {
 
-		// String SOURCE = "http://purl.org/sig/ont/fma.owl";
-		// String FILENAME = "file:ontologies/fma.owl";
-
-		// String SOURCE = "http://www.co-ode.org/ontologies/galen";
-		// String FILENAME = "file:ontologies/full-galen.owl";
-
 		String SOURCE = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
-		String FILENAME = "file:../ontologies/pizza.owl";
+		String FILENAME = "file:../../ontologies/pizza.owl";
 
 		String NS = SOURCE + "#";
 
@@ -74,12 +67,14 @@ public class OntologyLoader {
 		qe = QueryExecutionFactory.create(query, base);
 		Model resultModel = qe.execConstruct();
 		try {
-			resultModel.write(new FileWriter("ontologies/pizza_construct.ttl"), "TURTLE");
-			resultModel.write(new FileWriter("ontologies/pizza_construct.json"), "JSONLD");
+			resultModel.write(new FileWriter("../../ontologies/pizza_construct.ttl"), "TURTLE");
+			resultModel.write(new FileWriter("../../ontologies/pizza_construct.json"), "JSONLD");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		qe.close();
 
 		queryString = "PREFIX pizza:      <http://www.co-ode.org/ontologies/pizza/pizza.owl#>\r\n"
 				+ "PREFIX rdfs:      <http://www.w3.org/2000/01/rdf-schema#>\r\n" + "\r\n" + "DESCRIBE  ?namePizza\r\n"
@@ -89,12 +84,14 @@ public class OntologyLoader {
 		qe = QueryExecutionFactory.create(query, base);
 		resultModel = qe.execDescribe();
 		try {
-			resultModel.write(new FileWriter("ontologies/pizza_describe.ttl"), "TURTLE");
-			resultModel.write(new FileWriter("ontologies/pizza_describe.json"), "JSONLD");
+			resultModel.write(new FileWriter("../../ontologies/pizza_describe.ttl"), "TURTLE");
+			resultModel.write(new FileWriter("../../ontologies/pizza_describe.json"), "JSONLD");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		qe.close();
 
 		PrintUtil.registerPrefix("pizza", NS);
 
@@ -110,13 +107,6 @@ public class OntologyLoader {
 			System.out.println(" - " + PrintUtil.print(i.nextStatement()));
 		}
 
-		/*
-		 * try { infmodel.getDeductionsModel().write(new
-		 * FileWriter("ontologies/rule_ontology.ttl"), "TURTLE");
-		 * 
-		 * } catch (IOException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
 	}
 
 	public static OntModel loadOntology(String source, String filePath) {
@@ -138,7 +128,7 @@ public class OntologyLoader {
 		System.out.println("Writing the base ontologies");
 
 		try {
-			base.write(new FileWriter("ontologies/base_ontology.ttl"), "TURTLE");
+			base.write(new FileWriter("../../ontologies/base_ontology.ttl"), "TURTLE");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -146,9 +136,8 @@ public class OntologyLoader {
 		}
 
 		System.out.println("Building the inference ontology");
-		
 
-		Reasoner reasoner = ReasonerRegistry.getOWLReasoner();
+		Reasoner reasoner = ReasonerRegistry.getOWLMicroReasoner();
 		// reasoner = reasoner.bindSchema(base);
 
 		long startTime = System.currentTimeMillis();
@@ -163,7 +152,8 @@ public class OntologyLoader {
 		// OntModel inf =
 		// ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF, base);
 
-		//OntModel inf = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RULE_INF, base);
+		// OntModel inf =
+		// ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RULE_INF, base);
 
 		// inf.prepare();
 
@@ -182,7 +172,7 @@ public class OntologyLoader {
 
 			System.out.println("Writing the materalized ontologies");
 			try {
-				infmodel.write(new FileWriter("ontologies/materialized_ontology.ttl"), "TURTLE");
+				infmodel.write(new FileWriter("../../ontologies/materialized_ontology.ttl"), "TURTLE");
 
 			} catch (IOException e) { // TODO Auto-generated catch block
 				e.printStackTrace();

@@ -4,3 +4,7 @@ MESH.ttl
 Thesaurus.owl
 vicodi_all.owl
 ACGT.owl
+pizza_*
+base_ontology.ttl
+materialized_ontology.ttl
+*_saving.*
