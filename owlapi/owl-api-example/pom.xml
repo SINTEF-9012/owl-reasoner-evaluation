@@ -41,14 +41,16 @@
 			<artifactId>openllet-owlapi</artifactId>
 			<version>2.6.5</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/jfact -->
-<dependency>
-    <groupId>net.sourceforge.owlapi</groupId>
-    <artifactId>jfact</artifactId>
-    <version>5.0.3</version>
-</dependency>
-		
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>jfact</artifactId>
+			<version>5.0.3</version>
+		</dependency>
+
+
+
 
 		<!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/org.semanticweb.hermit -->
 		<dependency>
@@ -57,17 +59,24 @@
 			<version>1.4.5.519</version>
 			<scope>compile</scope>
 		</dependency>
-		
-		  <dependency>
-      <groupId>au.csiro</groupId>
-      <artifactId>ontology-model</artifactId>
-      <version>2.10.0</version>
-    </dependency>
-    <dependency>
-      <groupId>au.csiro</groupId>
-      <artifactId>ontology-import</artifactId>
-      <version>2.10.0</version>
-    </dependency>
+
+		<dependency>
+			<groupId>au.csiro</groupId>
+			<artifactId>ontology-model</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>au.csiro</groupId>
+			<artifactId>ontology-import</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+
+<!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/owllinkhttpxml -->
+<dependency>
+    <groupId>net.sourceforge.owlapi</groupId>
+    <artifactId>owllinkhttpxml</artifactId>
+    <version>2.0.0</version>
+</dependency>
 
 
 

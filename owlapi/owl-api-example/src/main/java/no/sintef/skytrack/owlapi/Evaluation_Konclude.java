@@ -1,9 +1,12 @@
 package no.sintef.skytrack.owlapi;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.*;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
@@ -11,20 +14,19 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.owllink.OWLlinkHTTPXMLReasonerFactory;
+import org.semanticweb.owlapi.owllink.OWLlinkReasonerConfigurationImpl;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import openllet.owlapi.OpenlletReasonerFactory;
+public class Evaluation_Konclude {
+	
+	static Logger logger = LoggerFactory.getLogger(Evaluation_Konclude.class);
 
-public class Evaluation {
-
-	static Logger logger = LoggerFactory.getLogger(Evaluation.class);
-
-	public static void main(String[] args) {
-		
-		
+	public static void main(String[] args) throws MalformedURLException, OWLOntologyCreationException {
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
 		ontologiesMap.put("http://vicodi.org/ontology", "../../ontologies/vicodi_all.owl");
 		ontologiesMap.put("http://www.ifomis.org/acgt/1.0", "../../ontologies/ACGT.owl");
@@ -32,11 +34,10 @@ public class Evaluation {
 		
 		
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
-		reasonerFactoryMap.put("Pellet",  OpenlletReasonerFactory.getInstance());
-		reasonerFactoryMap.put("HermiT", new org.semanticweb.HermiT.ReasonerFactory());
-		reasonerFactoryMap.put("JFact", new uk.ac.manchester.cs.jfact.JFactFactory());
+		reasonerFactoryMap.put("Konclude",   new OWLlinkHTTPXMLReasonerFactory());
 		
-		//reasonerFactoryMap.put("Snorocket ",  new au.csiro.snorocket.owlapi.SnorocketReasonerFactory() );
+		OWLReasonerConfiguration koncludeReasonerConfiguration = new OWLlinkReasonerConfigurationImpl(new URL("http://localhost:8080"));
+	 	
 	 
 		
 		int RUN = 5;
@@ -76,8 +77,18 @@ public class Evaluation {
 				for(int i = 1; i <= RUN; i++)
 				{
 					OWLOntology ontology = loadOntology(source, filename);
-					OWLReasoner reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
-					//reasoner.
+					
+					OWLReasoner reasoner;
+					
+					if(reasonerName.equals("Konclude"))
+					{
+						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+						reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology, koncludeReasonerConfiguration);
+					}
+					else 
+						reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
+						
+					
 					evaluationTime += performEvaluation(ontology, reasoner).get(0);
 				}
 				
@@ -180,3 +191,4 @@ public class Evaluation {
 	}
 
 }
+
