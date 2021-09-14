@@ -106,7 +106,7 @@ public class OntologyLoader {
 					
 						OWLAxiom axiom = fac.getOWLClassAssertionAxiom(professsorClass, role);
 						if(reasoner.isEntailed(axiom))
-							System.out.println( " -> " + ind.getEntities().iterator().next().getIRI().getShortForm());
+							System.out.println( " -> " + ind.getEntities().iterator().next().getIRI());
 					}
 				}));
 			}
