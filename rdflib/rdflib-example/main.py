@@ -9,6 +9,8 @@ if __name__ == '__main__':
 
     print("Loading ontology: " + ns)
 
+    rdflib.logger.setLevel('FATAL')
+
 
     g = rdflib.Graph()
     start_time = time.time()
@@ -16,20 +18,22 @@ if __name__ == '__main__':
     end_time = time.time()
     print("Loading Time: ", end_time - start_time)
 
-    q1 = """
-        PREFIX : <http://vicodi.org/ontology#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        SELECT ?s
-        WHERE {
-            :Professor rdfs:subClassOf ?s .
-        }
-        """
+
 
     print("Materializing the ontology")
     start_time = time.time()
     owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
     end_time = time.time()
     print("Time: ", end_time - start_time)
+
+    q1 = """
+            PREFIX : <http://vicodi.org/ontology#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            SELECT ?s
+            WHERE {
+                :Professor rdfs:subClassOf ?s .
+            }
+            """
 
     print("Printing superclasses of the Professor")
     for r in g.query(q1):
