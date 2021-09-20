@@ -23,13 +23,13 @@ public class Evaluation {
 	public static void main(String[] args) {
 
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
-		ontologiesMap.put("http://vicodi.org/ontology#", "file:../../ontologies/vicodi_all.owl");
-		ontologiesMap.put("http://www.ifomis.org/acgt/1.0#", "file:../../ontologies/ACGT.owl");
-		ontologiesMap.put("http://www.co-ode.org/ontologies/galen#", "file:../../ontologies/full-galen.owl");
-		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "file:../../ontologies/fma.owl");
-		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "file:../../ontologies/ncit.owl");
-		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "file:../../ontologies/MESH.ttl");
-		ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "file:../../ontologies/gaz.owl");
+		ontologiesMap.put("http://vicodi.org/ontology#", "file:../../../ontologies/vicodi_all.owl");
+		ontologiesMap.put("http://www.ifomis.org/acgt/1.0#", "file:../../../ontologies/ACGT.owl");
+		ontologiesMap.put("http://www.co-ode.org/ontologies/galen#", "file:../../../ontologies/full-galen.owl");
+		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "file:../../../ontologies/fma.owl");
+		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "file:../../../ontologies/ncit.owl");
+		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "file:../../../ontologies/MESH.ttl");
+		ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "file:../../../ontologies/gaz.owl");
 		
 		Map<String, Reasoner> reasonerFactoryMap = new LinkedHashMap<>();
 		reasonerFactoryMap.put("OWL Micro",  ReasonerRegistry.getOWLMicroReasoner());
