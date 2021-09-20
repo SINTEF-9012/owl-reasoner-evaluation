@@ -129,7 +129,7 @@ public class Evaluation {
 
 		try {
 
-			logger.info("Loading the ontology " + source);
+			//logger.info("Loading the ontology " + source);
 			long startTime = System.currentTimeMillis();
 			ontology = manager.loadOntology(iri);
 			long endTime = System.currentTimeMillis();
