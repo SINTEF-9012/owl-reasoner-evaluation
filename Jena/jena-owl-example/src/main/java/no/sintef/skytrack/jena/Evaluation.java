@@ -98,7 +98,10 @@ public class Evaluation {
 			base.read(source);
 		long endTime = System.currentTimeMillis();
 		
+		
 		try {
+
+			logger.info("Writing mesh file");
 			base.write(new FileWriter("../../../ontologies/MESH.owl"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
