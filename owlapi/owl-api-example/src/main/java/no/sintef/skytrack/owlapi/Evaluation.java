@@ -26,9 +26,16 @@ public class Evaluation {
 		
 		
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
-		ontologiesMap.put("http://vicodi.org/ontology", "../../ontologies/vicodi_all.owl");
-		ontologiesMap.put("http://www.ifomis.org/acgt/1.0", "../../ontologies/ACGT.owl");
-		ontologiesMap.put("http://www.co-ode.org/ontologies/galen", "../../ontologies/full-galen.owl");
+		
+		ontologiesMap.put("http://vicodi.org/ontology#", "../../ontologies/vicodi_all.owl");
+		ontologiesMap.put("http://www.ifomis.org/acgt/1.0#", "../../ontologies/ACGT.owl");
+		ontologiesMap.put("http://www.co-ode.org/ontologies/galen#", "../../ontologies/full-galen.owl");
+		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "../../ontologies/fma.owl");
+		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "../../ontologies/ncit.owl");
+		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../ontologies/MESH.ttl");
+		ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "../../ontologies/gaz.owl");
+		
+		
 		
 		
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
@@ -43,18 +50,18 @@ public class Evaluation {
 		
 		long evaluationTime = 0;
 		
-		/*
-		 * for(String source : ontologiesMap.keySet()) {
-		 * 
-		 * String filename = ontologiesMap.get(source); logger.info("");
-		 * logger.info("Ontology: " + source); evaluationTime = 0; for(int i = 1; i <=
-		 * RUN; i++) { evaluationTime += loadOntologyEvaluation(source, filename); }
-		 * 
-		 * logger.info("Everage Loading Time of " + filename + " :" +
-		 * evaluationTime/(double)RUN);
-		 * 
-		 * }
-		 */
+		
+		  for(String source : ontologiesMap.keySet()) {
+		  
+		  String filename = ontologiesMap.get(source); logger.info("");
+		  logger.info("Ontology: " + source); evaluationTime = 0; for(int i = 1; i <=
+		  RUN; i++) { evaluationTime += loadOntologyEvaluation(source, filename); }
+		  
+		  logger.info("Everage Loading Time of " + filename + " :" +
+		  evaluationTime/(double)RUN);
+		  
+		  }
+		 
 		
 		
 		logger.info("");
@@ -161,6 +168,8 @@ public class Evaluation {
 			long startTime = System.currentTimeMillis();
 			boolean consistent = reasoner.isConsistent();
 			long endTime = System.currentTimeMillis();
+			
+			
 
 			logger.info("Validation takes " + (endTime - startTime) + " ms");
 			

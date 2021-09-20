@@ -103,7 +103,7 @@
 						</descriptorRefs>
 						<archive>
 							<manifest>
-								<mainClass>no.sintef.skytrack.owl.OntologyLoader</mainClass>
+								<mainClass>no.sintef.skytrack.owlapi.Evaluation</mainClass>
 							</manifest>
 						</archive>
 					</configuration>

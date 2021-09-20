@@ -23,9 +23,13 @@ public class Evaluation {
 	public static void main(String[] args) {
 
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
-		ontologiesMap.put("http://vicodi.org/ontology", "file:../../ontologies/vicodi_all.owl");
-		ontologiesMap.put("http://www.ifomis.org/acgt/1.0", "file:../../ontologies/ACGT.owl");
-		ontologiesMap.put("http://www.co-ode.org/ontologies/galen", "file:../../ontologies/full-galen.owl");
+		ontologiesMap.put("http://vicodi.org/ontology#", "file:../../ontologies/vicodi_all.owl");
+		ontologiesMap.put("http://www.ifomis.org/acgt/1.0#", "file:../../ontologies/ACGT.owl");
+		ontologiesMap.put("http://www.co-ode.org/ontologies/galen#", "file:../../ontologies/full-galen.owl");
+		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "file:../../ontologies/fma.owl");
+		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "file:../../ontologies/ncit.owl");
+		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "file:../../ontologies/MESH.ttl");
+		ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "file:../../ontologies/gaz.owl");
 		
 		Map<String, Reasoner> reasonerFactoryMap = new LinkedHashMap<>();
 		reasonerFactoryMap.put("OWL Micro",  ReasonerRegistry.getOWLMicroReasoner());
@@ -52,38 +56,32 @@ public class Evaluation {
 
 		}
 
-		logger.info("");
-		logger.info("Evaluating Reasoner");
-		
-		for(String source : ontologiesMap.keySet())
-		{
-			
-			String filename = ontologiesMap.get(source);
-			logger.info("Ontology: " + source);
-			
-			
-			for(String reasonerName : reasonerFactoryMap.keySet())
-			{
-				logger.info("");
-				logger.info("Evaluation reasoner " + reasonerName);
-				evaluationTime = 0;
-				
-				for(int i = 1; i <= RUN; i++)
-				{
-					OntModel base = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-					OntDocumentManager dm = base.getDocumentManager();
-					dm.addAltEntry(source, filename);
-					base.read(source);
-					
-					Reasoner reasoner = reasonerFactoryMap.get(reasonerName);
-					
-					evaluationTime += performValidationTest(base, reasoner);
-				}
-				
-				logger.info(reasonerName + " Everage Evaluation Time: " + evaluationTime/(double)RUN);
-			}
-			
-		}
+		/*
+		 * logger.info(""); logger.info("Evaluating Reasoner");
+		 * 
+		 * for(String source : ontologiesMap.keySet()) {
+		 * 
+		 * String filename = ontologiesMap.get(source); logger.info("Ontology: " +
+		 * source);
+		 * 
+		 * 
+		 * for(String reasonerName : reasonerFactoryMap.keySet()) { logger.info("");
+		 * logger.info("Evaluation reasoner " + reasonerName); evaluationTime = 0;
+		 * 
+		 * for(int i = 1; i <= RUN; i++) { OntModel base =
+		 * ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM); OntDocumentManager dm
+		 * = base.getDocumentManager(); dm.addAltEntry(source, filename);
+		 * base.read(source);
+		 * 
+		 * Reasoner reasoner = reasonerFactoryMap.get(reasonerName);
+		 * 
+		 * evaluationTime += performValidationTest(base, reasoner); }
+		 * 
+		 * logger.info(reasonerName + " Everage Evaluation Time: " +
+		 * evaluationTime/(double)RUN); }
+		 * 
+		 * }
+		 */
 	}
 
 	public static long performLoadingOntologyTest(String source, String filename) {
@@ -103,8 +101,10 @@ public class Evaluation {
 	public static long performValidationTest(OntModel base, Reasoner reasoner) {
 
 		InfModel infmodel = ModelFactory.createInfModel(reasoner, base);
+		
 		infmodel.prepare();
 
+	
 		logger.info("Validating the ontology");
 		long startTime = System.currentTimeMillis();
 		ValidityReport validateReport = infmodel.validate();
