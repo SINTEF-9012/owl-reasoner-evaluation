@@ -33,7 +33,7 @@ public class Evaluation {
 		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "../../../ontologies/fma.owl");
 		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "../../../ontologies/ncit.owl");
 		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.ttl");
-		ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "../../../ontologies/gaz.owl");
+		//ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "../../../ontologies/gaz.owl");
 		
 		
 		
@@ -51,16 +51,18 @@ public class Evaluation {
 		long evaluationTime = 0;
 		
 		
-		  for(String source : ontologiesMap.keySet()) {
-		  
-		  String filename = ontologiesMap.get(source); logger.info("");
-		  logger.info("Ontology: " + source); evaluationTime = 0; for(int i = 1; i <=
-		  RUN; i++) { evaluationTime += loadOntologyEvaluation(source, filename); }
-		  
-		  logger.info("Everage Loading Time of " + filename + " :" +
-		  evaluationTime/(double)RUN);
-		  
-		  }
+		/*
+		 * for(String source : ontologiesMap.keySet()) {
+		 * 
+		 * String filename = ontologiesMap.get(source); logger.info("");
+		 * logger.info("Ontology: " + source); evaluationTime = 0; for(int i = 1; i <=
+		 * RUN; i++) { evaluationTime += loadOntologyEvaluation(source, filename); }
+		 * 
+		 * logger.info("Everage Loading Time of " + filename + " :" +
+		 * evaluationTime/(double)RUN);
+		 * 
+		 * }
+		 */
 		 
 		
 		
@@ -86,6 +88,9 @@ public class Evaluation {
 					OWLReasoner reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
 					//reasoner.
 					evaluationTime += performEvaluation(ontology, reasoner).get(0);
+					
+					//Calling GC
+					System.gc();
 				}
 				
 				logger.info(reasonerName + " Everage Evaluation Time: " + evaluationTime/(double)RUN);
