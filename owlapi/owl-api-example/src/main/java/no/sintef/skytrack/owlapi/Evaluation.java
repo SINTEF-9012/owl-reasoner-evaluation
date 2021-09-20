@@ -92,13 +92,14 @@ public class Evaluation {
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 			logger.info("");
 			logger.info("Evaluation reasoner " + reasonerName);
-			evaluationTime = 0;
+			
 
 			for (String source : ontologiesMap.keySet()) {
 
 				String filename = ontologiesMap.get(source);
 				logger.info("Ontology: " + source);
-
+				evaluationTime = 0;
+				
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
 					OWLReasoner reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
@@ -110,7 +111,7 @@ public class Evaluation {
 				// Calling GC
 				System.gc();
 
-				logger.info(reasonerName + " Everage Evaluation Time: " + evaluationTime / (double) RUN);
+				logger.info(reasonerName + " Everage Evaluation Time on: " + source + "is: " + evaluationTime / (double) RUN);
 			}
 
 		}
