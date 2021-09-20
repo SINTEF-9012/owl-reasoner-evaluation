@@ -146,7 +146,7 @@ public class Evaluation {
 			ontology = manager.loadOntology(iri);
 			endTime = System.currentTimeMillis();
 
-			//logger.info("Loading takes " + (endTime - startTime) + " ms");
+			logger.info("Loading takes " + (endTime - startTime) + " ms");
 
 		} catch (OWLOntologyCreationException e) {
 			
@@ -154,7 +154,7 @@ public class Evaluation {
 		}
 		
 		int numClassses = ontology.getClassesInSignature(Imports.INCLUDED).size();
-		System.out.println("Number of Classes " + numClassses);
+		//System.out.println("Number of Classes " + numClassses);
 		
 		return (endTime - startTime);
 	}

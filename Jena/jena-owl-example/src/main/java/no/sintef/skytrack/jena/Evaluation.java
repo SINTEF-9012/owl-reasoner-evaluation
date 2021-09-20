@@ -92,6 +92,12 @@ public class Evaluation {
 		long startTime = System.currentTimeMillis();
 		base.read(source);
 		long endTime = System.currentTimeMillis();
+		
+		int numClassses = base.listNamedClasses().toList().size();
+		int numIndividual = base.listIndividuals().toList().size();
+
+		System.out.println("Number of Classes " + numClassses);
+		System.out.println("Number of Individual " + numIndividual);
 
 		logger.info("Loading takes " + (endTime - startTime) + " ms");
 
