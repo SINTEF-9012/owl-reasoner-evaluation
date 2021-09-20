@@ -51,7 +51,7 @@
 						</descriptorRefs>
 						<archive>
 							<manifest>
-								<mainClass>no.sintef.skytrack.owl.Evaluation</mainClass>
+								<mainClass>no.sintef.skytrack.jena.Evaluation</mainClass>
 							</manifest>
 						</archive>
 					</configuration>
