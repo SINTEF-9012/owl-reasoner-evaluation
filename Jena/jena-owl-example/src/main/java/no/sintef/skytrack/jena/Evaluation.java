@@ -1,5 +1,7 @@
 package no.sintef.skytrack.jena;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class Evaluation {
 		//ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "file:../../../ontologies/fma.owl");
 		//ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "file:../../../ontologies/ncit.owl");
 		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "file:../../../ontologies/MESH.ttl");
-		ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "file:../../../ontologies/gaz.owl");
+		//ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "file:../../../ontologies/gaz.owl");
 		
 		Map<String, Reasoner> reasonerFactoryMap = new LinkedHashMap<>();
 		reasonerFactoryMap.put("OWL Micro",  ReasonerRegistry.getOWLMicroReasoner());
@@ -38,7 +40,7 @@ public class Evaluation {
 		
 		
 
-		int RUN = 5;
+		int RUN = 1;
 
 		long evaluationTime = 0;
 
@@ -95,6 +97,13 @@ public class Evaluation {
 		else
 			base.read(source);
 		long endTime = System.currentTimeMillis();
+		
+		try {
+			base.write(new FileWriter("../../../ontologies/MESH.owl"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		int numClassses = base.listNamedClasses().toList().size();
 		int numIndividual = base.listIndividuals().toList().size();
