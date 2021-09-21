@@ -77,7 +77,7 @@ if __name__ == '__main__':
         "http://www.co-ode.org/ontologies/galen": "full-galen.owl",
         "http://purl.org/sig/ont/fma.owl": "fma.owl",
         "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#":  "ncit.owl",
-         "http://purl.bioontology.org/ontology/MESH/": "MESH.ttl"
+         "http://purl.bioontology.org/ontology/MESH/": "MESH.owl"
 
     }
 
