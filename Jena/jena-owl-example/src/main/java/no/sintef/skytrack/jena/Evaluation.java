@@ -30,7 +30,7 @@ public class Evaluation {
 		//ontologiesMap.put("http://www.co-ode.org/ontologies/galen#", "file:../../../ontologies/full-galen.owl");
 		//ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "file:../../../ontologies/fma.owl");
 		//ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "file:../../../ontologies/ncit.owl");
-		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "file:../../../ontologies/MESH.ttl");
+		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "file:../../../ontologies/MESH.owl");
 		//ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#", "file:../../../ontologies/gaz.owl");
 		
 		Map<String, Reasoner> reasonerFactoryMap = new LinkedHashMap<>();
