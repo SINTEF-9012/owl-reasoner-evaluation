@@ -73,15 +73,19 @@ if __name__ == '__main__':
 
     ontologies_map = {
         "http://vicodi.org/ontology": "vicodi_all.owl",
-        "http://www.ifomis.org/acgt/1.0": "ontologies/ACGT.owl",
-        #"http://www.co-ode.org/ontologies/galen": "full-galen.owl"
+        "http://www.ifomis.org/acgt/1.0": "ACGT.owl",
+        "http://www.co-ode.org/ontologies/galen": "full-galen.owl",
+        "http://purl.org/sig/ont/fma.owl": "fma.owl",
+        "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#":  "ncit.owl",
+         "http://purl.bioontology.org/ontology/MESH/": "MESH.ttl"
+
     }
 
     owlready2.onto_path.append("../../ontologies/")
     owlready2.reasoning.JAVA_MEMORY = 5000
 
-    #perform_loading_evaluation()
-    perform_reasoning_evaluation()
+    perform_loading_evaluation()
+    #perform_reasoning_evaluation()
 
 
 
