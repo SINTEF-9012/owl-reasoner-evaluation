@@ -43,19 +43,8 @@ public class Evaluation_Konclude {
 		int RUN = 5;
 		
 		long evaluationTime = 0;
-		
-		/*
-		 * for(String source : ontologiesMap.keySet()) {
-		 * 
-		 * String filename = ontologiesMap.get(source); logger.info("");
-		 * logger.info("Ontology: " + source); evaluationTime = 0; for(int i = 1; i <=
-		 * RUN; i++) { evaluationTime += loadOntologyEvaluation(source, filename); }
-		 * 
-		 * logger.info("Everage Loading Time of " + filename + " :" +
-		 * evaluationTime/(double)RUN);
-		 * 
-		 * }
-		 */
+		long reasonerLoadingTime = 0;
+		long startTime, endTime;
 		
 		
 		logger.info("");
@@ -83,16 +72,30 @@ public class Evaluation_Konclude {
 					if(reasonerName.equals("Konclude"))
 					{
 						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+						startTime = System.currentTimeMillis();
 						reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology, koncludeReasonerConfiguration);
+						endTime = System.currentTimeMillis();
+						
+						logger.info("Reasoner Loading takes " + (endTime - startTime) + " ms");
+						reasonerLoadingTime += (endTime - startTime);
+						
+						
 					}
 					else 
 						reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
 						
 					
 					evaluationTime += performEvaluation(ontology, reasoner).get(0);
+					
+					
+					
 				}
 				
-				logger.info(reasonerName + " Everage Evaluation Time: " + evaluationTime/(double)RUN);
+				logger.info(reasonerName + " Everage Loading Time on: " + source + "is: "
+						+ reasonerLoadingTime / (double) RUN);
+				
+				logger.info(reasonerName + " Everage Validation Time on: " + source + "is: "
+						+ evaluationTime / (double) RUN);
 			}
 			
 		}
