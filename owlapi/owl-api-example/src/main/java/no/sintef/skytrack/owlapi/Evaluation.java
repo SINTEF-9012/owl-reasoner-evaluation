@@ -47,18 +47,19 @@ public class Evaluation {
 
 		long evaluationTime = 0;
 
-		/*
-		 * for(String source : ontologiesMap.keySet()) {
-		 * 
-		 * String filename = ontologiesMap.get(source); logger.info("");
-		 * logger.info("Ontology: " + source); evaluationTime = 0; for(int i = 1; i <=
-		 * RUN; i++) { evaluationTime += loadOntologyEvaluation(source, filename); }
-		 * 
-		 * logger.info("Everage Loading Time of " + filename + " :" +
-		 * evaluationTime/(double)RUN);
-		 * 
-		 * }
-		 */
+		for (String source : ontologiesMap.keySet()) {
+
+			String filename = ontologiesMap.get(source);
+			logger.info("");
+			logger.info("Ontology: " + source);
+			evaluationTime = 0;
+			for (int i = 1; i <= RUN; i++) {
+				evaluationTime += loadOntologyEvaluation(source, filename);
+			}
+
+			logger.info("Everage Loading Time of " + filename + " :" + evaluationTime / (double) RUN);
+
+		}
 
 		logger.info("");
 
@@ -92,14 +93,13 @@ public class Evaluation {
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 			logger.info("");
 			logger.info("Evaluation reasoner " + reasonerName);
-			
 
 			for (String source : ontologiesMap.keySet()) {
 
 				String filename = ontologiesMap.get(source);
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
-				
+
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
 					OWLReasoner reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
@@ -111,7 +111,8 @@ public class Evaluation {
 				// Calling GC
 				System.gc();
 
-				logger.info(reasonerName + " Everage Evaluation Time on: " + source + "is: " + evaluationTime / (double) RUN);
+				logger.info(reasonerName + " Everage Evaluation Time on: " + source + "is: "
+						+ evaluationTime / (double) RUN);
 			}
 
 		}
@@ -129,7 +130,7 @@ public class Evaluation {
 
 		try {
 
-			//logger.info("Loading the ontology " + source);
+			// logger.info("Loading the ontology " + source);
 			long startTime = System.currentTimeMillis();
 			ontology = manager.loadOntology(iri);
 			long endTime = System.currentTimeMillis();
