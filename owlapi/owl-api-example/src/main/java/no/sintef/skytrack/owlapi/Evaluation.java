@@ -30,8 +30,8 @@ public class Evaluation {
 		//ontologiesMap.put("http://www.ifomis.org/acgt/1.0#", "../../../ontologies/ACGT.owl");
 		//ontologiesMap.put("http://www.co-ode.org/ontologies/galen#", "../../../ontologies/full-galen.owl");
 		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "../../../ontologies/fma.owl");
-		//ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "../../../ontologies/ncit.owl");
-		//ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.owl");
+		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "../../../ontologies/ncit.owl");
+		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.owl");
 		//ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.ttl");
 		
 		// ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#",
@@ -40,7 +40,8 @@ public class Evaluation {
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
 		//reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
 		reasonerFactoryMap.put("HermiT", new org.semanticweb.HermiT.ReasonerFactory());
-		reasonerFactoryMap.put("JFact", new uk.ac.manchester.cs.jfact.JFactFactory());
+		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
+		//reasonerFactoryMap.put("JFact", new uk.ac.manchester.cs.jfact.JFactFactory());
 
 		// reasonerFactoryMap.put("Snorocket ", new
 		// au.csiro.snorocket.owlapi.SnorocketReasonerFactory() );
