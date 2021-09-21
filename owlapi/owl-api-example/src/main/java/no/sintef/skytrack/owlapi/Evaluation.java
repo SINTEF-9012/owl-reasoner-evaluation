@@ -45,7 +45,7 @@ public class Evaluation {
 		// reasonerFactoryMap.put("Snorocket ", new
 		// au.csiro.snorocket.owlapi.SnorocketReasonerFactory() );
 
-		int RUN = 1;
+		int RUN = 5;
 
 		long evaluationTime = 0;
 		long validationTime = 0;
