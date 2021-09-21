@@ -84,8 +84,8 @@ if __name__ == '__main__':
     owlready2.onto_path.append("../../ontologies/")
     owlready2.reasoning.JAVA_MEMORY = 5000
 
-    perform_loading_evaluation()
-    #perform_reasoning_evaluation()
+    #perform_loading_evaluation()
+    perform_reasoning_evaluation()
 
 
 
