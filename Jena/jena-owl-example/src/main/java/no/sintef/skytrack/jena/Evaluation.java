@@ -40,7 +40,7 @@ public class Evaluation {
 		
 		
 
-		int RUN = 1;
+		int RUN = 5;
 
 		long evaluationTime = 0;
 
@@ -99,14 +99,13 @@ public class Evaluation {
 		long endTime = System.currentTimeMillis();
 		
 		
-		try {
-
-			logger.info("Writing mesh file");
-			base.write(new FileWriter("../../../ontologies/MESH.owl"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		/*
+		 * try {
+		 * 
+		 * logger.info("Writing mesh file"); base.write(new
+		 * FileWriter("../../../ontologies/MESH.owl")); } catch (IOException e) { //
+		 * TODO Auto-generated catch block e.printStackTrace(); }
+		 */
 		
 		int numClassses = base.listNamedClasses().toList().size();
 		int numIndividual = base.listIndividuals().toList().size();
