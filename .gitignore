@@ -231,4 +231,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+
+docker/
+
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse,python

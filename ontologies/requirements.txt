@@ -1,0 +1,2 @@
+Owlready2
+rdflib
