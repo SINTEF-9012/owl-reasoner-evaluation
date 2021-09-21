@@ -48,6 +48,9 @@ public class Evaluation {
 		int RUN = 5;
 
 		long evaluationTime = 0;
+		long validationTime = 0;
+		long reasonerLoadingTime = 0;
+		long startTime, endTime;
 
 		/*
 		 * for (String source : ontologiesMap.keySet()) {
@@ -99,21 +102,30 @@ public class Evaluation {
 
 				String filename = ontologiesMap.get(source);
 				logger.info("Ontology: " + source);
-				evaluationTime = 0;
+				validationTime = 0;
+				reasonerLoadingTime = 0;
 
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
+					startTime = System.currentTimeMillis();
 					OWLReasoner reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
-					// reasoner.
-					evaluationTime += performEvaluation(ontology, reasoner).get(0);
+					endTime = System.currentTimeMillis();
+					logger.info("Reasoner Loading takes " + (endTime - startTime) + " ms");
+					
+					reasonerLoadingTime += (endTime - startTime);
+					
+					validationTime += performEvaluation(ontology, reasoner).get(0);
 
 				}
 
 				// Calling GC
 				System.gc();
+				
+				logger.info(reasonerName + " Everage Loading Time on: " + source + "is: "
+						+ reasonerLoadingTime / (double) RUN);
 
-				logger.info(reasonerName + " Everage Evaluation Time on: " + source + "is: "
-						+ evaluationTime / (double) RUN);
+				logger.info(reasonerName + " Everage Validation Time on: " + source + "is: "
+						+ validationTime / (double) RUN);
 			}
 
 		}
