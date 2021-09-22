@@ -72,8 +72,8 @@ def perform_reasoning_evaluation():
 if __name__ == '__main__':
 
     ontologies_map = {
-        "http://vicodi.org/ontology": "vicodi_all.owl",
-        "http://www.ifomis.org/acgt/1.0": "ACGT.owl",
+        #"http://vicodi.org/ontology": "vicodi_all.owl",
+        #"http://www.ifomis.org/acgt/1.0": "ACGT.owl",
         "http://www.co-ode.org/ontologies/galen": "full-galen.owl",
         "http://purl.org/sig/ont/fma.owl": "fma.owl",
         "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#":  "ncit.owl",
