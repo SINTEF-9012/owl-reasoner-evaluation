@@ -35,7 +35,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/FaCTpp-OWLAPI-4.x-v1.6.5.jar"/>
-	<classpathentry kind="lib" path="lib/elk-distribution-0.4.3-owlapi-library/elk-owlapi.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -1,0 +1,7 @@
+mvn install:install-file
+   -Dfile=FaCTpp-OWLAPI-4.x-v1.6.5.jar
+   -DgroupId=net.sourceforge.owlapi
+   -DartifactId=factplusplus
+   -Dversion=1.6.5
+   -Dpackaging=jar
+   -DgeneratePom=true
