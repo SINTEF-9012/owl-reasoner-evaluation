@@ -11,7 +11,8 @@ COPY requirements.txt .
 RUN git clone https://github.com/SINTEF-9012/SkyTrack.git
 
 COPY . ./SkyTrack/ontologies
-RUN apt update
-RUN apt install default-jre
+RUN apt-get update
+RUN apt-get install -y openjdk-8-jdk
+RUN apt-get install -y openjdk-8-jre
 
 RUN pip install --no-cache-dir -r requirements.txt
