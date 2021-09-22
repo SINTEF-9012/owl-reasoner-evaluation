@@ -32,9 +32,9 @@ public class Evaluation_Konclude {
 		ontologiesMap.put("http://www.ifomis.org/acgt/1.0#", "../../../ontologies/ACGT.owl");
 		ontologiesMap.put("http://www.co-ode.org/ontologies/galen#", "../../../ontologies/full-galen.owl");
 		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "../../../ontologies/fma.owl");
-		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "../../../ontologies/ncit.owl");
+		//ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "../../ontologies/ncit.owl");
 		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.owl");
-		//ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.ttl");
+		//ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../ontologies/MESH.ttl");
 		
 		
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
@@ -71,13 +71,32 @@ public class Evaluation_Konclude {
 				{
 					OWLOntology ontology = loadOntology(source, filename);
 					
-					OWLReasoner reasoner;
+					OWLReasoner reasoner = null;
 					
 					if(reasonerName.equals("Konclude"))
 					{
-						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+						//ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 						startTime = System.currentTimeMillis();
-						reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology, koncludeReasonerConfiguration);
+						try
+						{
+							reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology, koncludeReasonerConfiguration);
+						}
+						catch (Exception e){
+							//e.printStackTrace();
+							logger.info("Error - Load ontology again");
+							ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+							
+							try
+							{	startTime = System.currentTimeMillis();
+								reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology, koncludeReasonerConfiguration);
+							}
+							catch (Exception ex){
+								ex.printStackTrace();
+							}
+							
+							
+						}
+						
 						endTime = System.currentTimeMillis();
 						
 						logger.info("Reasoner Loading takes " + (endTime - startTime) + " ms");
@@ -89,7 +108,8 @@ public class Evaluation_Konclude {
 						reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
 						
 					
-					evaluationTime += performEvaluation(ontology, reasoner).get(0);
+					if(reasoner != null)
+						evaluationTime += performEvaluation(ontology, reasoner).get(0);
 					
 					
 					
@@ -119,12 +139,12 @@ public class Evaluation_Konclude {
 
 		try {
 
-			logger.info("Loading the ontology " + source);
+			//logger.info("Loading the ontology " + source);
 			long startTime = System.currentTimeMillis();
 			ontology = manager.loadOntology(iri);
 			long endTime = System.currentTimeMillis();
 
-			logger.info("Loading takes " + (endTime - startTime) + " ms");
+			//logger.info("Loading takes " + (endTime - startTime) + " ms");
 
 		} catch (OWLOntologyCreationException e) {
 			
