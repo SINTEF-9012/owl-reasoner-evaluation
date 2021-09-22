@@ -11,5 +11,7 @@ COPY requirements.txt .
 RUN git clone https://github.com/SINTEF-9012/SkyTrack.git
 
 COPY . ./SkyTrack/ontologies
+RUN apt update
+RUN apt install default-jre
 
 RUN pip install --no-cache-dir -r requirements.txt
