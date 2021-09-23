@@ -8,3 +8,6 @@ pizza_*
 base_ontology.ttl
 materialized_ontology.ttl
 *_saving.*
+ncit.owl
+ncit_new.owl
+SAI.owl
