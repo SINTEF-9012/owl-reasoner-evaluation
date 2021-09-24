@@ -94,6 +94,14 @@
     <type>pom</type>
 </dependency>
 
+<!-- https://mvnrepository.com/artifact/com.complexible.stardog.reasoning.http/stardog-reasoning-protocols-http-client -->
+<dependency>
+    <groupId>com.complexible.stardog.reasoning.http</groupId>
+    <artifactId>stardog-reasoning-protocols-http-client</artifactId>
+    <version>${stardog.version}</version>
+</dependency>
+
+
 <!-- https://mvnrepository.com/artifact/com.google.guava/failureaccess -->
 <dependency>
     <groupId>com.google.guava</groupId>
