@@ -13,7 +13,7 @@ import com.complexible.stardog.api.ConnectionConfiguration;
 import com.complexible.stardog.api.admin.AdminConnection;
 import com.complexible.stardog.api.admin.AdminConnectionConfiguration;
 import com.complexible.stardog.api.reasoning.ReasoningConnection;
-import com.complexible.stardog.metadata.ConfigProperty;
+//import com.complexible.stardog.api.reasoning.ReasoningConnection;
 import com.complexible.stardog.reasoning.ReasoningOptions;
 import com.complexible.stardog.reasoning.api.ReasoningType;
 import com.stardog.stark.io.RDFFormats;
@@ -117,7 +117,7 @@ public class Evaluation {
 		try {
 
 			ReasoningConnection aReasoningConn = ConnectionConfiguration.to(source).server(server).credentials("admin", "admin")
-					.reasoning(true).connect().as(ReasoningConnection.class);
+					.reasoning(true).connect().as( ReasoningConnection.class);
 			aReasoningConn.begin();
 
 			startTime = System.currentTimeMillis();

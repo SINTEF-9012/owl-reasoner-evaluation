@@ -38,12 +38,6 @@
     <version>${stardog.version}</version>
     <type>pom</type>
 </dependency>
-<dependency>
-    <groupId>com.complexible.stardog</groupId>
-    <artifactId>client-embedded</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
 
 <dependency>
     <groupId>com.complexible.stardog</groupId>
@@ -92,13 +86,6 @@
     <artifactId>stardog-skos</artifactId>
     <version>${stardog.version}</version>
     <type>pom</type>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/com.complexible.stardog.reasoning.http/stardog-reasoning-protocols-http-client -->
-<dependency>
-    <groupId>com.complexible.stardog.reasoning.http</groupId>
-    <artifactId>stardog-reasoning-protocols-http-client</artifactId>
-    <version>${stardog.version}</version>
 </dependency>
 
 
