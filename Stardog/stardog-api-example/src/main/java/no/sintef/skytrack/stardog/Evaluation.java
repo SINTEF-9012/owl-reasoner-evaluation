@@ -13,7 +13,6 @@ import com.complexible.stardog.api.ConnectionConfiguration;
 import com.complexible.stardog.api.admin.AdminConnection;
 import com.complexible.stardog.api.admin.AdminConnectionConfiguration;
 import com.complexible.stardog.api.reasoning.ReasoningConnection;
-//import com.complexible.stardog.api.reasoning.ReasoningConnection;
 import com.complexible.stardog.reasoning.ReasoningOptions;
 import com.complexible.stardog.reasoning.api.ReasoningType;
 import com.stardog.stark.io.RDFFormats;
@@ -26,7 +25,7 @@ public class Evaluation {
 	public static void main(String[] args) {
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
 
-		ontologiesMap.put("VICODI", "../../../ontologies/vicodi_all.owl");
+		ontologiesMap.put("VICODI", "../../ontologies/vicodi_all.owl");
 		ontologiesMap.put("ACGT", "../../../ontologies/ACGT.owl");
 		ontologiesMap.put("GALEN", "../../../ontologies/full-galen.owl");
 		ontologiesMap.put("FMA", "../../../ontologies/fma.owl");

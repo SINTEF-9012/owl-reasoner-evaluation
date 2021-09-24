@@ -9,7 +9,10 @@
 	
 	 <properties>
         <stardog.version>7.7.2</stardog.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
 
 <repositories>
    <repository>
@@ -39,54 +42,14 @@
     <type>pom</type>
 </dependency>
 
-<dependency>
-    <groupId>com.complexible.stardog</groupId>
-    <artifactId>server</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
 
-<dependency>
-    <groupId>com.complexible.stardog.cache</groupId>
-    <artifactId>stardog-cache-core</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
 
-<dependency>
-    <groupId>com.stardog.stark.io</groupId>
-    <artifactId>stardog-stark-io-api</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
 
-<dependency>
-    <groupId>com.stardog.stark.query.io</groupId>
-    <artifactId>stardog-stark-query-io</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
 
-<dependency>
-    <groupId>com.stardog.stark.query</groupId>
-    <artifactId>stardog-stark-query-api</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
 
-<dependency>
-    <groupId>com.complexible.stardog.prov</groupId>
-    <artifactId>stardog-prov</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
 
-<dependency>
-    <groupId>com.complexible.stardog.skos</groupId>
-    <artifactId>stardog-skos</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
+
+
 
 
 <!-- https://mvnrepository.com/artifact/com.google.guava/failureaccess -->
