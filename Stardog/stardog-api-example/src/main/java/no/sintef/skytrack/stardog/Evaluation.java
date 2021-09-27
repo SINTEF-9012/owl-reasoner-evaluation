@@ -25,7 +25,7 @@ public class Evaluation {
 	public static void main(String[] args) {
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
 
-		ontologiesMap.put("VICODI", "../../ontologies/vicodi_all.owl");
+		ontologiesMap.put("VICODI", "../../../ontologies/vicodi_all.owl");
 		ontologiesMap.put("ACGT", "../../../ontologies/ACGT.owl");
 		ontologiesMap.put("GALEN", "../../../ontologies/full-galen.owl");
 		ontologiesMap.put("FMA", "../../../ontologies/fma.owl");
