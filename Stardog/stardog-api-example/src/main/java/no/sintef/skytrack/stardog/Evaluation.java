@@ -115,7 +115,7 @@ public class Evaluation {
 
 		try {
 
-			ReasoningConnection aReasoningConn = ConnectionConfiguration.to(source).server(server).credentials("admin", "admin").reasoning(true).set(ConnectionConfiguration.CONNECTION_TYPE, "http").connect().as( ReasoningConnection.class);
+			ReasoningConnection aReasoningConn = ConnectionConfiguration.to(source).server(server).credentials("admin", "admin").reasoning(true).connect().as( ReasoningConnection.class);
 			aReasoningConn.begin();
 
 			startTime = System.currentTimeMillis();
