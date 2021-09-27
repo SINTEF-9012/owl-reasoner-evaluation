@@ -60,7 +60,7 @@ public class Evaluation {
 			for (int i = 1; i <= RUN; i++) {
 				loadOntology(source, filename);
 
-				validationTime += performEvaluation(source);
+				//validationTime += performEvaluation(source);
 
 			}
 
@@ -71,7 +71,7 @@ public class Evaluation {
 
 	public static boolean loadOntology(String source, String filename) {
 
-		// long startTime = 0, endTime = 0;
+		long startTime = 0, endTime = 0;
 
 		try {
 
@@ -98,6 +98,20 @@ public class Evaluation {
 
 			// logger.info("Loading takes " + (endTime - startTime) + " ms");
 
+			
+			
+			ReasoningConnection aReasoningConn = connCfg.reasoning(true).connect().as(ReasoningConnection.class);
+			startTime = System.currentTimeMillis();
+
+			boolean isConsitent = aReasoningConn.isConsistent();
+
+			endTime = System.currentTimeMillis();
+
+			logger.info("isConsitent=" + isConsitent);
+
+			logger.info("Validationg takes " + (endTime - startTime) + " ms");
+			
+			aReasoningConn.close();
 			aConn.close();
 			aAdminConnection.close();
 
@@ -115,6 +129,7 @@ public class Evaluation {
 
 		try {
 
+			
 			ReasoningConnection aReasoningConn = ConnectionConfiguration.to(source).server(server).credentials("admin", "admin").reasoning(true).connect().as( ReasoningConnection.class);
 			aReasoningConn.begin();
 
