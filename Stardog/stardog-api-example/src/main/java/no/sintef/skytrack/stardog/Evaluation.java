@@ -20,7 +20,7 @@ import com.stardog.stark.io.RDFFormats;
 public class Evaluation {
 
 	static Logger logger = LoggerFactory.getLogger(Evaluation.class);
-	static String server = "http://localhost:5820";
+	static String server = "http://192.168.1.45:5820";
 
 	public static void main(String[] args) {
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();

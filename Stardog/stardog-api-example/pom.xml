@@ -42,33 +42,12 @@
     <type>pom</type>
 </dependency>
 
-<dependency>
-    <groupId>com.complexible.stardog</groupId>
-    <artifactId>client-embedded</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
-
-
-
-
-
-
-
-
-
-
-
 <!-- https://mvnrepository.com/artifact/com.google.guava/failureaccess -->
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>failureaccess</artifactId>
     <version>1.0.1</version>
 </dependency>
-
-
-
-
 	</dependencies>
 	
 	
