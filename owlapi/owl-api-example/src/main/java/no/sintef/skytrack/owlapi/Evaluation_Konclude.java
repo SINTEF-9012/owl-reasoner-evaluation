@@ -170,6 +170,7 @@ public class Evaluation_Konclude {
 
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
+					ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 
 					try {
 						reasonerClassificationTime += performClassification(ontology, reasonerFactoryMap.get(reasonerName));
