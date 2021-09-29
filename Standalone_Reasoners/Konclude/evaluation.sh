@@ -17,9 +17,9 @@ do
    echo
    reasonerConsistencyTime=0
    for runC in {1..5}; do
-		start=$(date +%s.%3N)
+		start=$(date +%s%3N)
 		Konclude consistency -i $i -o ./output/consistency.owl.xml > consistency.log
-		end=$(date +%s.%3N)
+		end=$(date +%s%3N)
 		runtime=$( echo "$end - $start" | bc -l )
 		reasonerConsistencyTime=$(echo "$runtime + $reasonerConsistencyTime" | bc -l)
 		echo "Consistency validation takes ${runtime}"
@@ -38,9 +38,9 @@ do
    echo
    reasonerClassification=0
    for runC in {1..5}; do
-		start=$(date +%s.%3N)
+		start=$(date +%s%3N)
 		Konclude classification -i $i -o ./output/classification.owl.xml > classification.log
-		end=$(date +%s.%3N)
+		end=$(date +%s%3N)
 		runtime=$( echo "$end - $start" | bc -l )
 		reasonerClassification=$(echo "$runtime + $reasonerClassification" | bc -l)
 		echo "Classification takes ${runtime}"
