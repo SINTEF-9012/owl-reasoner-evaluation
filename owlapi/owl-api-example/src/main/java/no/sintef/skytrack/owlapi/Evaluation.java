@@ -147,9 +147,18 @@ public class Evaluation {
 
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
-
-					reasonerConsistencyTime += performConsistencyEvaluation(ontology,
-							reasonerFactoryMap.get(reasonerName)); 
+					
+					try
+					{
+						reasonerConsistencyTime += performConsistencyEvaluation(ontology,
+								reasonerFactoryMap.get(reasonerName)); 
+					}
+					catch(Exception e)
+					{
+						logger.info(reasonerName + " running error " + e.getMessage());
+						continue;
+					}
+				
 					
 					// Calling GC 
 					System.gc();
@@ -176,7 +185,16 @@ public class Evaluation {
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
 
-					reasonerClassificationTime += performClassification(ontology, reasonerFactoryMap.get(reasonerName));
+					try
+					{
+						reasonerClassificationTime += performClassification(ontology, reasonerFactoryMap.get(reasonerName));
+					}
+					catch(Exception e)
+					{
+						logger.info(reasonerName + " running error " + e.getMessage());
+						continue;
+					}
+					
 					// Calling GC
 					System.gc();
 
