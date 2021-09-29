@@ -18,7 +18,7 @@ do
    reasonerConsistencyTime=0
    for runC in {1..5}; do
 		start=$(date +%s.%3N)
-		Konclude consistency -i $i -o ./output/consistency_check.owl.xml > consistency_check.log
+		Konclude consistency -i $i -o ./output/consistency.owl.xml > consistency.log
 		end=$(date +%s.%3N)
 		runtime=$( echo "$end - $start" | bc -l )
 		reasonerConsistencyTime=$(echo "$runtime + $reasonerConsistencyTime" | bc -l)
@@ -36,16 +36,16 @@ for i in "${ontoArr[@]}"
 do
    echo "$i"
    echo
-   reasonerConsistencyTime=0
+   reasonerClassification=0
    for runC in {1..5}; do
 		start=$(date +%s.%3N)
 		Konclude classification -i $i -o ./output/classification.owl.xml > classification.log
 		end=$(date +%s.%3N)
 		runtime=$( echo "$end - $start" | bc -l )
-		reasonerConsistencyTime=$(echo "$runtime + $reasonerConsistencyTime" | bc -l)
+		reasonerClassification=$(echo "$runtime + $reasonerClassification" | bc -l)
 		echo "Classification takes ${runtime}"
 	done
 	
-	reasonerConsistencyTime=$(echo "$reasonerConsistencyTime/5" | bc -l)
-	echo "Everage classification time on: $i is $reasonerConsistencyTime"
+	reasonerClassification=$(echo "$reasonerClassification/5" | bc -l)
+	echo "Everage classification time on: $i is $reasonerClassification"
 done
