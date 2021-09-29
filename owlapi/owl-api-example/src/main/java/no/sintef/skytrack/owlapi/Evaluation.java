@@ -149,7 +149,10 @@ public class Evaluation {
 					OWLOntology ontology = loadOntology(source, filename);
 
 					reasonerConsistencyTime += performConsistencyEvaluation(ontology,
-							reasonerFactoryMap.get(reasonerName)); // Calling GC System.gc();
+							reasonerFactoryMap.get(reasonerName)); 
+					
+					// Calling GC 
+					System.gc();
 
 				}
 

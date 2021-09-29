@@ -138,9 +138,14 @@ public class Evaluation_Konclude {
 
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
+					
+					ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 
 					reasonerConsistencyTime += performConsistencyEvaluation(ontology,
-							reasonerFactoryMap.get(reasonerName)); // Calling GC System.gc();
+							reasonerFactoryMap.get(reasonerName)); 
+					
+					// Calling GC 
+					System.gc();
 
 				}
 
