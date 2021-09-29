@@ -90,19 +90,19 @@
 							<goals>
 								<goal>single</goal>
 							</goals>
-							<configuration>
-								<descriptorRefs>
-									<descriptorRef>jar-with-dependencies</descriptorRef>
-								</descriptorRefs>
-								<archive>
-									<manifest>
-										<mainClass>no.sintef.skytrack.owlapi.Evaluation_Konclude</mainClass>
-									</manifest>
-								</archive>
-							</configuration>
 						</execution>
-					</executions>
 
+					</executions>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+							<manifest>
+								<mainClass>no.sintef.skytrack.owlapi.Evaluation_Konclude</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
