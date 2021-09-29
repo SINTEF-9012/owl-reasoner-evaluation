@@ -156,7 +156,7 @@ public class Evaluation {
 					catch(Exception e)
 					{
 						logger.info(reasonerName + " running error " + e.getMessage());
-						continue;
+						break;
 					}
 				
 					
@@ -192,7 +192,7 @@ public class Evaluation {
 					catch(Exception e)
 					{
 						logger.info(reasonerName + " running error " + e.getMessage());
-						continue;
+						break;
 					}
 					
 					// Calling GC
