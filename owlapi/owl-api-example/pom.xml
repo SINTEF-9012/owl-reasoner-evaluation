@@ -99,7 +99,7 @@
 						</descriptorRefs>
 						<archive>
 							<manifest>
-								<mainClass>no.sintef.skytrack.owlapi.Evaluation_Konclude</mainClass>
+								<mainClass>no.sintef.skytrack.owlapi.Evaluation</mainClass>
 							</manifest>
 						</archive>
 					</configuration>
