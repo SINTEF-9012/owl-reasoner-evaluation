@@ -6,26 +6,26 @@
 	<artifactId>stardog-api-example</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>stardog-api-example</name>
-	
-	 <properties>
-        <stardog.version>7.7.2</stardog.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
+
+	<properties>
+		<stardog.version>7.7.2</stardog.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+	</properties>
 
 
-<repositories>
-   <repository>
-     <id>stardog-public</id>
-     <url>https://maven.stardog.com</url>
-   </repository>
-</repositories>
+	<repositories>
+		<repository>
+			<id>stardog-public</id>
+			<url>https://maven.stardog.com</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 
-	<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 
-	
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
@@ -34,23 +34,23 @@
 		</dependency>
 
 
-<!-- https://mvnrepository.com/artifact/com.complexible.stardog/client-http -->
-<dependency>
-    <groupId>com.complexible.stardog</groupId>
-    <artifactId>client-http</artifactId>
-    <version>${stardog.version}</version>
-    <type>pom</type>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/com.complexible.stardog/client-http -->
+		<dependency>
+			<groupId>com.complexible.stardog</groupId>
+			<artifactId>client-http</artifactId>
+			<version>${stardog.version}</version>
+			<type>pom</type>
 
-<!-- https://mvnrepository.com/artifact/com.google.guava/failureaccess -->
-<dependency>
-    <groupId>com.google.guava</groupId>
-    <artifactId>failureaccess</artifactId>
-    <version>1.0.1</version>
-</dependency>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/failureaccess -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>failureaccess</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 	</dependencies>
-	
-	
+
+
 
 	<build>
 		<pluginManagement>

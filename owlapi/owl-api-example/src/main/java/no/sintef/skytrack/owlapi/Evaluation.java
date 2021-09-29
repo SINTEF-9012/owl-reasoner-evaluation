@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
@@ -32,10 +33,8 @@ public class Evaluation {
 		ontologiesMap.put("http://purl.org/sig/ont/fma.owl#", "../../../ontologies/fma.owl");
 		ontologiesMap.put("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#", "../../../ontologies/ncit.owl");
 		ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.owl");
-		//ontologiesMap.put("http://purl.bioontology.org/ontology/MESH/", "../../../ontologies/MESH.ttl");
 		
-		// ontologiesMap.put("http://purl.obolibrary.org/obo/gaz.owl#",
-		// "../../../ontologies/gaz.owl");
+
 
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
 		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
@@ -43,14 +42,15 @@ public class Evaluation {
 		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
 		reasonerFactoryMap.put("JFact", new uk.ac.manchester.cs.jfact.JFactFactory());
 
-		// reasonerFactoryMap.put("Snorocket ", new
-		// au.csiro.snorocket.owlapi.SnorocketReasonerFactory() );
+
 
 		int RUN = 5;
 
 		long evaluationTime = 0;
 		long validationTime = 0;
 		long reasonerLoadingTime = 0;
+		long reasonerClassificationTime = 0;
+		long reasonerConsistencyTime = 0;
 		long startTime, endTime;
 
 		/*
@@ -95,6 +95,42 @@ public class Evaluation {
 
 		logger.info("Evaluating Reasoner");
 
+		/*
+		 * for (String reasonerName : reasonerFactoryMap.keySet()) { logger.info("");
+		 * logger.info("Evaluation reasoner " + reasonerName);
+		 * 
+		 * for (String source : ontologiesMap.keySet()) {
+		 * 
+		 * String filename = ontologiesMap.get(source); logger.info("Ontology: " +
+		 * source); validationTime = 0; reasonerLoadingTime = 0;
+		 * 
+		 * for (int i = 1; i <= RUN; i++) { OWLOntology ontology = loadOntology(source,
+		 * filename); startTime = System.currentTimeMillis(); OWLReasoner reasoner =
+		 * reasonerFactoryMap.get(reasonerName).createReasoner(ontology); endTime =
+		 * System.currentTimeMillis(); logger.info("Reasoner Loading takes " + (endTime
+		 * - startTime) + " ms");
+		 * 
+		 * reasonerLoadingTime += (endTime - startTime);
+		 * 
+		 * validationTime += performEvaluation(ontology, reasoner).get(0);
+		 * 
+		 * // Calling GC System.gc();
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * logger.info(reasonerName + " Everage Loading Time on: " + source + "is: " +
+		 * reasonerLoadingTime / (double) RUN);
+		 * 
+		 * logger.info(reasonerName + " Everage Validation Time on: " + source + "is: "
+		 * + validationTime / (double) RUN); }
+		 * 
+		 * }
+		 */
+
+		logger.info("Evaluating Reasoner consistency validation");
+
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 			logger.info("");
 			logger.info("Evaluation reasoner " + reasonerName);
@@ -103,35 +139,72 @@ public class Evaluation {
 
 				String filename = ontologiesMap.get(source);
 				logger.info("Ontology: " + source);
-				validationTime = 0;
-				reasonerLoadingTime = 0;
+				reasonerConsistencyTime = 0;
 
 				for (int i = 1; i <= RUN; i++) {
 					OWLOntology ontology = loadOntology(source, filename);
-					startTime = System.currentTimeMillis();
-					OWLReasoner reasoner = reasonerFactoryMap.get(reasonerName).createReasoner(ontology);
-					endTime = System.currentTimeMillis();
-					logger.info("Reasoner Loading takes " + (endTime - startTime) + " ms");
-					
-					reasonerLoadingTime += (endTime - startTime);
-					
-					validationTime += performEvaluation(ontology, reasoner).get(0);
-					
+
+					reasonerConsistencyTime += performConsistencyEvaluation(ontology,
+							reasonerFactoryMap.get(reasonerName)); // Calling GC System.gc();
+
+				}
+
+				logger.info(reasonerName + " Everage consistency validation time on: " + source + "is: "
+						+ reasonerConsistencyTime / (double) RUN);
+			}
+		}
+
+		logger.info("Evaluating Reasoner Classification");
+
+		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			logger.info("");
+			logger.info("Evaluation reasoner " + reasonerName);
+
+			for (String source : ontologiesMap.keySet()) {
+
+				String filename = ontologiesMap.get(source);
+				logger.info("Ontology: " + source);
+				reasonerClassificationTime = 0;
+
+				for (int i = 1; i <= RUN; i++) {
+					OWLOntology ontology = loadOntology(source, filename);
+
+					reasonerClassificationTime += performClassification(ontology, reasonerFactoryMap.get(reasonerName));
 					// Calling GC
 					System.gc();
 
 				}
 
-				
-				
-				logger.info(reasonerName + " Everage Loading Time on: " + source + "is: "
-						+ reasonerLoadingTime / (double) RUN);
-
-				logger.info(reasonerName + " Everage Validation Time on: " + source + "is: "
-						+ validationTime / (double) RUN);
+				logger.info(reasonerName + " Everage consistency validation time on: " + source + "is: "
+						+ reasonerClassificationTime / (double) RUN);
 			}
-
 		}
+
+	}
+
+	public static long performConsistencyEvaluation(OWLOntology ontology, OWLReasonerFactory reasonerFactory) {
+		long startTime = System.currentTimeMillis();
+		OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
+		boolean consistent = reasoner.isConsistent();
+		long endTime = System.currentTimeMillis();
+		reasoner.dispose();
+
+		logger.info(
+				"Reasoner consistency validation takes " + (endTime - startTime) + " ms. IsConsisten = " + consistent);
+
+		return (endTime - startTime);
+	}
+
+	public static long performClassification(OWLOntology ontology, OWLReasonerFactory reasonerFactory) {
+		long startTime = System.currentTimeMillis();
+		OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
+		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+		long endTime = System.currentTimeMillis();
+		reasoner.dispose();
+
+		logger.info("Reasoner classification takes " + (endTime - startTime) + " ms.");
+
+		return (endTime - startTime);
 	}
 
 	public static OWLOntology loadOntology(String source, String filename) {
