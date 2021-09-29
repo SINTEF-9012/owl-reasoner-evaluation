@@ -26,10 +26,26 @@ do
 	done
 	
 	reasonerConsistencyTime=$(echo "$reasonerConsistencyTime/5" | bc -l)
-	echo "Consistency validation takes ${runtime}"
 	echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
 done
 
 
 
 echo "Evaluating Reasoner Classification"
+for i in "${ontoArr[@]}"
+do
+   echo "$i"
+   echo
+   reasonerConsistencyTime=0
+   for runC in {1..5}; do
+		start=$(date +%s.%3N)
+		Konclude classification -i $i -o ./output/classification.owl.xml > classification.log
+		end=$(date +%s.%3N)
+		runtime=$( echo "$end - $start" | bc -l )
+		reasonerConsistencyTime=$(echo "$runtime + $reasonerConsistencyTime" | bc -l)
+		echo "Classification takes ${runtime}"
+	done
+	
+	reasonerConsistencyTime=$(echo "$reasonerConsistencyTime/5" | bc -l)
+	echo "Everage classification time on: $i is $reasonerConsistencyTime"
+done
