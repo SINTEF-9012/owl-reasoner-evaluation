@@ -124,43 +124,37 @@ public class Evaluation_Konclude {
 		 */
 		
 		
-		logger.info("Evaluating Reasoner consistency validation");
-
-		for (String reasonerName : reasonerFactoryMap.keySet()) {
-			logger.info("");
-			logger.info("Evaluation reasoner " + reasonerName);
-
-			for (String source : ontologiesMap.keySet()) {
-
-				String filename = ontologiesMap.get(source);
-				logger.info("Ontology: " + source);
-				reasonerConsistencyTime = 0;
-
-				for (int i = 1; i <= RUN; i++) {
-					OWLOntology ontology = loadOntology(source, filename);
-					
-					ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
-
-					try {
-						reasonerConsistencyTime += performConsistencyEvaluation(ontology,
-								reasonerFactoryMap.get(reasonerName)); 
-						
-					}
-					catch(Exception e)
-					{
-						logger.info(reasonerName + " running error " + e.getMessage());
-						break;
-					}
-					
-					// Calling GC 
-					System.gc();
-
-				}
-
-				logger.info(reasonerName + " Everage consistency validation time on: " + source + "is: "
-						+ reasonerConsistencyTime / (double) RUN);
-			}
-		}
+		/*
+		 * logger.info("Evaluating Reasoner consistency validation");
+		 * 
+		 * for (String reasonerName : reasonerFactoryMap.keySet()) { logger.info("");
+		 * logger.info("Evaluation reasoner " + reasonerName);
+		 * 
+		 * for (String source : ontologiesMap.keySet()) {
+		 * 
+		 * String filename = ontologiesMap.get(source); logger.info("Ontology: " +
+		 * source); reasonerConsistencyTime = 0;
+		 * 
+		 * for (int i = 1; i <= RUN; i++) { OWLOntology ontology = loadOntology(source,
+		 * filename);
+		 * 
+		 * ontology =
+		 * ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().
+		 * flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+		 * 
+		 * try { reasonerConsistencyTime += performConsistencyEvaluation(ontology,
+		 * reasonerFactoryMap.get(reasonerName));
+		 * 
+		 * } catch(Exception e) { logger.info(reasonerName + " running error " +
+		 * e.getMessage()); break; }
+		 * 
+		 * // Calling GC System.gc();
+		 * 
+		 * }
+		 * 
+		 * logger.info(reasonerName + " Everage consistency validation time on: " +
+		 * source + "is: " + reasonerConsistencyTime / (double) RUN); } }
+		 */
 
 		logger.info("Evaluating Reasoner Classification");
 
