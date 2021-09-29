@@ -65,12 +65,12 @@
 			<version>2.10.0</version>
 		</dependency>
 
-<!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/owllinkhttpxml -->
-<dependency>
-    <groupId>net.sourceforge.owlapi</groupId>
-    <artifactId>owllinkhttpxml</artifactId>
-    <version>2.0.0</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/owllinkhttpxml -->
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owllinkhttpxml</artifactId>
+			<version>2.0.0</version>
+		</dependency>
 
 
 
@@ -86,21 +86,23 @@
 					<executions>
 						<execution>
 							<phase>package</phase>
+							<id>Evaluation</id>
 							<goals>
 								<goal>single</goal>
 							</goals>
+							<configuration>
+								<descriptorRefs>
+									<descriptorRef>jar-with-dependencies</descriptorRef>
+								</descriptorRefs>
+								<archive>
+									<manifest>
+										<mainClass>no.sintef.skytrack.owlapi.Evaluation_Konclude</mainClass>
+									</manifest>
+								</archive>
+							</configuration>
 						</execution>
 					</executions>
-					<configuration>
-						<descriptorRefs>
-							<descriptorRef>jar-with-dependencies</descriptorRef>
-						</descriptorRefs>
-						<archive>
-							<manifest>
-								<mainClass>no.sintef.skytrack.owlapi.Evaluation</mainClass>
-							</manifest>
-						</archive>
-					</configuration>
+
 				</plugin>
 			</plugins>
 		</pluginManagement>

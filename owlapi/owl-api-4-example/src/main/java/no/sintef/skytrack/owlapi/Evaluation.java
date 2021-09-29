@@ -23,6 +23,12 @@ public class Evaluation {
 
 	public static void main(String[] args) {
 
+		
+		logger.info("");
+		logger.info("--------------------------------------------------");
+		logger.info("");
+		
+		
 		System.out.println(System.getProperty("java.library.path"));
 
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();

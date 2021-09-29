@@ -24,6 +24,10 @@ public class Evaluation {
 	static Logger logger = LoggerFactory.getLogger(Evaluation.class);
 
 	public static void main(String[] args) {
+		
+		logger.info("");
+		logger.info("--------------------------------------------------");
+		logger.info("");
 
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
 
@@ -39,7 +43,6 @@ public class Evaluation {
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
 		
 		reasonerFactoryMap.put("HermiT", new org.semanticweb.HermiT.ReasonerFactory());
-		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
 		reasonerFactoryMap.put("JFact", new uk.ac.manchester.cs.jfact.JFactFactory());
 		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
 

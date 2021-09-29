@@ -30,6 +30,11 @@ public class Evaluation_Konclude {
 	static OWLReasonerConfiguration koncludeReasonerConfiguration;
 
 	public static void main(String[] args) throws MalformedURLException, OWLOntologyCreationException {
+		
+		logger.info("");
+		logger.info("--------------------------------------------------");
+		logger.info("");
+		
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
 		ontologiesMap.put("http://vicodi.org/ontology#", "../../../ontologies/vicodi_all.owl");
 		ontologiesMap.put("http://www.ifomis.org/acgt/1.0#", "../../../ontologies/ACGT.owl");
