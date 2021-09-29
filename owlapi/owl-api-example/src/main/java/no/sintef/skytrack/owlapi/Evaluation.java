@@ -37,10 +37,11 @@ public class Evaluation {
 
 
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
-		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
+		
 		reasonerFactoryMap.put("HermiT", new org.semanticweb.HermiT.ReasonerFactory());
 		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
 		reasonerFactoryMap.put("JFact", new uk.ac.manchester.cs.jfact.JFactFactory());
+		reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
 
 
 
