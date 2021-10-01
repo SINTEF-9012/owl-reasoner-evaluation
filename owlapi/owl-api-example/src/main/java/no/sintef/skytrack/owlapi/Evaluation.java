@@ -690,7 +690,7 @@ public class Evaluation {
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology);
 		}
-		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
 		endTime = System.currentTimeMillis();
 		reasoner.dispose();
 		logger.info("Reasoner classification takes " + (endTime - startTime)/1000.0 + " s.");
@@ -710,7 +710,7 @@ public class Evaluation {
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology);
 		}
-		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS);
+		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
 		endTime = System.currentTimeMillis();
 		reasoner.dispose();
 		logger.info("Reasoner realization takes " + (endTime - startTime)/1000.0 + " s.");
