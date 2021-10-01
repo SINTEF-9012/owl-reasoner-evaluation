@@ -358,6 +358,7 @@ public class Evaluation {
 				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
 
 				String filename = ontologiesMap.get(source);
+				logger.info("");
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
@@ -385,12 +386,12 @@ public class Evaluation {
 					// Calling GC
 					System.gc();
 				}
-				
+				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Load time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
-			writeMapToCSV(outputDir+"/" + reasonerName + "_Load.csv", ontoEvalMap);
+			//writeMapToCSV(outputDir+"/" + reasonerName + "_Load.csv", ontoEvalMap);
 		}
 	}
 	
@@ -414,6 +415,7 @@ public class Evaluation {
 				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
 
 				String filename = ontologiesMap.get(source);
+				logger.info("");
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
@@ -441,12 +443,12 @@ public class Evaluation {
 					// Calling GC
 					System.gc();
 				}
-				
+				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Classification time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
-			writeMapToCSV(outputDir+"/" + reasonerName + "_Classification.csv", ontoEvalMap);
+			//writeMapToCSV(outputDir+"/" + reasonerName + "_Classification.csv", ontoEvalMap);
 		}
 	}
 	
@@ -470,6 +472,7 @@ public class Evaluation {
 				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
 
 				String filename = ontologiesMap.get(source);
+				logger.info("");
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
@@ -497,12 +500,12 @@ public class Evaluation {
 					// Calling GC
 					System.gc();
 				}
-				
+				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Consitency Validation time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
-			writeMapToCSV(outputDir+"/" + reasonerName + "_Consitency.csv", ontoEvalMap);
+			//writeMapToCSV(outputDir+"/" + reasonerName + "_Consitency.csv", ontoEvalMap);
 		}
 	}
 	
@@ -526,6 +529,7 @@ public class Evaluation {
 				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
 
 				String filename = ontologiesMap.get(source);
+				logger.info("");
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
@@ -554,11 +558,12 @@ public class Evaluation {
 					System.gc();
 				}
 				
+				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Realization time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
-			writeMapToCSV(outputDir+"/" + reasonerName + "_Realization.csv", ontoEvalMap);
+			//writeMapToCSV(outputDir+"/" + reasonerName + "_Realization.csv", ontoEvalMap);
 		}
 	}
 	
@@ -579,7 +584,23 @@ public class Evaluation {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	private static void writeListToCSV(String name, ArrayList<Double>  list, String listname)
+	{
+		try {
+			FileWriter writer = new FileWriter(name, true);
+			writer.append(listname + ",");
+			ArrayList<Double> results = list;
+			writer.append(Stream.of(results.toArray()).map(String::valueOf).collect(Collectors.joining(",")));
+			writer.append("\n");
+			
+			writer.flush();
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void printOntologyStatistics(Map<String, String> ontologiesMap) {
