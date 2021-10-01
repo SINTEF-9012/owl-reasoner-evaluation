@@ -461,7 +461,7 @@ public class Evaluation {
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
+				writeListToCSV(outputDir+"/" + reasonerName + "_Classification.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Classification time on: " + source + "is: " + evaluationTime / (double) runs);
@@ -519,7 +519,7 @@ public class Evaluation {
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
+				writeListToCSV(outputDir+"/" + reasonerName + "_Consitency.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Consitency Validation time on: " + source + "is: " + evaluationTime / (double) runs);

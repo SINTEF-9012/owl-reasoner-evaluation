@@ -10,7 +10,7 @@
 NEWLINE=$'\n'
 ontoDir="../../ontologies/ontologies/"
 RUN=10
-rm -rf ./output/
+#rm -rf ./output/
 
 mkdir output
 mkdir output/consistency
