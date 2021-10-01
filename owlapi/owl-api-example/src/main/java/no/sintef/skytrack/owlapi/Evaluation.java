@@ -471,7 +471,7 @@ public class Evaluation {
 	}
 	
 	public static void taskConsitency(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
-		logger.info("Task Consitency Validation Ontology");
+		logger.info("Task consistency Validation Ontology");
 
 		double evaluationTime = 0;
 
@@ -519,7 +519,7 @@ public class Evaluation {
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Consitency.csv", evalResults, source);
+				writeListToCSV(outputDir+"/" + reasonerName + "_Consistency.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Consitency Validation time on: " + source + "is: " + evaluationTime / (double) runs);
