@@ -8,7 +8,7 @@
 #					"../../ontologies/MESH.owl")
 
 NEWLINE=$'\n'
-ontoDir="../../ontologies/ontologies"
+ontoDir="../../ontologies/ontologies/*"
 
 rm -rf ./output/
 
