@@ -146,7 +146,7 @@ public class Evaluation {
 			File ontoFie = new File(ontoToJump);
 			if(ontoFie.exists() && ontoFie.isFile() && ontologiesMap.containsKey(ontoFie.getName()))
 			{
-				Set<String> keySet = new HashSet<String>(ontologiesMap.keySet());
+				ArrayList<String> keySet = new ArrayList<String>(ontologiesMap.keySet());
 				for(String name : keySet)
 				{
 					if(name.equals(ontoFie.getName()))
