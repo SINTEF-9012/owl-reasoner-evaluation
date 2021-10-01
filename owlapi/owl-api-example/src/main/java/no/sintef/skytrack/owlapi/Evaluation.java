@@ -1,9 +1,7 @@
 package no.sintef.skytrack.owlapi;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,11 +10,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
-
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -24,6 +20,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -38,8 +35,6 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.commons.cli.ParseException;
 
 import openllet.owlapi.OpenlletReasonerFactory;
 
@@ -68,14 +63,12 @@ public class Evaluation {
 		output.setRequired(false);
 		options.addOption(output);
 
-		Option reasoners = new Option("r", "reasoner", true,
-				"list of reasoner to evaluate (HermiT, JFact, Pellet, KonClude)");
+		Option reasoners = new Option("r", "reasoner", true, "list of reasoner to evaluate (HermiT, JFact, Pellet, KonClude)");
 		reasoners.setRequired(false);
 		reasoners.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(reasoners);
 
-		Option tasks = new Option("t", "task", true,
-				"list of reasoner tasks to evaluate (loading, consistency, classification, realization)");
+		Option tasks = new Option("t", "task", true, "list of reasoner tasks to evaluate (loading, consistency, classification, realization)");
 		tasks.setRequired(false);
 		tasks.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(tasks);
@@ -88,6 +81,19 @@ public class Evaluation {
 		Option printOnt = new Option("p", "print", false, "print statistics of ontologies");
 		printOnt.setRequired(false);
 		options.addOption(printOnt);
+		
+		
+		Option fileOnt = new Option("f", "file", true, "print statistics of ontologies");
+		fileOnt.setRequired(false);
+		fileOnt.setArgs(Option.UNLIMITED_VALUES);
+		options.addOption(fileOnt);
+		
+		Option jump = new Option("j", "jump", true, "jump to current ontology");
+		jump.setRequired(false);
+		options.addOption(jump);
+		
+		
+		
 
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -102,9 +108,13 @@ public class Evaluation {
 			System.exit(1);
 		}
 
+		
+		//------------------------------------------------------
+		// Input Dir
+		//------------------------------------------------------
 		String inputFilePath = cmd.getOptionValue("input");
 		if (inputFilePath == null)
-			inputFilePath = "../../../ontologies";
+			inputFilePath = "../../../ontologies/ontologies";
 		File inputDir = new File(inputFilePath);
 		if (inputDir.exists()) {
 			File[] listOfFiles = inputDir.listFiles((dir, name) -> name.toLowerCase().endsWith("owl")
@@ -125,18 +135,66 @@ public class Evaluation {
 			logger.error("Input Dir: " + inputFilePath + " not exist");
 			System.exit(0);
 		}
+		
+		//------------------------------------------------------
+		// Jump to ontology
+		//------------------------------------------------------
+		if(cmd.hasOption("jump"))
+		{
+			String ontoToJump = cmd.getOptionValue("jump");
+			File ontoFie = new File(ontoToJump);
+			if(ontoFie.exists() && ontoFie.isFile() && ontologiesMap.containsKey(ontoFie.getName()))
+			{
+				Set<String> keySet = ontologiesMap.keySet();
+				for(String name : keySet)
+				{
+					if(name.equals(ontoFie.getName()))
+						break;
+					
+					ontologiesMap.remove(name);
+				}
+			}
+		}
+		//------------------------------------------------------
+		// File option
+		//------------------------------------------------------
+		if(cmd.hasOption("file"))
+		{
+			ontologiesMap.clear();
+			String[] files = cmd.getOptionValues("file");
+			for(String name : files)
+			{
+				File file = new File(name); 
+				if (file.exists() && file.isFile()) {
+					ontologiesMap.put(file.getName(), file.getAbsolutePath());
+				}
+			}
+			
+		}
+		
+		//------------------------------------------------------
+		// Printing Statistics of ontologies and exit
+		//------------------------------------------------------
 
 		if (cmd.hasOption("print")) {
 			printOntologyStatistics(ontologiesMap);
 			System.exit(0);
 		}
 
+		
+		//------------------------------------------------------
+		// Output Dir
+		//------------------------------------------------------
 		String outputFilePath = cmd.getOptionValue("output");
 		if (outputFilePath == null)
 			outputFilePath = "./output";
 		File outputDir = new File(outputFilePath);
 		if (!outputDir.exists())
 			outputDir.mkdir();
+		
+		//------------------------------------------------------
+		// Reasoners
+		//------------------------------------------------------
 
 		ArrayList<String> supportReasoners = new ArrayList<String>(
 				Arrays.asList("HermiT", "JFact", "Pellet", "Konclude"));
@@ -153,10 +211,15 @@ public class Evaluation {
 			}
 		}
 
+		
+		//------------------------------------------------------
+		// Tasks
+		//------------------------------------------------------
+		
 		ArrayList<String> supportTasks = new ArrayList<String>(
 				Arrays.asList("loading", "consistency", "classification", "realization"));
 
-		String[] tasksName = cmd.getOptionValues("reasoners");
+		String[] tasksName = cmd.getOptionValues("task");
 		if (tasksName == null) {
 			tasksName = new String[] {};
 			tasksName = supportTasks.toArray(tasksName);
@@ -169,6 +232,12 @@ public class Evaluation {
 			}
 		}
 
+		
+		
+		//------------------------------------------------------
+		// iterations
+		//------------------------------------------------------
+		
 		Integer runs = null;
 
 		try {
@@ -179,6 +248,11 @@ public class Evaluation {
 
 		if (runs == null)
 			runs = 10;
+		
+		//------------------------------------------------------
+		// Printing args
+		//------------------------------------------------------
+		
 
 		logger.info("inputFilePath: " + inputFilePath);
 		logger.info("outputFilePath: " + outputFilePath);
@@ -189,6 +263,12 @@ public class Evaluation {
 		logger.info("");
 		logger.info("--------------------------------------------------");
 		logger.info("");
+		
+		
+		
+		//------------------------------------------------------
+		// Create reasoners
+		//------------------------------------------------------
 
 		Map<String, OWLReasonerFactory> reasonerFactoryMap = new LinkedHashMap<>();
 
@@ -203,6 +283,11 @@ public class Evaluation {
 			reasonerFactoryMap.put("Konclude", new OWLlinkHTTPXMLReasonerFactory());
 
 		
+		
+		//------------------------------------------------------
+		// Task Load Reasoners
+		//------------------------------------------------------
+		
 		ArrayList<String> taskNameList = new ArrayList<String>(Arrays.asList(tasksName));
 		
 		if(taskNameList.contains("loading"))
@@ -210,11 +295,49 @@ public class Evaluation {
 			logger.info("");
 			logger.info("--------------------------------------------------");
 			logger.info("");
-			taskLoadOntology(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
+			taskLoadReasoner(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
 		}
+		//------------------------------------------------------
+		// Task Consistency
+		//------------------------------------------------------
+		
+		if(taskNameList.contains("consistency"))
+		{
+			logger.info("");
+			logger.info("--------------------------------------------------");
+			logger.info("");
+			taskConsitency(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
+		}
+		
+		//------------------------------------------------------
+		// Task Classification
+		//------------------------------------------------------
+
+		if(taskNameList.contains("classification"))
+		{
+			logger.info("");
+			logger.info("--------------------------------------------------");
+			logger.info("");
+			taskClassification(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
+		}
+		
+		//------------------------------------------------------
+		// Task Realization
+		//------------------------------------------------------
+		
+
+		if(taskNameList.contains("realization"))
+		{
+			logger.info("");
+			logger.info("--------------------------------------------------");
+			logger.info("");
+			taskRealization(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
+		}
+		
+		
 	}
 
-	public static void taskLoadOntology(Map<String, String> ontologiesMap,
+	public static void taskLoadReasoner(Map<String, String> ontologiesMap,
 			Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		logger.info("Task Load Ontology");
 
@@ -222,7 +345,7 @@ public class Evaluation {
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 
-			Map<String, ArrayList<Long>> ontoEvalMap = new LinkedHashMap<>();
+			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
 			logger.info("");
 			logger.info("--------------------------------------------------");
@@ -232,22 +355,31 @@ public class Evaluation {
 
 			for (String source : ontologiesMap.keySet()) {
 
-				ArrayList<Long> evalResults = new ArrayList<Long>(runs);
+				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
 
 				String filename = ontologiesMap.get(source);
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				for (int i = 1; i <= runs; i++) {
-					OWLOntology ontology = loadOntology(source, filename);
-
+				OWLOntology ontology = loadOntologyFromFile(filename);
+				if (reasonerName.equals("Konclude")) {
 					try {
-						long thisTimeRunResult = performLoadingReasoner(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
+						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+					} catch (OWLOntologyCreationException e) {
+						logger.info(reasonerName + "Loading ontology error: " + source);
+						continue;
+					}
+				}
+				
+				for (int i = 1; i <= runs; i++) {
+					
+					try {
+						double thisTimeRunResult = performLoadingReasoner(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
-						logger.info(reasonerName + "running error");
-						break;
+						logger.info(reasonerName + "running error. Ontology:" + source);
+						break; 
 					}
 
 					// Calling GC
@@ -256,20 +388,188 @@ public class Evaluation {
 				
 				ontoEvalMap.put(source, evalResults);
 
-				logger.info(reasonerName + " Everage Load validation time on: " + source + "is: " + evaluationTime / (double) runs);
+				logger.info(reasonerName + " Everage Load time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
 			writeMapToCSV(outputDir+"/" + reasonerName + "_Load.csv", ontoEvalMap);
 		}
 	}
 	
-	private static void writeMapToCSV(String name, Map<String, ArrayList<Long>>  map)
+	public static void taskClassification(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
+		logger.info("Task Classification Ontology");
+
+		long evaluationTime = 0;
+
+		for (String reasonerName : reasonerFactoryMap.keySet()) {
+
+			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+
+			logger.info("");
+			logger.info("--------------------------------------------------");
+			logger.info("");
+
+			logger.info("Evaluation reasoner " + reasonerName);
+
+			for (String source : ontologiesMap.keySet()) {
+
+				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
+
+				String filename = ontologiesMap.get(source);
+				logger.info("Ontology: " + source);
+				evaluationTime = 0;
+
+				OWLOntology ontology = loadOntologyFromFile(filename);
+				if (reasonerName.equals("Konclude")) {
+					try {
+						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+					} catch (OWLOntologyCreationException e) {
+						logger.info(reasonerName + "Loading ontology error: " + source);
+						continue;
+					}
+				}
+				
+				for (int i = 1; i <= runs; i++) {
+					
+					try {
+						double thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
+						evalResults.add(thisTimeRunResult);
+						evaluationTime += thisTimeRunResult;
+					} catch (Exception e) {
+						logger.info(reasonerName + "running error. Ontology:" + source);
+						break; 
+					}
+
+					// Calling GC
+					System.gc();
+				}
+				
+				ontoEvalMap.put(source, evalResults);
+
+				logger.info(reasonerName + " Everage Classification time on: " + source + "is: " + evaluationTime / (double) runs);
+			}
+			writeMapToCSV(outputDir+"/" + reasonerName + "_Classification.csv", ontoEvalMap);
+		}
+	}
+	
+	public static void taskConsitency(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
+		logger.info("Task Consitency Validation Ontology");
+
+		long evaluationTime = 0;
+
+		for (String reasonerName : reasonerFactoryMap.keySet()) {
+
+			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+
+			logger.info("");
+			logger.info("--------------------------------------------------");
+			logger.info("");
+
+			logger.info("Evaluation reasoner " + reasonerName);
+
+			for (String source : ontologiesMap.keySet()) {
+
+				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
+
+				String filename = ontologiesMap.get(source);
+				logger.info("Ontology: " + source);
+				evaluationTime = 0;
+
+				OWLOntology ontology = loadOntologyFromFile(filename);
+				if (reasonerName.equals("Konclude")) {
+					try {
+						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+					} catch (OWLOntologyCreationException e) {
+						logger.info(reasonerName + "Loading ontology error: " + source);
+						continue;
+					}
+				}
+				
+				for (int i = 1; i <= runs; i++) {
+					
+					try {
+						double thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
+						evalResults.add(thisTimeRunResult);
+						evaluationTime += thisTimeRunResult;
+					} catch (Exception e) {
+						logger.info(reasonerName + "running error. Ontology:" + source);
+						break; 
+					}
+
+					// Calling GC
+					System.gc();
+				}
+				
+				ontoEvalMap.put(source, evalResults);
+
+				logger.info(reasonerName + " Everage Consitency Validation time on: " + source + "is: " + evaluationTime / (double) runs);
+			}
+			writeMapToCSV(outputDir+"/" + reasonerName + "_Consitency.csv", ontoEvalMap);
+		}
+	}
+	
+	public static void taskRealization(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
+		logger.info("Task Realization Ontology");
+
+		long evaluationTime = 0;
+
+		for (String reasonerName : reasonerFactoryMap.keySet()) {
+
+			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+
+			logger.info("");
+			logger.info("--------------------------------------------------");
+			logger.info("");
+
+			logger.info("Evaluation reasoner " + reasonerName);
+
+			for (String source : ontologiesMap.keySet()) {
+
+				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
+
+				String filename = ontologiesMap.get(source);
+				logger.info("Ontology: " + source);
+				evaluationTime = 0;
+
+				OWLOntology ontology = loadOntologyFromFile(filename);
+				if (reasonerName.equals("Konclude")) {
+					try {
+						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+					} catch (OWLOntologyCreationException e) {
+						logger.info(reasonerName + "Loading ontology error: " + source);
+						continue;
+					}
+				}
+				
+				for (int i = 1; i <= runs; i++) {
+					
+					try {
+						double thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
+						evalResults.add(thisTimeRunResult);
+						evaluationTime += thisTimeRunResult;
+					} catch (Exception e) {
+						logger.info(reasonerName + "running error. Ontology:" + source);
+						break; 
+					}
+
+					// Calling GC
+					System.gc();
+				}
+				
+				ontoEvalMap.put(source, evalResults);
+
+				logger.info(reasonerName + " Everage Realization time on: " + source + "is: " + evaluationTime / (double) runs);
+			}
+			writeMapToCSV(outputDir+"/" + reasonerName + "_Realization.csv", ontoEvalMap);
+		}
+	}
+	
+	private static void writeMapToCSV(String name, Map<String, ArrayList<Double>>  map)
 	{
 		try {
 			FileWriter writer = new FileWriter(name, false);
 			for(String key : map.keySet())
 			{
 				writer.append(key + ",");
-				ArrayList<Long> results = map.get(key);
+				ArrayList<Double> results = map.get(key);
 				writer.append(Stream.of(results.toArray()).map(String::valueOf).collect(Collectors.joining(",")));
 				writer.append("\n");
 			}
@@ -302,7 +602,7 @@ public class Evaluation {
 		}
 	}
 
-	public static long performLoadingReasoner(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
+	public static double performLoadingReasoner(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
 			throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
@@ -320,19 +620,16 @@ public class Evaluation {
 		endTime = System.currentTimeMillis();
 		reasoner.dispose();
 
-		logger.info("Reasoner Loading takes " + (endTime - startTime) + " ms.");
+		logger.info("Reasoner Loading takes " + (endTime - startTime)/1000.0 + " s.");
 
-		return (endTime - startTime);
+		return (endTime - startTime)/1000.0;
 	}
 
-	public static long performConsistencyEvaluation(OWLOntology ontology, OWLReasonerFactory reasonerFactory,
-			String name) throws Exception {
+	public static double performConsistencyEvaluation(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name) throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
 		if (name.equals("Konclude")) {
-			ontology.getOWLOntologyManager().createOntology(
-					ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
 
@@ -346,19 +643,17 @@ public class Evaluation {
 		reasoner.dispose();
 
 		logger.info(
-				"Reasoner consistency validation takes " + (endTime - startTime) + " ms. IsConsisten = " + consistent);
+				"Reasoner consistency validation takes " + (endTime - startTime)/1000.0 + " s. IsConsisten = " + consistent);
 
-		return (endTime - startTime);
+		return (endTime - startTime)/1000.0;
 	}
 
-	public static long performClassification(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
+	public static double performClassification(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
 			throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
 		if (name.equals("Konclude")) {
-			ontology.getOWLOntologyManager().createOntology(
-					ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
 
@@ -369,18 +664,16 @@ public class Evaluation {
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
 		endTime = System.currentTimeMillis();
 		reasoner.dispose();
-		logger.info("Reasoner classification takes " + (endTime - startTime) + " ms.");
-		return (endTime - startTime);
+		logger.info("Reasoner classification takes " + (endTime - startTime)/1000.0 + " s.");
+		return (endTime - startTime)/1000.0;
 	}
 
-	public static long performRealization(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
+	public static double performRealization(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
 			throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
 		if (name.equals("Konclude")) {
-			ontology.getOWLOntologyManager().createOntology(
-					ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
 
@@ -391,8 +684,8 @@ public class Evaluation {
 		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS);
 		endTime = System.currentTimeMillis();
 		reasoner.dispose();
-		logger.info("Reasoner realization takes " + (endTime - startTime) + " ms.");
-		return (endTime - startTime);
+		logger.info("Reasoner realization takes " + (endTime - startTime)/1000.0 + " s.");
+		return (endTime - startTime)/1000.0;
 
 	}
 
@@ -432,7 +725,7 @@ public class Evaluation {
 		return ontology;
 	}
 
-	public static long loadOntologyEvaluation(String source, String filename) {
+	public static double loadOntologyEvaluation(String source, String filename) {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 		IRI iri = IRI.create(source);
 
@@ -451,17 +744,17 @@ public class Evaluation {
 			ontology = manager.loadOntology(iri);
 			endTime = System.currentTimeMillis();
 
-			logger.info("Loading takes " + (endTime - startTime) + " ms");
+			logger.info("Loading takes " + (endTime - startTime)/1000.0 + " s");
 
 		} catch (OWLOntologyCreationException e) {
 
 			e.printStackTrace();
 		}
 
-		int numClassses = ontology.getClassesInSignature(Imports.INCLUDED).size();
+		//int numClassses = ontology.getClassesInSignature(Imports.INCLUDED).size();
 		// System.out.println("Number of Classes " + numClassses);
 
-		return (endTime - startTime);
+		return (endTime - startTime)/1000.0;
 	}
 
 }
