@@ -27,7 +27,8 @@ do
    echo
    output="$output$i"
    reasonerConsistencyTime=0
-   for runC in {1..$RUN}; do
+   for (( runC=1; runC<=$RUN; runC++ )) 
+   do 
 		start=$(date +%s.%3N)
 		Konclude consistency -i $i -o ./output/consistency.owl.xml > ./output/consistency.log
 		end=$(date +%s.%3N)
@@ -56,7 +57,8 @@ do
    echo
    output="$output$i"
    reasonerClassification=0
-   for runC in {1..$RUN}; do
+   for (( runC=1; runC<=$RUN; runC++ )) 
+   do 
 		start=$(date +%s.%3N)
 		Konclude classification -i $i -o ./output/classification.owl.xml > ./output/classification.log
 		end=$(date +%s.%3N)
@@ -84,7 +86,8 @@ do
    echo
    output="$output$i"
    reasonerClassification=0
-   for runC in {1..$RUN}; do
+   for (( runC=1; runC<=$RUN; runC++ )) 
+   do 
 		start=$(date +%s.%3N)
 		Konclude classification -i $i -o ./output/realization.owl.xml > ./output/realization.log
 		end=$(date +%s.%3N)
