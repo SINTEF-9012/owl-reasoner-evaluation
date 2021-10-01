@@ -9,7 +9,7 @@
 
 NEWLINE=$'\n'
 ontoDir="../../ontologies/ontologies/*"
-
+RUN=10
 rm -rf ./output/
 
 mkdir output
@@ -27,7 +27,7 @@ do
    echo
    output="$output$i"
    reasonerConsistencyTime=0
-   for runC in {1..10}; do
+   for runC in {1..$RUN}; do
 		start=$(date +%s.%3N)
 		Konclude consistency -i $i -o ./output/consistency.owl.xml > ./output/consistency.log
 		end=$(date +%s.%3N)
@@ -38,7 +38,7 @@ do
 	done
 	output="${output}${NEWLINE}"
 	
-	reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/5" | bc -l)
+	reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/$RUN" | bc -l)
 	echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
 done
 
@@ -56,7 +56,7 @@ do
    echo
    output="$output$i"
    reasonerClassification=0
-   for runC in {1..10}; do
+   for runC in {1..$RUN}; do
 		start=$(date +%s.%3N)
 		Konclude classification -i $i -o ./output/classification.owl.xml > ./output/classification.log
 		end=$(date +%s.%3N)
@@ -67,7 +67,7 @@ do
 	done
 	output="${output}${NEWLINE}"
 	
-	reasonerClassification=$(echo "scale=3; $reasonerClassification/5" | bc -l)
+	reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 	echo "Everage classification time on: $i is $reasonerClassification"
 done
 
@@ -84,7 +84,7 @@ do
    echo
    output="$output$i"
    reasonerClassification=0
-   for runC in {1..10}; do
+   for runC in {1..$RUN}; do
 		start=$(date +%s.%3N)
 		Konclude classification -i $i -o ./output/realization.owl.xml > ./output/realization.log
 		end=$(date +%s.%3N)
@@ -95,7 +95,7 @@ do
 	done
 	output="${output}${NEWLINE}"
 	
-	reasonerClassification=$(echo "scale=3; $reasonerClassification/5" | bc -l)
+	reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 	echo "Everage classification time on: $i is $reasonerClassification"
 done
 
