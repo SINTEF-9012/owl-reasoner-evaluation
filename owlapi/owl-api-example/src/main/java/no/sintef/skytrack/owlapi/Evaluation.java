@@ -366,7 +366,7 @@ public class Evaluation {
 					try {
 						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + "Loading ontology error: " + source);
+						logger.info(reasonerName + " Loading ontology error: " + source);
 						continue;
 					}
 				}
@@ -378,7 +378,7 @@ public class Evaluation {
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
-						logger.info(reasonerName + "running error. Ontology:" + source);
+						logger.info(reasonerName + " running error. Ontology:" + source);
 						break; 
 					}
 
@@ -422,7 +422,7 @@ public class Evaluation {
 					try {
 						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + "Loading ontology error: " + source);
+						logger.info(reasonerName + " Loading ontology error: " + source);
 						continue;
 					}
 				}
@@ -434,7 +434,7 @@ public class Evaluation {
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
-						logger.info(reasonerName + "running error. Ontology:" + source);
+						logger.info(reasonerName + " running error. Ontology:" + source);
 						break; 
 					}
 
@@ -478,7 +478,7 @@ public class Evaluation {
 					try {
 						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + "Loading ontology error: " + source);
+						logger.info(reasonerName + " Loading ontology error: " + source);
 						continue;
 					}
 				}
@@ -490,7 +490,7 @@ public class Evaluation {
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
-						logger.info(reasonerName + "running error. Ontology:" + source);
+						logger.info(reasonerName + " running error. Ontology:" + source);
 						break; 
 					}
 
@@ -534,7 +534,7 @@ public class Evaluation {
 					try {
 						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + "Loading ontology error: " + source);
+						logger.info(reasonerName + " Loading ontology error: " + source);
 						continue;
 					}
 				}
@@ -546,7 +546,7 @@ public class Evaluation {
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
-						logger.info(reasonerName + "running error. Ontology:" + source);
+						logger.info(reasonerName + " running error. Ontology:" + source);
 						break; 
 					}
 
