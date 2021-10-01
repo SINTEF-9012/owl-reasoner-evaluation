@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#declare -a ontoArr=("../../ontologies/vicodi_all.owl"
-#					"../../ontologies/ACGT.owl"
-#					"../../ontologies/full-galen.owl"
-#					"../../ontologies/fma.owl")
-#					"../../ontologies/ncit.owl"
-#					"../../ontologies/MESH.owl")
-
 NEWLINE=$'\n'
 ontoDir="../../ontologies/ontologies/"
 RUN=10
@@ -27,6 +20,7 @@ echo
 output=""
 for i in `ls -Sr ${ontoDir}`;
 do
+   echo
    echo "$i"
    echo
    output="$output$i"
@@ -55,6 +49,7 @@ echo
 output=""
 for i in `ls -Sr ${ontoDir}`;
 do
+   echo
    echo "$i"
    echo
    output="$output$i"
@@ -85,6 +80,7 @@ output=""
 #for i in "${ontoArr[@]}"
 for i in `ls -Sr ${ontoDir}`;
 do
+   echo
    echo "$i"
    echo
    output="$output$i"
