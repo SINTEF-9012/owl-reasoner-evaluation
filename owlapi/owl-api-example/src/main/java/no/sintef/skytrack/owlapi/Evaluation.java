@@ -23,10 +23,12 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.owllink.OWLlinkHTTPXMLReasonerFactory;
 import org.semanticweb.owlapi.owllink.OWLlinkReasonerConfigurationImpl;
@@ -34,6 +36,7 @@ import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.util.InferredOntologyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +194,7 @@ public class Evaluation {
 			outputFilePath = "./output";
 		File outputDir = new File(outputFilePath);
 		if (!outputDir.exists())
-			outputDir.mkdir();
+			outputDir.mkdirs();
 		
 		//------------------------------------------------------
 		// Reasoners
@@ -436,7 +439,17 @@ public class Evaluation {
 				for (int i = 1; i <= runs; i++) {
 					
 					try {
-						double thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
+
+						double thisTimeRunResult = 0;
+						
+						if(i==1)
+						{
+							thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Classification_" + source);
+						}
+						else 
+						{
+							thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
+						}
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
@@ -553,7 +566,18 @@ public class Evaluation {
 				for (int i = 1; i <= runs; i++) {
 					
 					try {
-						double thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
+						
+						double thisTimeRunResult = 0;
+						
+						if(i==1)
+						{
+							thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Realization_" + source);
+						}
+						else 
+						{
+							thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
+						}
+						
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
@@ -609,6 +633,33 @@ public class Evaluation {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void writeInfencesToFile(String filename, OWLReasoner reasoner){
+		
+		long startTime, endTime;
+		try {
+			File file = new File(filename);
+			
+			if(file.getParentFile() != null || !file.getParentFile().exists())
+				file.getParentFile().mkdirs();
+			
+			OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+			
+			OWLOntology exportedOntology = manager.createOntology();
+			InferredOntologyGenerator generator = new InferredOntologyGenerator( reasoner );
+			generator.fillOntology( manager.getOWLDataFactory(), exportedOntology );
+			
+			logger.info("Writing inferences to file: " + filename);
+			startTime = System.currentTimeMillis();
+			manager.saveOntology(exportedOntology, new  ManchesterSyntaxDocumentFormat(), IRI.create(file.toURI()));
+			endTime = System.currentTimeMillis();
+			logger.info("Writing takes: " + (endTime-startTime)/1000.0 + "s");
+		} catch (Exception e) {
+			logger.info("Cannot write file: " + filename);
+			logger.info(e.getMessage());
+		}
+		
 	}
 
 	public static void printOntologyStatistics(Map<String, String> ontologiesMap) {
@@ -677,8 +728,7 @@ public class Evaluation {
 		return (endTime - startTime)/1000.0;
 	}
 
-	public static double performClassification(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
-			throws Exception {
+	public static double performClassification(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name, String outputFileName) throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
@@ -691,13 +741,21 @@ public class Evaluation {
 			reasoner = reasonerFactory.createReasoner(ontology);
 		}
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
+		
+		
 		endTime = System.currentTimeMillis();
-		reasoner.dispose();
+		
 		logger.info("Reasoner classification takes " + (endTime - startTime)/1000.0 + " s.");
+		if(outputFileName != null)
+			writeInfencesToFile(outputFileName, reasoner);
+		
+		
+		reasoner.dispose();
+		
 		return (endTime - startTime)/1000.0;
 	}
 
-	public static double performRealization(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
+	public static double performRealization(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name, String outputFileName)
 			throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
@@ -712,8 +770,15 @@ public class Evaluation {
 		}
 		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
 		endTime = System.currentTimeMillis();
-		reasoner.dispose();
+		
 		logger.info("Reasoner realization takes " + (endTime - startTime)/1000.0 + " s.");
+		
+		if(outputFileName != null)
+			writeInfencesToFile(outputFileName, reasoner);
+		reasoner.dispose();
+		
+		
+		
 		return (endTime - startTime)/1000.0;
 
 	}
