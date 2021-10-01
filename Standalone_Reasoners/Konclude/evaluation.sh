@@ -8,6 +8,7 @@
 #					"../../ontologies/MESH.owl")
 
 NEWLINE=$'\n'
+ontoDir="../../ontologies/ontologies"
 
 rm -rf ./output/
 #for i in `ls -Sr ../../ontologies/*`;
@@ -18,7 +19,7 @@ echo "Evaluating Reasoner consistency validation"
 echo
 output=""
 #for i in "${ontoArr[@]}"
-for i in `ls -Sr ../../ontologies/*`;
+for i in `ls -Sr ${ontoDir}`;
 do
    echo "$i"
    echo
@@ -47,7 +48,7 @@ echo
 echo "Evaluating Reasoner Classification"
 echo
 output=""
-for i in `ls -Sr ../../ontologies/*`;
+for i in `ls -Sr ${ontoDir}`;
 do
    echo "$i"
    echo
@@ -75,7 +76,7 @@ echo
 echo "Evaluating Reasoner Realization"
 echo
 output=""
-for i in `ls -Sr ../../ontologies/*`;
+for i in `ls -Sr ${ontoDir}`;
 do
    echo "$i"
    echo
