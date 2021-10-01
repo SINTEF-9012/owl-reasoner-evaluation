@@ -7,6 +7,8 @@ declare -a ontoArr=("../../ontologies/vicodi_all.owl"
 #					"../../ontologies/ncit.owl"
 #					"../../ontologies/MESH.owl")
 
+NEWLINE=$'\n'
+
 #for i in `ls -Sr ../../ontologies/*`;
 
 echo "Evaluating reasoner Konclude"
@@ -29,7 +31,7 @@ do
 		reasonerConsistencyTime=$(echo "$runtime + $reasonerConsistencyTime" | bc -l)
 		echo "Consistency validation takes ${runtime}"
 	done
-	output="${output}\n"
+	output="${output}${NEWLINE}"
 	
 	reasonerConsistencyTime=$(echo "$reasonerConsistencyTime/5" | bc -l)
 	echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
