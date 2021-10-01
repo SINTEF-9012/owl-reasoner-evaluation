@@ -341,7 +341,7 @@ public class Evaluation {
 			Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		logger.info("Task Load Ontology");
 
-		long evaluationTime = 0;
+		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 
@@ -397,7 +397,7 @@ public class Evaluation {
 	public static void taskClassification(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		logger.info("Task Classification Ontology");
 
-		long evaluationTime = 0;
+		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 
@@ -453,7 +453,7 @@ public class Evaluation {
 	public static void taskConsitency(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		logger.info("Task Consitency Validation Ontology");
 
-		long evaluationTime = 0;
+		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 
@@ -509,7 +509,7 @@ public class Evaluation {
 	public static void taskRealization(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		logger.info("Task Realization Ontology");
 
-		long evaluationTime = 0;
+		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 
