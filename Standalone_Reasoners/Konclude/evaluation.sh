@@ -11,6 +11,8 @@ NEWLINE=$'\n'
 ontoDir="../../ontologies/ontologies"
 
 rm -rf ./output/
+
+mkdir output
 #for i in `ls -Sr ../../ontologies/*`;
 
 echo "Evaluating reasoner Konclude"
