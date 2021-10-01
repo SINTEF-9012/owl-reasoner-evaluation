@@ -13,11 +13,12 @@ echo "Evaluating reasoner Konclude"
 echo
 echo "Evaluating Reasoner consistency validation"
 echo
+output=""
 for i in "${ontoArr[@]}"
 do
    echo "$i"
    echo
-   output="$i"
+   output="$output$i"
    reasonerConsistencyTime=0
    for runC in {1..10}; do
 		start=$(date +%s%3N)
