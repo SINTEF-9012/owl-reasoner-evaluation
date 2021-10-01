@@ -28,17 +28,17 @@ do
    output="$output$i"
    reasonerConsistencyTime=0
    for runC in {1..10}; do
-		start=$(date +%s%3N)
+		start=$(date +%s.%3N)
 		Konclude consistency -i $i -o ./output/consistency.owl.xml > ./output/consistency.log
-		end=$(date +%s%3N)
-		runtime=$( echo "$end - $start" | bc -l )
+		end=$(date +%s.%3N)
+		runtime=$( echo "scale=3; $end - $start" | bc -l )
 		output="${output},${runtime}"
-		reasonerConsistencyTime=$(echo "$runtime + $reasonerConsistencyTime" | bc -l)
+		reasonerConsistencyTime=$(echo "scale=3; $runtime + $reasonerConsistencyTime" | bc -l)
 		echo "Consistency validation takes ${runtime}"
 	done
 	output="${output}${NEWLINE}"
 	
-	reasonerConsistencyTime=$(echo "$reasonerConsistencyTime/5" | bc -l)
+	reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/5" | bc -l)
 	echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
 done
 
@@ -57,17 +57,17 @@ do
    output="$output$i"
    reasonerClassification=0
    for runC in {1..10}; do
-		start=$(date +%s%3N)
+		start=$(date +%s.%3N)
 		Konclude classification -i $i -o ./output/classification.owl.xml > ./output/classification.log
-		end=$(date +%s%3N)
-		runtime=$( echo "$end - $start" | bc -l )
+		end=$(date +%s.%3N)
+		runtime=$( echo "scale=3; $end - $start" | bc -l )
 		output="${output},${runtime}"
-		reasonerClassification=$(echo "$runtime + $reasonerClassification" | bc -l)
+		reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
 		echo "Classification takes ${runtime}"
 	done
 	output="${output}${NEWLINE}"
 	
-	reasonerClassification=$(echo "$reasonerClassification/5" | bc -l)
+	reasonerClassification=$(echo "scale=3; $reasonerClassification/5" | bc -l)
 	echo "Everage classification time on: $i is $reasonerClassification"
 done
 
@@ -85,17 +85,17 @@ do
    output="$output$i"
    reasonerClassification=0
    for runC in {1..10}; do
-		start=$(date +%s%3N)
+		start=$(date +%s.%3N)
 		Konclude classification -i $i -o ./output/realization.owl.xml > ./output/realization.log
-		end=$(date +%s%3N)
-		runtime=$( echo "$end - $start" | bc -l )
+		end=$(date +%s.%3N)
+		runtime=$( echo "scale=3; $end - $start" | bc -l )
 		output="${output},${runtime}"
-		reasonerClassification=$(echo "$runtime + $reasonerClassification" | bc -l)
+		reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
 		echo "Classification takes ${runtime}"
 	done
 	output="${output}${NEWLINE}"
 	
-	reasonerClassification=$(echo "$reasonerClassification/5" | bc -l)
+	reasonerClassification=$(echo "scale=3; $reasonerClassification/5" | bc -l)
 	echo "Everage classification time on: $i is $reasonerClassification"
 done
 
