@@ -198,7 +198,7 @@ public class Evaluation {
 
 		ArrayList<String> supportReasoners = new ArrayList<String>(
 				Arrays.asList("HermiT", "JFact", "Pellet", "Konclude"));
-		String[] reasonersName = cmd.getOptionValues("reasoners");
+		String[] reasonersName = cmd.getOptionValues("reasoner");
 		if (reasonersName == null) {
 			reasonersName = new String[] {};
 			reasonersName = supportReasoners.toArray(reasonersName);
