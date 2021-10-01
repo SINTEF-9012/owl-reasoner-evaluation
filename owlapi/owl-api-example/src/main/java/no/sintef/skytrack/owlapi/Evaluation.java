@@ -368,6 +368,7 @@ public class Evaluation {
 						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 					} catch (OWLOntologyCreationException e) {
 						logger.info(reasonerName + " Loading ontology error: " + source);
+						logger.info(e.getMessage());
 						continue;
 					}
 				}
@@ -380,6 +381,7 @@ public class Evaluation {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
+						logger.info(e.getMessage());
 						break; 
 					}
 
@@ -425,6 +427,7 @@ public class Evaluation {
 						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 					} catch (OWLOntologyCreationException e) {
 						logger.info(reasonerName + " Loading ontology error: " + source);
+						logger.info(e.getMessage());
 						continue;
 					}
 				}
@@ -437,6 +440,7 @@ public class Evaluation {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
+						logger.info(e.getMessage());
 						break; 
 					}
 
@@ -494,6 +498,7 @@ public class Evaluation {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
+						logger.info(e.getMessage());
 						break; 
 					}
 
@@ -539,6 +544,7 @@ public class Evaluation {
 						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 					} catch (OWLOntologyCreationException e) {
 						logger.info(reasonerName + " Loading ontology error: " + source);
+						logger.info(e.getMessage());
 						continue;
 					}
 				}
@@ -551,6 +557,7 @@ public class Evaluation {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
+						logger.info(e.getMessage());
 						break; 
 					}
 
