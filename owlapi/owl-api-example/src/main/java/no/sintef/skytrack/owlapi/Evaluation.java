@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -145,7 +146,7 @@ public class Evaluation {
 			File ontoFie = new File(ontoToJump);
 			if(ontoFie.exists() && ontoFie.isFile() && ontologiesMap.containsKey(ontoFie.getName()))
 			{
-				Set<String> keySet = ontologiesMap.keySet();
+				Set<String> keySet = new HashSet<String>(ontologiesMap.keySet());
 				for(String name : keySet)
 				{
 					if(name.equals(ontoFie.getName()))
