@@ -20,6 +20,8 @@ do
     esac
 done
 
+skip_to_file_bk="$skip_to_file"
+
 
 mkdir output
 mkdir output/consistency
@@ -43,6 +45,8 @@ then
 	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file"]; 
 	   then
 			continue
+	   else
+			skip_to_file=""
 	   fi
 	   
 	   echo
@@ -69,7 +73,7 @@ then
 fi
 
 
-
+skip_to_file="$skip_to_file_bk"
 
 if [ "$classification_task" = true ] ;
 then
@@ -83,6 +87,8 @@ then
 	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file"]; 
 	   then
 			continue
+	   else
+			skip_to_file=""
 	   fi
 	   
 	   echo
@@ -107,7 +113,7 @@ then
 	done
 fi
 
-
+skip_to_file="$skip_to_file_bk"
 
 if [ "$consistency" = true ] ;
 then
@@ -119,6 +125,8 @@ then
 	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file"]; 
 	   then
 			continue
+	   else
+			skip_to_file=""
 	   fi
 	   
 	   echo
