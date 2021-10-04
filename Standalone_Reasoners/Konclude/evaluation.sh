@@ -17,13 +17,13 @@ echo "Evaluating reasoner Konclude"
 echo
 echo "Evaluating Reasoner Realization"
 echo
-output=""
+
 for i in `ls -Sr ${ontoDir}`;
 do
    echo
    echo "$i"
    echo
-   output="$output$i"
+   output="$i"
    reasonerClassification=0
    for (( runC=1; runC<=$RUN; runC++ )) 
    do 
@@ -36,23 +36,24 @@ do
 		echo "Realization takes ${runtime}"
 	done
 	output="${output}${NEWLINE}"
+	echo "$output" >> ./output/realization.csv
 	
 	reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 	echo "Everage Realization time on: $i is $reasonerClassification"
 done
 
-echo "$output" > ./output/realization.csv
+
 
 echo
 echo "Evaluating Reasoner Classification"
 echo
-output=""
+
 for i in `ls -Sr ${ontoDir}`;
 do
    echo
    echo "$i"
    echo
-   output="$output$i"
+   output="$i"
    reasonerClassification=0
    for (( runC=1; runC<=$RUN; runC++ )) 
    do 
@@ -65,25 +66,23 @@ do
 		echo "Classification takes ${runtime}"
 	done
 	output="${output}${NEWLINE}"
-	
+	echo "$output" >> ./output/classification.csv
 	reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 	echo "Everage classification time on: $i is $reasonerClassification"
 done
 
-echo "$output" > ./output/classification.csv
+
 
 
 echo
 echo "Evaluating Reasoner consistency validation"
 echo
-output=""
-#for i in "${ontoArr[@]}"
 for i in `ls -Sr ${ontoDir}`;
 do
    echo
    echo "$i"
    echo
-   output="$output$i"
+   output="$i"
    reasonerConsistencyTime=0
    for (( runC=1; runC<=$RUN; runC++ )) 
    do 
@@ -96,9 +95,8 @@ do
 		echo "Consistency validation takes ${runtime}"
 	done
 	output="${output}${NEWLINE}"
-	
+	echo "$output" >> ./output/consistency.csv
 	reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/$RUN" | bc -l)
 	echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
 done
 
-echo "$output" > ./output/consistency.csv
