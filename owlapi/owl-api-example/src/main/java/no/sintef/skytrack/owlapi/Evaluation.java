@@ -498,7 +498,7 @@ public class Evaluation {
 				if (reasonerName.equals("Konclude")) {
 					try {
 						logger.info("Preparing ontology for Konclude.");
-						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().parallel().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 						logger.info("Preparing ontology for Konclude. Done");
 					} catch (OWLOntologyCreationException e) {
 						logger.info(reasonerName + " Loading ontology error: " + source);
