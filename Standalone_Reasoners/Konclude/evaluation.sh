@@ -42,7 +42,7 @@ then
 	do
 	  
 	   
-	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file"]; 
+	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file" ]; 
 	   then
 			continue
 	   else
@@ -84,7 +84,7 @@ then
 	for i in `ls -Sr ${ontoDir}`;
 	do
 	   
-	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file"]; 
+	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file" ]; 
 	   then
 			continue
 	   else
@@ -122,7 +122,7 @@ then
 	echo
 	for i in `ls -Sr ${ontoDir}`;
 	do
-	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file"]; 
+	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file" ]; 
 	   then
 			continue
 	   else
