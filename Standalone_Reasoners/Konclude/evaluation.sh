@@ -35,7 +35,7 @@ do
 		reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
 		echo "Realization takes ${runtime}"
 	done
-	output="${output}${NEWLINE}"
+	output="${output}"
 	echo "$output" >> ./output/realization.csv
 	
 	reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
@@ -65,7 +65,7 @@ do
 		reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
 		echo "Classification takes ${runtime}"
 	done
-	output="${output}${NEWLINE}"
+	output="${output}"
 	echo "$output" >> ./output/classification.csv
 	reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 	echo "Everage classification time on: $i is $reasonerClassification"
@@ -94,7 +94,7 @@ do
 		reasonerConsistencyTime=$(echo "scale=3; $runtime + $reasonerConsistencyTime" | bc -l)
 		echo "Consistency validation takes ${runtime}"
 	done
-	output="${output}${NEWLINE}"
+	output="${output}"
 	echo "$output" >> ./output/consistency.csv
 	reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/$RUN" | bc -l)
 	echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
