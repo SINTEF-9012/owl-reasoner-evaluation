@@ -414,7 +414,7 @@ public class Evaluation {
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
+				writeListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Load time on: " + source + "is: " + evaluationTime / (double) runs);

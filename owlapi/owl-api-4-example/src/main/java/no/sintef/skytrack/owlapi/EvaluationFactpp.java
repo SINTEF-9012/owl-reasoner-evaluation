@@ -76,11 +76,11 @@ public class EvaluationFactpp {
 		fileOnt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(fileOnt);
 		
-		Option jump = new Option("j", "jump", true, "jump to current ontology");
+		Option jump = new Option("j", "jump", true, "jump to current ontology in the input directory");
 		jump.setRequired(false);
 		options.addOption(jump);
 		
-		Option skipOpt = new Option("s", "skip", true, "Skip those ontologies");
+		Option skipOpt = new Option("s", "skip", true, "skip those ontologies in the input directory");
 		skipOpt.setRequired(false);
 		skipOpt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(skipOpt);
