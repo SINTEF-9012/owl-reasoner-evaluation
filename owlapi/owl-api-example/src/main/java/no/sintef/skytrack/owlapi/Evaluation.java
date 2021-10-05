@@ -96,6 +96,11 @@ public class Evaluation {
 		jump.setRequired(false);
 		options.addOption(jump);
 		
+		Option skipOpt = new Option("s", "skip", true, "Skip those ontologies");
+		skipOpt.setRequired(false);
+		skipOpt.setArgs(Option.UNLIMITED_VALUES);
+		options.addOption(skipOpt);
+		
 		
 		
 
@@ -146,19 +151,35 @@ public class Evaluation {
 		if(cmd.hasOption("jump"))
 		{
 			String ontoToJump = cmd.getOptionValue("jump");
-			File ontoFie = new File(ontoToJump);
-			if(ontoFie.exists() && ontoFie.isFile() && ontologiesMap.containsKey(ontoFie.getName()))
+			if(ontologiesMap.containsKey(ontoToJump.trim()))
 			{
 				ArrayList<String> keySet = new ArrayList<String>(ontologiesMap.keySet());
 				for(String name : keySet)
 				{
-					if(name.equals(ontoFie.getName()))
+					if(name.equals(ontoToJump.trim()))
 						break;
 					
 					ontologiesMap.remove(name);
 				}
 			}
 		}
+		
+		
+		//------------------------------------------------------
+		// Skip ontologies
+		//------------------------------------------------------
+		
+		if(cmd.hasOption("skip"))
+		{
+			String[] files = cmd.getOptionValues("skip");
+		
+			for(String name : files)
+			{
+				if(ontologiesMap.containsKey(name.trim()))
+					ontologiesMap.remove(name);
+			}
+		}
+		
 		//------------------------------------------------------
 		// File option
 		//------------------------------------------------------
@@ -263,6 +284,7 @@ public class Evaluation {
 		logger.info("iterations: " + runs);
 		logger.info("reasoner: " + Arrays.toString(reasonersName));
 		logger.info("task: " + Arrays.toString(tasksName));
+		logger.info("ontologies: " + Arrays.toString(ontologiesMap.keySet().toArray()));
 
 		logger.info("");
 		logger.info("--------------------------------------------------");
