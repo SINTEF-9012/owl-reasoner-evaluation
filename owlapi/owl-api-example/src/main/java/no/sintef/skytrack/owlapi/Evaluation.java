@@ -450,18 +450,21 @@ public class Evaluation {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
-				if (reasonerName.equals("Konclude")) {
-					try {
-						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().parallel().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
-					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + " Loading ontology error: " + source);
-						logger.info(e.getMessage());
-						continue;
-					}
-				}
+				
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+					if (reasonerName.equals("Konclude")) {
+						try {
+							ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().parallel().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+						} catch (OWLOntologyCreationException e) {
+							logger.info(reasonerName + " Loading ontology error: " + source);
+							logger.info(e.getMessage());
+							continue;
+						}
+					}
+					
 					
 					try {
 
@@ -519,19 +522,22 @@ public class Evaluation {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
-				if (reasonerName.equals("Konclude")) {
-					try {
-						//logger.info("Preparing ontology for Konclude.");
-						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().parallel().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
-						//logger.info("Preparing ontology for Konclude. Done");
-					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + " Loading ontology error: " + source);
-						continue;
-					}
-				}
+
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+					if (reasonerName.equals("Konclude")) {
+						try {
+							//logger.info("Preparing ontology for Konclude.");
+							ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().parallel().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+							//logger.info("Preparing ontology for Konclude. Done");
+						} catch (OWLOntologyCreationException e) {
+							logger.info(reasonerName + " Loading ontology error: " + source);
+							continue;
+						}
+					}
+					
 					
 					try {
 						double thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
@@ -579,18 +585,21 @@ public class Evaluation {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
-				if (reasonerName.equals("Konclude")) {
-					try {
-						ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().parallel().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
-					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + " Loading ontology error: " + source);
-						logger.info(e.getMessage());
-						continue;
-					}
-				}
+
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+					if (reasonerName.equals("Konclude")) {
+						try {
+							ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().parallel().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+						} catch (OWLOntologyCreationException e) {
+							logger.info(reasonerName + " Loading ontology error: " + source);
+							logger.info(e.getMessage());
+							continue;
+						}
+					}
+					
 					
 					try {
 						
