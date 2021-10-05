@@ -67,7 +67,7 @@ public class Evaluation {
 		output.setRequired(false);
 		options.addOption(output);
 
-		Option reasoners = new Option("r", "reasoner", true, "list of reasoner to evaluate (HermiT, JFact, Pellet, KonClude)");
+		Option reasoners = new Option("r", "reasoner", true, "list of reasoner to evaluate (HermiT, JFact, Pellet, Konclude)");
 		reasoners.setRequired(false);
 		reasoners.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(reasoners);
@@ -388,18 +388,21 @@ public class Evaluation {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
-				if (reasonerName.equals("Konclude")) {
-					try {
-						ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
-					} catch (OWLOntologyCreationException e) {
-						logger.info(reasonerName + " Loading ontology error: " + source);
-						logger.info(e.getMessage());
-						continue;
-					}
-				}
+
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+					if (reasonerName.equals("Konclude")) {
+						try {
+							
+							ontology = ontology.getOWLOntologyManager().createOntology(ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
+						} catch (OWLOntologyCreationException e) {
+							logger.info(reasonerName + " Loading ontology error: " + source);
+							logger.info(e.getMessage());
+							continue;
+						}
+					}
 					
 					try {
 						double thisTimeRunResult = performLoadingReasoner(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
@@ -712,16 +715,16 @@ public class Evaluation {
 		OWLReasoner reasoner;
 
 		if (name.equals("Konclude")) {
-			ontology.getOWLOntologyManager().createOntology(
-					ontology.importsClosure().flatMap(OWLOntology::logicalAxioms).collect(Collectors.toSet()));
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
+			endTime = System.currentTimeMillis();
 
 		} else {
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology);
+			endTime = System.currentTimeMillis();
 		}
-		endTime = System.currentTimeMillis();
+		
 		reasoner.dispose();
 
 		logger.info("Reasoner Loading takes " + (endTime - startTime)/1000.0 + " s.");
