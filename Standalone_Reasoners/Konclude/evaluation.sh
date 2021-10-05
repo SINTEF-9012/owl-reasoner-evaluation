@@ -115,7 +115,7 @@ fi
 
 skip_to_file="$skip_to_file_bk"
 
-if [ "$consistency" = true ] ;
+if [ "$consistency_task" = true ] ;
 then
 	echo
 	echo "Evaluating Reasoner consistency validation"
