@@ -10,7 +10,7 @@ classification_task=false
 realization_task=false
 skip_to_file=""
 
-while getopts j:v:c:r flag
+while getopts j:vcr flag
 do
     case "${flag}" in
         j) skip_to_file=${OPTARG};;
