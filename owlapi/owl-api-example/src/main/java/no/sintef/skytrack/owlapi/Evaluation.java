@@ -118,67 +118,80 @@ public class Evaluation {
 		}
 
 		
-		//------------------------------------------------------
-		// Input Dir
-		//------------------------------------------------------
-		String inputFilePath = cmd.getOptionValue("input");
-		if (inputFilePath == null)
-			inputFilePath = "../../../ontologies/ontologies";
-		File inputDir = new File(inputFilePath);
-		if (inputDir.exists()) {
-			File[] listOfFiles = inputDir.listFiles((dir, name) -> name.toLowerCase().endsWith("owl")
-					|| name.toLowerCase().endsWith("ttl") || name.toLowerCase().endsWith("xml"));
+		String inputFilePath = ".";
+		
+		if(!cmd.hasOption("file"))
+		{
+			
+			//------------------------------------------------------
+			// Input Dir
+			//------------------------------------------------------
+			
+			
+			inputFilePath = cmd.getOptionValue("input");
+			if (inputFilePath == null)
+				inputFilePath = "../../../ontologies/ontologies";
+			File inputDir = new File(inputFilePath);
+			if (inputDir.exists()) {
+				File[] listOfFiles = inputDir.listFiles((dir, name) -> name.toLowerCase().endsWith("owl")
+						|| name.toLowerCase().endsWith("ttl") || name.toLowerCase().endsWith("xml"));
 
-			Arrays.sort(listOfFiles, Comparator.comparingLong(File::length));
-			for (File file : listOfFiles)
-				if (file.isFile()) {
-					ontologiesMap.put(file.getName(), file.getAbsolutePath());
+				Arrays.sort(listOfFiles, Comparator.comparingLong(File::length));
+				for (File file : listOfFiles)
+					if (file.isFile()) {
+						ontologiesMap.put(file.getName(), file.getAbsolutePath());
+					}
+
+				if (ontologiesMap.isEmpty()) {
+					logger.error("Input Dir: " + inputFilePath + " is empty");
+					System.exit(0);
 				}
 
-			if (ontologiesMap.isEmpty()) {
-				logger.error("Input Dir: " + inputFilePath + " is empty");
+			} else {
+				logger.error("Input Dir: " + inputFilePath + " not exist");
 				System.exit(0);
 			}
-
-		} else {
-			logger.error("Input Dir: " + inputFilePath + " not exist");
-			System.exit(0);
-		}
-		
-		//------------------------------------------------------
-		// Jump to ontology
-		//------------------------------------------------------
-		if(cmd.hasOption("jump"))
-		{
-			String ontoToJump = cmd.getOptionValue("jump");
-			if(ontologiesMap.containsKey(ontoToJump.trim()))
+			
+			
+			//------------------------------------------------------
+			// Jump to ontology
+			//------------------------------------------------------
+			if(cmd.hasOption("jump"))
 			{
-				ArrayList<String> keySet = new ArrayList<String>(ontologiesMap.keySet());
-				for(String name : keySet)
+				String ontoToJump = cmd.getOptionValue("jump");
+				if(ontologiesMap.containsKey(ontoToJump.trim()))
 				{
-					if(name.equals(ontoToJump.trim()))
-						break;
-					
-					ontologiesMap.remove(name);
+					ArrayList<String> keySet = new ArrayList<String>(ontologiesMap.keySet());
+					for(String name : keySet)
+					{
+						if(name.equals(ontoToJump.trim()))
+							break;
+						
+						ontologiesMap.remove(name);
+					}
 				}
 			}
-		}
-		
-		
-		//------------------------------------------------------
-		// Skip ontologies
-		//------------------------------------------------------
-		
-		if(cmd.hasOption("skip"))
-		{
-			String[] files = cmd.getOptionValues("skip");
-		
-			for(String name : files)
+			
+			
+			//------------------------------------------------------
+			// Skip ontologies
+			//------------------------------------------------------
+			
+			if(cmd.hasOption("skip"))
 			{
-				if(ontologiesMap.containsKey(name.trim()))
-					ontologiesMap.remove(name);
+				String[] files = cmd.getOptionValues("skip");
+			
+				for(String name : files)
+				{
+					if(ontologiesMap.containsKey(name.trim()))
+						ontologiesMap.remove(name);
+				}
 			}
+			
 		}
+		
+		
+
 		
 		//------------------------------------------------------
 		// File option
@@ -190,6 +203,11 @@ public class Evaluation {
 			for(String name : files)
 			{
 				File file = new File(name); 
+				if(!file.exists())
+				{
+					logger.info("File " + file.getAbsolutePath() + " does not exist.");
+					continue;
+				}
 				if (file.exists() && file.isFile()) {
 					ontologiesMap.put(file.getName(), file.getAbsolutePath());
 				}

@@ -20,17 +20,17 @@ import com.stardog.stark.io.RDFFormats;
 public class Evaluation {
 
 	static Logger logger = LoggerFactory.getLogger(Evaluation.class);
-	static String server = "http://192.168.1.45:5820";
+	static String server = "http://localhost:5820";
 
 	public static void main(String[] args) {
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
 
 		ontologiesMap.put("VICODI", "../../../ontologies/vicodi_all.owl");
-		ontologiesMap.put("ACGT", "../../../ontologies/ACGT.owl");
-		ontologiesMap.put("GALEN", "../../../ontologies/full-galen.owl");
-		ontologiesMap.put("FMA", "../../../ontologies/fma.owl");
-		ontologiesMap.put("NCIT", "../../../ontologies/ncit.owl");
-		ontologiesMap.put("MESH", "../../../ontologies/MESH.owl");
+		//ontologiesMap.put("ACGT", "../../../ontologies/ACGT.owl");
+		//ontologiesMap.put("GALEN", "../../../ontologies/full-galen.owl");
+		//ontologiesMap.put("FMA", "../../../ontologies/fma.owl");
+		//ontologiesMap.put("NCIT", "../../../ontologies/ncit.owl");
+		//ontologiesMap.put("MESH", "../../../ontologies/MESH.owl");
 
 		int RUN = 5;
 

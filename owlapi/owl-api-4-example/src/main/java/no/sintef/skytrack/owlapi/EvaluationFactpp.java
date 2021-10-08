@@ -3,6 +3,8 @@ package no.sintef.skytrack.owlapi;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,8 +27,10 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
+
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
 import org.slf4j.Logger;
@@ -35,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 public class EvaluationFactpp {
 	static Logger logger = LoggerFactory.getLogger(EvaluationFactpp.class);
-
 
 	public static void main(String[] args) {
 
@@ -51,7 +54,7 @@ public class EvaluationFactpp {
 		output.setRequired(false);
 		options.addOption(output);
 
-		Option reasoners = new Option("r", "reasoner", true, "list of reasoner to evaluate (Fact++)");
+		Option reasoners = new Option("r", "reasoner", true, "list of reasoner to evaluate (HermiT, JFact, Pellet, Konclude)");
 		reasoners.setRequired(false);
 		reasoners.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(reasoners);
@@ -76,11 +79,11 @@ public class EvaluationFactpp {
 		fileOnt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(fileOnt);
 		
-		Option jump = new Option("j", "jump", true, "jump to current ontology in the input directory");
+		Option jump = new Option("j", "jump", true, "jump to current ontology");
 		jump.setRequired(false);
 		options.addOption(jump);
 		
-		Option skipOpt = new Option("s", "skip", true, "skip those ontologies in the input directory");
+		Option skipOpt = new Option("s", "skip", true, "Skip those ontologies");
 		skipOpt.setRequired(false);
 		skipOpt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(skipOpt);
@@ -102,67 +105,80 @@ public class EvaluationFactpp {
 		}
 
 		
-		//------------------------------------------------------
-		// Input Dir
-		//------------------------------------------------------
-		String inputFilePath = cmd.getOptionValue("input");
-		if (inputFilePath == null)
-			inputFilePath = "../../../ontologies/ontologies";
-		File inputDir = new File(inputFilePath);
-		if (inputDir.exists()) {
-			File[] listOfFiles = inputDir.listFiles((dir, name) -> name.toLowerCase().endsWith("owl")
-					|| name.toLowerCase().endsWith("ttl") || name.toLowerCase().endsWith("xml"));
+		String inputFilePath = ".";
+		
+		if(!cmd.hasOption("file"))
+		{
+			
+			//------------------------------------------------------
+			// Input Dir
+			//------------------------------------------------------
+			
+			
+			inputFilePath = cmd.getOptionValue("input");
+			if (inputFilePath == null)
+				inputFilePath = "../../../ontologies/ontologies";
+			File inputDir = new File(inputFilePath);
+			if (inputDir.exists()) {
+				File[] listOfFiles = inputDir.listFiles((dir, name) -> name.toLowerCase().endsWith("owl")
+						|| name.toLowerCase().endsWith("ttl") || name.toLowerCase().endsWith("xml"));
 
-			Arrays.sort(listOfFiles, Comparator.comparingLong(File::length));
-			for (File file : listOfFiles)
-				if (file.isFile()) {
-					ontologiesMap.put(file.getName(), file.getAbsolutePath());
+				Arrays.sort(listOfFiles, Comparator.comparingLong(File::length));
+				for (File file : listOfFiles)
+					if (file.isFile()) {
+						ontologiesMap.put(file.getName(), file.getAbsolutePath());
+					}
+
+				if (ontologiesMap.isEmpty()) {
+					logger.error("Input Dir: " + inputFilePath + " is empty");
+					System.exit(0);
 				}
 
-			if (ontologiesMap.isEmpty()) {
-				logger.error("Input Dir: " + inputFilePath + " is empty");
+			} else {
+				logger.error("Input Dir: " + inputFilePath + " not exist");
 				System.exit(0);
 			}
-
-		} else {
-			logger.error("Input Dir: " + inputFilePath + " not exist");
-			System.exit(0);
-		}
-		
-		//------------------------------------------------------
-		// Jump to ontology
-		//------------------------------------------------------
-		if(cmd.hasOption("jump"))
-		{
-			String ontoToJump = cmd.getOptionValue("jump");
-			if(ontologiesMap.containsKey(ontoToJump.trim()))
+			
+			
+			//------------------------------------------------------
+			// Jump to ontology
+			//------------------------------------------------------
+			if(cmd.hasOption("jump"))
 			{
-				ArrayList<String> keySet = new ArrayList<String>(ontologiesMap.keySet());
-				for(String name : keySet)
+				String ontoToJump = cmd.getOptionValue("jump");
+				if(ontologiesMap.containsKey(ontoToJump.trim()))
 				{
-					if(name.equals(ontoToJump.trim()))
-						break;
-					
-					ontologiesMap.remove(name);
+					ArrayList<String> keySet = new ArrayList<String>(ontologiesMap.keySet());
+					for(String name : keySet)
+					{
+						if(name.equals(ontoToJump.trim()))
+							break;
+						
+						ontologiesMap.remove(name);
+					}
 				}
 			}
-		}
-		
-		
-		//------------------------------------------------------
-		// Skip ontologies
-		//------------------------------------------------------
-		
-		if(cmd.hasOption("skip"))
-		{
-			String[] files = cmd.getOptionValues("skip");
-		
-			for(String name : files)
+			
+			
+			//------------------------------------------------------
+			// Skip ontologies
+			//------------------------------------------------------
+			
+			if(cmd.hasOption("skip"))
 			{
-				if(ontologiesMap.containsKey(name.trim()))
-					ontologiesMap.remove(name);
+				String[] files = cmd.getOptionValues("skip");
+			
+				for(String name : files)
+				{
+					if(ontologiesMap.containsKey(name.trim()))
+						ontologiesMap.remove(name);
+				}
 			}
+			
 		}
+		
+		
+
 		
 		//------------------------------------------------------
 		// File option
@@ -174,6 +190,11 @@ public class EvaluationFactpp {
 			for(String name : files)
 			{
 				File file = new File(name); 
+				if(!file.exists())
+				{
+					logger.info("File " + file.getAbsolutePath() + " does not exist.");
+					continue;
+				}
 				if (file.exists() && file.isFile()) {
 					ontologiesMap.put(file.getName(), file.getAbsolutePath());
 				}
@@ -201,6 +222,7 @@ public class EvaluationFactpp {
 		if (!outputDir.exists())
 			outputDir.mkdirs();
 		
+		
 		//------------------------------------------------------
 		// Reasoners
 		//------------------------------------------------------
@@ -220,6 +242,7 @@ public class EvaluationFactpp {
 			}
 		}
 
+		
 		
 		//------------------------------------------------------
 		// Tasks
@@ -366,9 +389,12 @@ public class EvaluationFactpp {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
+
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+					
 					
 					try {
 						double thisTimeRunResult = performLoadingReasoner(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
@@ -383,7 +409,7 @@ public class EvaluationFactpp {
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
+				writeListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", evalResults, source);
 				ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Load time on: " + source + "is: " + evaluationTime / (double) runs);
@@ -416,9 +442,13 @@ public class EvaluationFactpp {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
+				
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+
+					
 					
 					try {
 
@@ -476,9 +506,13 @@ public class EvaluationFactpp {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
+
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+
+					
 					
 					try {
 						double thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
@@ -526,9 +560,13 @@ public class EvaluationFactpp {
 				logger.info("Ontology: " + source);
 				evaluationTime = 0;
 
-				OWLOntology ontology = loadOntologyFromFile(filename);
+
 				
 				for (int i = 1; i <= runs; i++) {
+					
+					OWLOntology ontology = loadOntologyFromFile(filename);
+
+					
 					
 					try {
 						
@@ -652,11 +690,12 @@ public class EvaluationFactpp {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
+ 
+			startTime = System.currentTimeMillis();
+			reasoner = reasonerFactory.createReasoner(ontology);
+			endTime = System.currentTimeMillis();
 		
-		startTime = System.currentTimeMillis();
-		reasoner = reasonerFactory.createReasoner(ontology);
 		
-		endTime = System.currentTimeMillis();
 		reasoner.dispose();
 
 		logger.info("Reasoner Loading takes " + (endTime - startTime)/1000.0 + " s.");
@@ -668,9 +707,9 @@ public class EvaluationFactpp {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-
-		startTime = System.currentTimeMillis();
-		reasoner = reasonerFactory.createReasoner(ontology);
+ 
+			startTime = System.currentTimeMillis();
+			reasoner = reasonerFactory.createReasoner(ontology);
 		
 
 		boolean consistent = reasoner.isConsistent();
@@ -687,9 +726,9 @@ public class EvaluationFactpp {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-		
-		startTime = System.currentTimeMillis();
-		reasoner = reasonerFactory.createReasoner(ontology);
+
+			startTime = System.currentTimeMillis();
+			reasoner = reasonerFactory.createReasoner(ontology);
 		
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
 		
@@ -711,9 +750,9 @@ public class EvaluationFactpp {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-		
-		startTime = System.currentTimeMillis();
-		reasoner = reasonerFactory.createReasoner(ontology);
+
+			startTime = System.currentTimeMillis();
+			reasoner = reasonerFactory.createReasoner(ontology);
 		
 		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
 		endTime = System.currentTimeMillis();
