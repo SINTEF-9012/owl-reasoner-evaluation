@@ -509,9 +509,9 @@ public class EvaluationFactpp {
 						//	thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Classification_" + source);
 						//}
 						//else 
-						{
-							thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
-						}
+						
+						thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
+						
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
@@ -627,9 +627,9 @@ public class EvaluationFactpp {
 						//	thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Realization_" + source);
 						//}
 						//else 
-						{
-							thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
-						}
+						
+						thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
+						
 						
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
@@ -757,10 +757,10 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 
-		startTime = System.currentTimeMillis();
+		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
-
+		startTime = System.currentTimeMillis();
 		boolean consistent = reasoner.isConsistent();
 		endTime = System.currentTimeMillis();
 		reasoner.dispose();
@@ -776,12 +776,11 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 
-		startTime = System.currentTimeMillis();
+		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
+		startTime = System.currentTimeMillis();
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
-		
-		
 		endTime = System.currentTimeMillis();
 		
 		logger.info("Reasoner classification takes " + (endTime - startTime)/1000.0 + " s.");
@@ -800,9 +799,10 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 
-		startTime = System.currentTimeMillis();
+		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
+		startTime = System.currentTimeMillis();
 		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
 		endTime = System.currentTimeMillis();
 		
