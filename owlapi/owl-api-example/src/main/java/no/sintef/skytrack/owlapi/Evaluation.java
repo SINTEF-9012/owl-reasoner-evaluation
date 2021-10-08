@@ -76,7 +76,7 @@ public class Evaluation {
 		output.setRequired(false);
 		options.addOption(output);
 
-		Option reasoners = new Option("r", "reasoner", true, "list of reasoner to evaluate (HermiT, JFact, Pellet, Konclude)");
+		Option reasoners = new Option("r", "reasoner", true, "list of reasoner to evaluate (HermiT, JFact, Openllet, Konclude)");
 		reasoners.setRequired(false);
 		reasoners.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(reasoners);
@@ -251,7 +251,7 @@ public class Evaluation {
 		//------------------------------------------------------
 
 		ArrayList<String> supportReasoners = new ArrayList<String>(
-				Arrays.asList("HermiT", "JFact", "Pellet", "Konclude"));
+				Arrays.asList("HermiT", "JFact", "Openllet", "Konclude"));
 		String[] reasonersName = cmd.getOptionValues("reasoner");
 		if (reasonersName == null) {
 			reasonersName = new String[] {};
@@ -332,8 +332,8 @@ public class Evaluation {
 			reasonerFactoryMap.put("HermiT", new org.semanticweb.HermiT.ReasonerFactory());
 		if (reasonersNameList.contains("JFact"))
 			reasonerFactoryMap.put("JFact", new uk.ac.manchester.cs.jfact.JFactFactory());
-		if (reasonersNameList.contains("Pellet"))
-			reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
+		if (reasonersNameList.contains("Openllet"))
+			reasonerFactoryMap.put("Openllet", OpenlletReasonerFactory.getInstance());
 		if (reasonersNameList.contains("Konclude"))
 			reasonerFactoryMap.put("Konclude", new OWLlinkHTTPXMLReasonerFactory());
 		
