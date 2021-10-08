@@ -1,8 +1,10 @@
 package no.sintef.skytrack.owlapi;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,6 +56,8 @@ public class Evaluation {
 
 	//static OWLReasonerConfiguration koncludeReasonerConfiguration;
 	static OWLReasonerConfiguration reasonerConfiguration;
+	static Process koncludeProcess;
+
 	
 	//static Map<String, OWLReasonerConfiguration> reasonerConfigurationMap = new LinkedHashMap<String, OWLReasonerConfiguration>();
 
@@ -189,6 +194,8 @@ public class Evaluation {
 				{
 					if(ontologiesMap.containsKey(name.trim()))
 						ontologiesMap.remove(name);
+					else
+						logger.info("File " + name + " does not exist in the input path");
 				}
 			}
 			
@@ -439,7 +446,8 @@ public class Evaluation {
 		logger.info("Task Load Ontology");
 
 		double evaluationTime = 0;
-
+		
+		
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
@@ -795,14 +803,22 @@ public class Evaluation {
 			throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
-
+		
+		if(name.equals("Konclude"))
+		{
+			if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+			TimeUnit.MILLISECONDS.sleep(500);
+			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			TimeUnit.MILLISECONDS.sleep(500);
+		}
 	
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 			endTime = System.currentTimeMillis();
 		
 		reasoner.dispose();
-
+		
 		logger.info("Reasoner Loading takes " + (endTime - startTime)/1000.0 + " s.");
 
 		return (endTime - startTime)/1000.0;
@@ -813,6 +829,14 @@ public class Evaluation {
 		OWLReasoner reasoner;
 
 
+		if(name.equals("Konclude"))
+		{
+			if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+			TimeUnit.MILLISECONDS.sleep(500);
+			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			TimeUnit.MILLISECONDS.sleep(500);
+		}
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
@@ -832,7 +856,14 @@ public class Evaluation {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-
+		if(name.equals("Konclude"))
+		{
+			if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+			TimeUnit.MILLISECONDS.sleep(500);
+			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			TimeUnit.MILLISECONDS.sleep(500);
+		}
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
@@ -856,6 +887,16 @@ public class Evaluation {
 		OWLReasoner reasoner;
 
 
+		if(name.equals("Konclude"))
+		{
+			if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+			
+			TimeUnit.MILLISECONDS.sleep(500);
+			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			TimeUnit.MILLISECONDS.sleep(500);
+		}
+		
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		startTime = System.currentTimeMillis();
@@ -867,7 +908,6 @@ public class Evaluation {
 		if(outputFileName != null)
 			writeInfencesToFile(outputFileName, reasoner);
 		reasoner.dispose();
-		
 		
 		
 		return (endTime - startTime)/1000.0;

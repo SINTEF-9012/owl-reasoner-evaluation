@@ -176,6 +176,8 @@ public class EvaluationFactpp {
 				{
 					if(ontologiesMap.containsKey(name.trim()))
 						ontologiesMap.remove(name);
+					else
+						logger.info("File " + name + " does not exist in the input path");
 				}
 			}
 			
