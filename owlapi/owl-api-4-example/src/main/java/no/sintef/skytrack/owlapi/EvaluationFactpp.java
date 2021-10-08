@@ -38,6 +38,8 @@ import org.semanticweb.owlapi.util.InferredOntologyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
+
 
 public class EvaluationFactpp {
 	static Logger logger = LoggerFactory.getLogger(EvaluationFactpp.class);
@@ -234,7 +236,7 @@ public class EvaluationFactpp {
 		//------------------------------------------------------
 
 		ArrayList<String> supportReasoners = new ArrayList<String>(
-				Arrays.asList("Factpp"));
+				Arrays.asList("Factpp", "Pellet"));
 		String[] reasonersName = cmd.getOptionValues("reasoner");
 		if (reasonersName == null) {
 			reasonersName = new String[] {};
@@ -314,6 +316,9 @@ public class EvaluationFactpp {
 		ArrayList<String> reasonersNameList = new ArrayList<String>(Arrays.asList(reasonersName));
 		if (reasonersNameList.contains("Factpp"))
 			reasonerFactoryMap.put("Fact++", new uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory());
+		
+		if (reasonersNameList.contains("Pellet"))
+			reasonerFactoryMap.put("Pellet", new PelletReasonerFactory());
 	
 		
 		//------------------------------------------------------
