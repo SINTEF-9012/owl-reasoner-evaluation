@@ -3,8 +3,6 @@ package no.sintef.skytrack.owlapi;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -28,11 +26,14 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
-
+import org.semanticweb.owlapi.reasoner.FreshEntityPolicy;
+import org.semanticweb.owlapi.reasoner.IndividualNodeSetPolicy;
 import org.semanticweb.owlapi.reasoner.InferenceType;
+import org.semanticweb.owlapi.reasoner.NullReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,8 @@ import org.slf4j.LoggerFactory;
 
 public class EvaluationFactpp {
 	static Logger logger = LoggerFactory.getLogger(EvaluationFactpp.class);
+	
+	static OWLReasonerConfiguration reasonerConfiguration;
 
 	public static void main(String[] args) {
 
@@ -311,6 +314,52 @@ public class EvaluationFactpp {
 			reasonerFactoryMap.put("Fact++", new uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory());
 	
 		
+		//------------------------------------------------------
+		// Create reasoners Configuration
+		//------------------------------------------------------
+		
+		long reasonerTimeOut = 2*60*60*1000;
+		
+		try {
+			
+			reasonerConfiguration = new OWLReasonerConfiguration() {
+				
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = -9157183864788821701L;
+
+				@Override
+				public long getTimeOut() {
+					return reasonerTimeOut;
+				}
+				
+				@Override
+				public ReasonerProgressMonitor getProgressMonitor() {
+					return new NullReasonerProgressMonitor();
+				}
+				
+				@Override
+				public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
+					return IndividualNodeSetPolicy.BY_NAME;
+				}
+				
+				@Override
+				public FreshEntityPolicy getFreshEntityPolicy() {
+					
+					return FreshEntityPolicy.ALLOW;
+				}
+			};
+			  
+		  
+		  
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(0);
+		}
+		
+		
+		
 		
 		//------------------------------------------------------
 		// Task Load Reasoners
@@ -455,11 +504,11 @@ public class EvaluationFactpp {
 
 						double thisTimeRunResult = 0;
 						
-						if(i==1)
-						{
-							thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Classification_" + source);
-						}
-						else 
+						//if(i==1)
+						//{
+						//	thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Classification_" + source);
+						//}
+						//else 
 						{
 							thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
 						}
@@ -573,11 +622,11 @@ public class EvaluationFactpp {
 						
 						double thisTimeRunResult = 0;
 						
-						if(i==1)
-						{
-							thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Realization_" + source);
-						}
-						else 
+						//if(i==1)
+						//{
+						//	thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Realization_" + source);
+						//}
+						//else 
 						{
 							thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
 						}
@@ -691,11 +740,10 @@ public class EvaluationFactpp {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
- 
+	
 			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
+			reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 			endTime = System.currentTimeMillis();
-		
 		
 		reasoner.dispose();
 
@@ -708,9 +756,9 @@ public class EvaluationFactpp {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
- 
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
+
+		startTime = System.currentTimeMillis();
+		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
 
 		boolean consistent = reasoner.isConsistent();
@@ -728,8 +776,8 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
+		startTime = System.currentTimeMillis();
+		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
 		
@@ -752,8 +800,8 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
+		startTime = System.currentTimeMillis();
+		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
 		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
 		endTime = System.currentTimeMillis();

@@ -240,3 +240,4 @@ ontologiesTest/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse,python
 Standalone_Reasoners/Konclude/test.sh
+ontologies/ochv.owl

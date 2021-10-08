@@ -25,6 +25,7 @@ import org.apache.commons.cli.ParseException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -32,10 +33,14 @@ import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.owllink.OWLlinkHTTPXMLReasonerFactory;
 import org.semanticweb.owlapi.owllink.OWLlinkReasonerConfigurationImpl;
+import org.semanticweb.owlapi.reasoner.FreshEntityPolicy;
+import org.semanticweb.owlapi.reasoner.IndividualNodeSetPolicy;
 import org.semanticweb.owlapi.reasoner.InferenceType;
+import org.semanticweb.owlapi.reasoner.NullReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +51,15 @@ public class Evaluation {
 
 	static Logger logger = LoggerFactory.getLogger(Evaluation.class);
 
-	static OWLReasonerConfiguration koncludeReasonerConfiguration;
+	//static OWLReasonerConfiguration koncludeReasonerConfiguration;
+	static OWLReasonerConfiguration reasonerConfiguration;
+	
+	//static Map<String, OWLReasonerConfiguration> reasonerConfigurationMap = new LinkedHashMap<String, OWLReasonerConfiguration>();
 
 	public static void main(String[] args) {
 
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
-		try {
-			koncludeReasonerConfiguration = new OWLlinkReasonerConfigurationImpl(new URL("http://localhost:8080"));
-		} catch (MalformedURLException e2) {
-			e2.printStackTrace();
-		}
+		
 
 		Options options = new Options();
 
@@ -253,8 +257,8 @@ public class Evaluation {
 				}
 			}
 		}
+				
 
-		
 		//------------------------------------------------------
 		// Tasks
 		//------------------------------------------------------
@@ -325,6 +329,55 @@ public class Evaluation {
 			reasonerFactoryMap.put("Pellet", OpenlletReasonerFactory.getInstance());
 		if (reasonersNameList.contains("Konclude"))
 			reasonerFactoryMap.put("Konclude", new OWLlinkHTTPXMLReasonerFactory());
+		
+		
+		
+		//------------------------------------------------------
+		// Create reasoners Configuration
+		//------------------------------------------------------
+		
+		long reasonerTimeOut = 2*60*60*1000;
+		
+		try {
+			
+			reasonerConfiguration = new OWLReasonerConfiguration() {
+				
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = -9157183864788821701L;
+
+				@Override
+				public long getTimeOut() {
+					return reasonerTimeOut;
+				}
+				
+				@Override
+				public ReasonerProgressMonitor getProgressMonitor() {
+					return new NullReasonerProgressMonitor();
+				}
+				
+				@Override
+				public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
+					return IndividualNodeSetPolicy.BY_NAME;
+				}
+				
+				@Override
+				public FreshEntityPolicy getFreshEntityPolicy() {
+					
+					return FreshEntityPolicy.ALLOW;
+				}
+			};
+			
+		  //Konclude
+		  reasonerConfiguration = new OWLlinkReasonerConfigurationImpl(reasonerConfiguration, new URL("http://localhost:8080"));
+		  
+		  
+		  
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(0);
+		}
 
 		
 		
@@ -488,11 +541,11 @@ public class Evaluation {
 
 						double thisTimeRunResult = 0;
 						
-						if(i==1)
-						{
-							thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Classification_" + source);
-						}
-						else 
+						//if(i==1)
+						//{
+						//	thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Classification_" + source);
+						//}
+						//else 
 						{
 							thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
 						}
@@ -623,11 +676,11 @@ public class Evaluation {
 						
 						double thisTimeRunResult = 0;
 						
-						if(i==1)
-						{
-							thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Realization_" + source);
-						}
-						else 
+						//if(i==1)
+						//{
+						//	thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, outputDir + "/" + reasonerName + "/Realization_" + source);
+						//}
+						//else 
 						{
 							thisTimeRunResult = performRealization(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
 						}
@@ -698,6 +751,8 @@ public class Evaluation {
 			if(file.getParentFile() != null || !file.getParentFile().exists())
 				file.getParentFile().mkdirs();
 			
+			logger.info("Preparing writing inferences to file");
+			startTime = System.currentTimeMillis();
 			OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 			
 			OWLOntology exportedOntology = manager.createOntology();
@@ -705,7 +760,7 @@ public class Evaluation {
 			generator.fillOntology( manager.getOWLDataFactory(), exportedOntology );
 			
 			logger.info("Writing inferences to file: " + filename);
-			startTime = System.currentTimeMillis();
+			
 			manager.saveOntology(exportedOntology, new  ManchesterSyntaxDocumentFormat(), IRI.create(file.toURI()));
 			endTime = System.currentTimeMillis();
 			logger.info("Writing takes: " + (endTime-startTime)/1000.0 + "s");
@@ -741,16 +796,10 @@ public class Evaluation {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-		if (name.equals("Konclude")) {
+	
 			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
+			reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 			endTime = System.currentTimeMillis();
-
-		} else {
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
-			endTime = System.currentTimeMillis();
-		}
 		
 		reasoner.dispose();
 
@@ -763,14 +812,10 @@ public class Evaluation {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-		if (name.equals("Konclude")) {
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
 
-		} else {
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
-		}
+		startTime = System.currentTimeMillis();
+		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
+		
 
 		boolean consistent = reasoner.isConsistent();
 		endTime = System.currentTimeMillis();
@@ -786,14 +831,10 @@ public class Evaluation {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-		if (name.equals("Konclude")) {
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
 
-		} else {
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
-		}
+		startTime = System.currentTimeMillis();
+		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
+		
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
 		
 		
@@ -814,14 +855,10 @@ public class Evaluation {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
-		if (name.equals("Konclude")) {
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology, koncludeReasonerConfiguration);
 
-		} else {
-			startTime = System.currentTimeMillis();
-			reasoner = reasonerFactory.createReasoner(ontology);
-		}
+		startTime = System.currentTimeMillis();
+		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
+		
 		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
 		endTime = System.currentTimeMillis();
 		
@@ -839,6 +876,7 @@ public class Evaluation {
 
 	public static OWLOntology loadOntologyFromFile(String filename) {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+		manager.getOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
 
 		OWLOntology ontology = null;
 
