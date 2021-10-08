@@ -23,6 +23,7 @@ import org.apache.commons.cli.ParseException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -771,6 +772,7 @@ public class EvaluationFactpp {
 
 	public static OWLOntology loadOntologyFromFile(String filename) {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+		manager.getOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
 
 		OWLOntology ontology = null;
 
@@ -783,58 +785,6 @@ public class EvaluationFactpp {
 			e.printStackTrace();
 		}
 		return ontology;
-	}
-
-	public static OWLOntology loadOntology(String source, String filename) {
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		IRI iri = IRI.create(source);
-
-		if (filename != null) {
-			iri = IRI.create(new File(filename));
-		}
-
-		OWLOntology ontology = null;
-
-		try {
-			ontology = manager.loadOntology(iri);
-
-		} catch (OWLOntologyCreationException e) {
-
-			e.printStackTrace();
-		}
-		return ontology;
-	}
-
-	public static double loadOntologyEvaluation(String source, String filename) {
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		IRI iri = IRI.create(source);
-
-		if (filename != null) {
-			iri = IRI.create(new File(filename));
-		}
-
-		long startTime = 0, endTime = 0;
-
-		OWLOntology ontology = null;
-
-		try {
-
-			// logger.info("Loading the ontology " + source);
-			startTime = System.currentTimeMillis();
-			ontology = manager.loadOntology(iri);
-			endTime = System.currentTimeMillis();
-
-			logger.info("Loading takes " + (endTime - startTime)/1000.0 + " s");
-
-		} catch (OWLOntologyCreationException e) {
-
-			e.printStackTrace();
-		}
-
-		//int numClassses = ontology.getClassesInSignature(Imports.INCLUDED).size();
-		// System.out.println("Number of Classes " + numClassses);
-
-		return (endTime - startTime)/1000.0;
 	}
 
 }
