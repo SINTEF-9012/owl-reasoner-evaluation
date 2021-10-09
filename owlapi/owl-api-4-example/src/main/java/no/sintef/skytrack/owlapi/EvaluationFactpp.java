@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -104,7 +106,7 @@ public class EvaluationFactpp {
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
-			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 			formatter.printHelp("Evaluation", options);
 
 			System.exit(1);
@@ -459,7 +461,7 @@ public class EvaluationFactpp {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
-						logger.info(e.getMessage());
+						logger.info(e.toString());
 						break; 
 					}
 
@@ -523,7 +525,7 @@ public class EvaluationFactpp {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
-						logger.info(e.getMessage());
+						logger.info(e.toString());
 						break; 
 					}
 
@@ -577,7 +579,7 @@ public class EvaluationFactpp {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
-						logger.info(e.getMessage());
+						logger.info(e.toString());
 						break; 
 					}
 
@@ -642,7 +644,7 @@ public class EvaluationFactpp {
 						evaluationTime += thisTimeRunResult;
 					} catch (Exception e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
-						logger.info(e.getMessage());
+						logger.info(e.toString());
 						break; 
 					}
 
@@ -717,7 +719,7 @@ public class EvaluationFactpp {
 			logger.info("Writing takes: " + (endTime-startTime)/1000.0 + "s");
 		} catch (Exception e) {
 			logger.info("Cannot write file: " + filename);
-			logger.info(e.getMessage());
+			logger.info(e.toString());
 		}
 		
 	}
@@ -786,16 +788,36 @@ public class EvaluationFactpp {
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
-		startTime = System.currentTimeMillis();
-		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
-		endTime = System.currentTimeMillis();
+		TimerTask task = new TimerTask() {
+	        public void run() {
+	           logger.info("Timeout: Stopping reasoner");
+	           reasoner.interrupt();
+	        }
+	    };
+	    Timer timer = new Timer("Timer");
+	    timer.schedule(task, reasonerConfiguration.getTimeOut());
+	    
+	    
 		
-		logger.info("Reasoner classification takes " + (endTime - startTime)/1000.0 + " s.");
-		if(outputFileName != null)
-			writeInfencesToFile(outputFileName, reasoner);
+	    try
+	    {
+	    	startTime = System.currentTimeMillis();
+			reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
+			endTime = System.currentTimeMillis();
+			
+			logger.info("Reasoner classification takes " + (endTime - startTime)/1000.0 + " s.");
+			if(outputFileName != null)
+				writeInfencesToFile(outputFileName, reasoner);
+	    }
+	    finally
+	    {
+	    	timer.cancel();
+	    	reasoner.dispose();
+	    }
 		
 		
-		reasoner.dispose();
+		
+		
 		
 		return (endTime - startTime)/1000.0;
 	}
@@ -809,15 +831,34 @@ public class EvaluationFactpp {
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
-		startTime = System.currentTimeMillis();
-		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
-		endTime = System.currentTimeMillis();
+		TimerTask task = new TimerTask() {
+	        public void run() {
+	           logger.info("Timeout: Stopping reasoner");
+	           reasoner.interrupt();
+	        }
+	    };
+	    Timer timer = new Timer("Timer");
+	    timer.schedule(task, reasonerConfiguration.getTimeOut());
+	    
+	    
+		try
+		{
+			startTime = System.currentTimeMillis();
+			reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
+			endTime = System.currentTimeMillis();
+			
+			logger.info("Reasoner realization takes " + (endTime - startTime)/1000.0 + " s.");
+			
+			if(outputFileName != null)
+				writeInfencesToFile(outputFileName, reasoner);
+		}
+		finally
+		{
+			timer.cancel();
+			reasoner.dispose();
+		}
 		
-		logger.info("Reasoner realization takes " + (endTime - startTime)/1000.0 + " s.");
 		
-		if(outputFileName != null)
-			writeInfencesToFile(outputFileName, reasoner);
-		reasoner.dispose();
 		
 		
 		
