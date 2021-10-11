@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
+import com.sequoiareasoner.owlapi.SequoiaReasonerFactory;
 
 
 public class EvaluationFactpp {
@@ -74,7 +75,6 @@ public class EvaluationFactpp {
 
 		Option iterations = new Option("n", "iterations", true, "number of iterations for each evaluation");
 		iterations.setRequired(false);
-		iterations.setType(Integer.class);
 		options.addOption(iterations);
 
 		Option printOnt = new Option("p", "print", false, "print statistics of ontologies");
@@ -238,7 +238,7 @@ public class EvaluationFactpp {
 		//------------------------------------------------------
 
 		ArrayList<String> supportReasoners = new ArrayList<String>(
-				Arrays.asList("Factpp", "Pellet"));
+				Arrays.asList("Factpp", "Pellet", "Sequoia"));
 		String[] reasonersName = cmd.getOptionValues("reasoner");
 		if (reasonersName == null) {
 			reasonersName = new String[] {};
@@ -283,8 +283,10 @@ public class EvaluationFactpp {
 		Integer runs = null;
 
 		try {
-			runs = (Integer) cmd.getParsedOptionValue("iterations");
-		} catch (ParseException e1) {
+			runs = Integer.valueOf(cmd.getOptionValue("iterations"));
+		} catch (Exception e1) {
+			logger.info(e1.toString());
+			runs = 10;
 
 		}
 
@@ -321,6 +323,9 @@ public class EvaluationFactpp {
 		
 		if (reasonersNameList.contains("Pellet"))
 			reasonerFactoryMap.put("Pellet", new PelletReasonerFactory());
+		
+		//if (reasonersNameList.contains("Sequoia"))
+		//	reasonerFactoryMap.put("Sequoia", new SequoiaReasonerFactory());
 	
 		
 		//------------------------------------------------------

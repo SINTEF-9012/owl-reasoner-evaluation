@@ -90,7 +90,6 @@ public class Evaluation {
 
 		Option iterations = new Option("n", "iterations", true, "number of iterations for each evaluation");
 		iterations.setRequired(false);
-		iterations.setType(Integer.class);
 		options.addOption(iterations);
 
 		Option printOnt = new Option("p", "print", false, "print statistics of ontologies");
@@ -297,8 +296,10 @@ public class Evaluation {
 		Integer runs = null;
 
 		try {
-			runs = (Integer) cmd.getParsedOptionValue("iterations");
-		} catch (ParseException e1) {
+			runs = Integer.valueOf(cmd.getOptionValue("iterations"));
+		} catch (Exception e1) {
+			logger.info(e1.toString());
+			runs = 10;
 
 		}
 
