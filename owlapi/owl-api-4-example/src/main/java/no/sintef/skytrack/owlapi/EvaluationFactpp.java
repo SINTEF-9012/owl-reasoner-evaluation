@@ -282,12 +282,15 @@ public class EvaluationFactpp {
 		
 		Integer runs = null;
 
-		try {
-			runs = Integer.valueOf(cmd.getOptionValue("iterations"));
-		} catch (Exception e1) {
-			logger.info(e1.toString());
-			runs = 10;
+		if(cmd.hasOption("iterations"))
+		{
+			try {
+				runs = Integer.valueOf(cmd.getOptionValue("iterations"));
+			} catch (Exception e1) {
+				logger.info(e1.toString());
+				runs = 10;
 
+			}
 		}
 
 		if (runs == null)

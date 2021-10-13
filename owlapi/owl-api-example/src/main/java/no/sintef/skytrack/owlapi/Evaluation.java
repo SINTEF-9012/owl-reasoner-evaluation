@@ -294,13 +294,16 @@ public class Evaluation {
 		//------------------------------------------------------
 		
 		Integer runs = null;
+		
+		if(cmd.hasOption("iterations"))
+		{
+			try {
+				runs = Integer.valueOf(cmd.getOptionValue("iterations"));
+			} catch (Exception e1) {
+				logger.info(e1.toString());
+				runs = 10;
 
-		try {
-			runs = Integer.valueOf(cmd.getOptionValue("iterations"));
-		} catch (Exception e1) {
-			logger.info(e1.toString());
-			runs = 10;
-
+			}
 		}
 
 		if (runs == null)
@@ -812,7 +815,7 @@ public class Evaluation {
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
 			TimeUnit.MILLISECONDS.sleep(500);
-			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080 >> konclude.log");
 			TimeUnit.MILLISECONDS.sleep(500);
 		}
 	
