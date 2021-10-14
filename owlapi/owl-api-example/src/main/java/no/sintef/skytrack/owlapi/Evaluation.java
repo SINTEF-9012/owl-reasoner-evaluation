@@ -815,7 +815,7 @@ public class Evaluation {
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
 			TimeUnit.MILLISECONDS.sleep(500);
-			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080 >> konclude.log");
+			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
 			TimeUnit.MILLISECONDS.sleep(500);
 		}
 	
@@ -900,6 +900,10 @@ public class Evaluation {
 			timer.cancel();
 			reasoner.dispose();
 			
+			if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+			
+			
 		}
 		
 		return (endTime - startTime)/1000.0;
@@ -948,6 +952,9 @@ public class Evaluation {
 	    {
 	    	timer.cancel();
 	    	reasoner.dispose();
+	    	if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+	    	
 	    }
 		
 		return (endTime - startTime)/1000.0;
