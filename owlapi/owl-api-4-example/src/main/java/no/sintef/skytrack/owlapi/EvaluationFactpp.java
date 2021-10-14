@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
-import com.sequoiareasoner.owlapi.SequoiaReasonerFactory;
 
 
 public class EvaluationFactpp {
