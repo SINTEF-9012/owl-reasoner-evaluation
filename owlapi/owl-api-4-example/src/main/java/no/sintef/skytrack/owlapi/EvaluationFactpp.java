@@ -466,7 +466,7 @@ public class EvaluationFactpp {
 						double thisTimeRunResult = performLoadingReasoner(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 
@@ -530,7 +530,7 @@ public class EvaluationFactpp {
 						
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 
@@ -584,7 +584,7 @@ public class EvaluationFactpp {
 						double thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 
@@ -649,7 +649,7 @@ public class EvaluationFactpp {
 						
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 

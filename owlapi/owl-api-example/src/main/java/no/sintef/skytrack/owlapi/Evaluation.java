@@ -493,7 +493,7 @@ public class Evaluation {
 						double thisTimeRunResult = performLoadingReasoner(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 
@@ -565,7 +565,7 @@ public class Evaluation {
 						
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 
@@ -628,7 +628,7 @@ public class Evaluation {
 						double thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 
@@ -701,7 +701,7 @@ public class Evaluation {
 						
 						evalResults.add(thisTimeRunResult);
 						evaluationTime += thisTimeRunResult;
-					} catch (Exception e) {
+					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						break; 
