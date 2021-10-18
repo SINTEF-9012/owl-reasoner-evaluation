@@ -846,20 +846,38 @@ public class Evaluation {
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
-		startTime = System.currentTimeMillis();
-		boolean consistent = reasoner.isConsistent();
-		endTime = System.currentTimeMillis();
-		
-		reasoner.dispose();
-
-		logger.info(
-				"Reasoner consistency validation takes " + (endTime - startTime)/1000.0 + " s. IsConsisten = " + consistent);
+		TimerTask task = new TimerTask() {
+	        public void run() {
+	           logger.info("Timeout: Stopping reasoner");
+	           reasoner.interrupt();
+	        }
+	    };
+	    Timer timer = new Timer("Timer");
+	    timer.schedule(task, reasonerConfiguration.getTimeOut());
+	    
+	    try
+	    {
+	    	startTime = System.currentTimeMillis();
+			boolean consistent = reasoner.isConsistent();
+			endTime = System.currentTimeMillis();
+			
+			logger.info(
+					"Reasoner consistency validation takes " + (endTime - startTime)/1000.0 + " s. IsConsistent = " + consistent);
+	    }
+		finally
+		{
+			timer.cancel();
+			reasoner.dispose();
+			
+			if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+		}
 
 		return (endTime - startTime)/1000.0;
 	}
 
 	public static double performClassification(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name, String outputFileName) throws Exception {
-		long startTime, endTime;
+		long startTime=0, endTime=0;
 		OWLReasoner reasoner;
 
 		if(name.equals("Konclude"))

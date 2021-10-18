@@ -776,13 +776,36 @@ public class EvaluationFactpp {
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
-		startTime = System.currentTimeMillis();
-		boolean consistent = reasoner.isConsistent();
-		endTime = System.currentTimeMillis();
-		reasoner.dispose();
 
-		logger.info(
-				"Reasoner consistency validation takes " + (endTime - startTime)/1000.0 + " s. IsConsisten = " + consistent);
+		TimerTask task = new TimerTask() {
+	        public void run() {
+	           logger.info("Timeout: Stopping reasoner");
+	           reasoner.interrupt();
+	        }
+	    };
+	    Timer timer = new Timer("Timer");
+	    timer.schedule(task, reasonerConfiguration.getTimeOut());
+	    
+	    
+	    
+		
+	    try
+	    {
+	    	startTime = System.currentTimeMillis();
+			boolean consistent = reasoner.isConsistent();
+			endTime = System.currentTimeMillis();
+			
+			logger.info(
+					"Reasoner consistency validation takes " + (endTime - startTime)/1000.0 + " s. IsConsistent = " + consistent);
+			
+	    }
+	    finally
+	    {
+	    	timer.cancel();
+	    	reasoner.dispose();
+	    }
+
+		
 
 		return (endTime - startTime)/1000.0;
 	}
