@@ -486,6 +486,8 @@ public class EvaluationFactpp {
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Load.csv", ontoEvalMap);
 		}
+		
+		logger =  LogManager.getRootLogger();
 	}
 	
 	public static void taskClassification(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
@@ -553,6 +555,9 @@ public class EvaluationFactpp {
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Classification.csv", ontoEvalMap);
 		}
+		
+		logger =  LogManager.getRootLogger();
+		
 	}
 	
 	public static void taskConsitency(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
@@ -610,6 +615,9 @@ public class EvaluationFactpp {
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Consitency.csv", ontoEvalMap);
 		}
+		
+		
+		logger =  LogManager.getRootLogger();
 	}
 	
 	public static void taskRealization(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
@@ -678,6 +686,8 @@ public class EvaluationFactpp {
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Realization.csv", ontoEvalMap);
 		}
+		
+		logger =  LogManager.getRootLogger();
 	}
 	
 	private static void writeMapToCSV(String name, Map<String, ArrayList<Double>>  map)
