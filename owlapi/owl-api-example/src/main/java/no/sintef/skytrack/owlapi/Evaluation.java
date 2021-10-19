@@ -1,19 +1,14 @@
 package no.sintef.skytrack.owlapi;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +22,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
@@ -34,7 +31,6 @@ import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.owllink.OWLlinkHTTPXMLReasonerFactory;
 import org.semanticweb.owlapi.owllink.OWLlinkReasonerConfigurationImpl;
@@ -47,14 +43,14 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import openllet.owlapi.OpenlletReasonerFactory;
 
 public class Evaluation {
 
-	static Logger logger = LoggerFactory.getLogger(Evaluation.class);
+	static Logger logger =  LogManager.getRootLogger();
 
 	//static OWLReasonerConfiguration koncludeReasonerConfiguration;
 	static OWLReasonerConfiguration reasonerConfiguration;
@@ -161,6 +157,8 @@ public class Evaluation {
 				logger.error("Input Dir: " + inputFilePath + " not exist");
 				System.exit(0);
 			}
+			
+			
 			
 			
 			//------------------------------------------------------
@@ -455,6 +453,8 @@ public class Evaluation {
 		
 		
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
@@ -517,6 +517,9 @@ public class Evaluation {
 		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
+			
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
@@ -589,6 +592,9 @@ public class Evaluation {
 		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
+			
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
@@ -652,6 +658,8 @@ public class Evaluation {
 		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
@@ -808,22 +816,31 @@ public class Evaluation {
 	public static double performLoadingReasoner(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
 			throws Exception {
 		long startTime, endTime;
-		OWLReasoner reasoner;
+		OWLReasoner reasoner = null;
 		
 		if(name.equals("Konclude"))
 		{
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 	
-		startTime = System.currentTimeMillis();
-		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
-		endTime = System.currentTimeMillis();
-		
-		reasoner.dispose();
+		try
+		{
+			startTime = System.currentTimeMillis();
+			reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
+			endTime = System.currentTimeMillis();
+		}
+		finally
+		{
+
+			if(koncludeProcess != null)
+				koncludeProcess.destroyForcibly();
+			if(reasoner!= null)
+				reasoner.dispose();
+		}
 		
 		logger.info("Reasoner Loading takes " + (endTime - startTime)/1000.0 + " s.");
 
@@ -839,9 +856,9 @@ public class Evaluation {
 		{
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
@@ -884,9 +901,9 @@ public class Evaluation {
 		{
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
@@ -938,9 +955,9 @@ public class Evaluation {
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
 			
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
-			TimeUnit.MILLISECONDS.sleep(500);
+			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 		
 		

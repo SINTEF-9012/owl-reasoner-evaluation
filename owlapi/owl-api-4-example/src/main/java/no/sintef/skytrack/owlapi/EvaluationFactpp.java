@@ -20,6 +20,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
@@ -37,14 +39,14 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.util.InferredOntologyGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
 
 
 public class EvaluationFactpp {
-	static Logger logger = LoggerFactory.getLogger(EvaluationFactpp.class);
+	
+	static Logger logger =  LogManager.getRootLogger();
 	
 	static OWLReasonerConfiguration reasonerConfiguration;
 
@@ -237,7 +239,7 @@ public class EvaluationFactpp {
 		//------------------------------------------------------
 
 		ArrayList<String> supportReasoners = new ArrayList<String>(
-				Arrays.asList("Factpp", "Pellet", "Sequoia"));
+				Arrays.asList("Factpp", "Pellet"));
 		String[] reasonersName = cmd.getOptionValues("reasoner");
 		if (reasonersName == null) {
 			reasonersName = new String[] {};
@@ -321,7 +323,7 @@ public class EvaluationFactpp {
 
 		ArrayList<String> reasonersNameList = new ArrayList<String>(Arrays.asList(reasonersName));
 		if (reasonersNameList.contains("Factpp"))
-			reasonerFactoryMap.put("Fact++", new uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory());
+			reasonerFactoryMap.put("Factpp", new uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory());
 		
 		if (reasonersNameList.contains("Pellet"))
 			reasonerFactoryMap.put("Pellet", new PelletReasonerFactory());
@@ -437,6 +439,8 @@ public class EvaluationFactpp {
 		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
@@ -490,6 +494,9 @@ public class EvaluationFactpp {
 		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
+			
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
@@ -554,6 +561,9 @@ public class EvaluationFactpp {
 		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
+			
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
@@ -608,6 +618,8 @@ public class EvaluationFactpp {
 		double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
+			
+			logger = LogManager.getLogger(reasonerName);
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
