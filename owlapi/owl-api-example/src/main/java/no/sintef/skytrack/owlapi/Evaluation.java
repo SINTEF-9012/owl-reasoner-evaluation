@@ -812,10 +812,15 @@ public class Evaluation {
 
 			if (onto != null) {
 
-				logger.info("Classes:" + onto.getClassesInSignature(Imports.INCLUDED).size());
+				logger.info("Classes: " + onto.getClassesInSignature(Imports.INCLUDED).size());
 				logger.info("Individuals: " + onto.getIndividualsInSignature(Imports.INCLUDED).size());
-				logger.info("Axioms: " + onto.getAxiomCount());
-
+				
+				logger.info("Axioms: " + onto.getAxiomCount(Imports.INCLUDED));
+				
+				logger.info("TBox: " + onto.getTBoxAxioms(Imports.INCLUDED).size());
+				logger.info("ABox: " + onto.getABoxAxioms(Imports.INCLUDED).size());
+				logger.info("RBox: " + onto.getRBoxAxioms(Imports.INCLUDED).size());
+				
 			}
 
 		}
