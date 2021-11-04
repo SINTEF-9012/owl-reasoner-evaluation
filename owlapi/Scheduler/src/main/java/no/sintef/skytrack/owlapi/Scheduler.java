@@ -30,7 +30,7 @@ public class Scheduler {
 	static String path1 = "../../owl-api-example/target/owl-api-example-0.0.1-SNAPSHOT-jar-with-dependencies.jar";
 	static String path2 = "../../owl-api-4-example/target/owl-api-4-example-0.0.1-SNAPSHOT-jar-with-dependencies.jar";
 	static String FactppLD = "../../owl-api-4-example/lib/FaCT++-linux-v1.6.5/64bit";
-	static String KoncludePath = "../../../Standalone_Reasoners/Konclude/Konclude-Linux/";
+	static String KoncludePath = "../../../Standalone_Reasoners/Konclude/Konclude-Linux/Binaries";
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
