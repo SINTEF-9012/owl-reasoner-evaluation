@@ -382,7 +382,7 @@ public class Scheduler {
 					Process process = null;
 					try {
 					
-						logger.info(finalCommand);
+						//logger.info(finalCommand);
 						
 						process = Runtime.getRuntime().exec(finalCommand);
 						BufferedReader processOutput = getOutput(process);

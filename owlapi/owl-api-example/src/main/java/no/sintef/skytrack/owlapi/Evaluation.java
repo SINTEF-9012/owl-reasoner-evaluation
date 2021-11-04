@@ -404,9 +404,9 @@ public class Evaluation {
 		
 		if(taskNameList.contains("loading"))
 		{
-			logger.info("");
+			//logger.info("");
 			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
 			taskLoadReasoner(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
 		}
 		//------------------------------------------------------
@@ -415,9 +415,9 @@ public class Evaluation {
 		
 		if(taskNameList.contains("consistency"))
 		{
-			logger.info("");
+			//logger.info("");
 			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
 			taskConsitency(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
 		}
 		
@@ -427,9 +427,9 @@ public class Evaluation {
 
 		if(taskNameList.contains("classification"))
 		{
-			logger.info("");
+			//logger.info("");
 			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
 			taskClassification(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
 		}
 		
@@ -440,9 +440,9 @@ public class Evaluation {
 
 		if(taskNameList.contains("realization"))
 		{
-			logger.info("");
+			//logger.info("");
 			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
 			taskRealization(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
 		}
 		
@@ -451,7 +451,7 @@ public class Evaluation {
 
 	public static void taskLoadReasoner(Map<String, String> ontologiesMap,
 			Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
-		logger.info("Task Load Ontology");
+		//logger.info("Task Load Ontology");
 
 		double evaluationTime = 0;
 		
@@ -462,9 +462,9 @@ public class Evaluation {
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
-			logger.info("");
-			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
+			//logger.info("--------------------------------------------------");
+			//logger.info("");
 
 			logger.info("Evaluation loading " + reasonerName);
 
@@ -518,7 +518,7 @@ public class Evaluation {
 	}
 	
 	public static void taskClassification(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
-		logger.info("Task Classification Ontology");
+		//logger.info("Task Classification Ontology");
 
 		double evaluationTime = 0;
 
@@ -529,9 +529,9 @@ public class Evaluation {
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
-			logger.info("");
-			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
+			//logger.info("--------------------------------------------------");
+			//logger.info("");
 
 			logger.info("Evaluation classification " + reasonerName);
 
@@ -595,7 +595,7 @@ public class Evaluation {
 	}
 	
 	public static void taskConsitency(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
-		logger.info("Task consistency Validation Ontology");
+		//logger.info("Task consistency Validation Ontology");
 
 		double evaluationTime = 0;
 
@@ -606,9 +606,9 @@ public class Evaluation {
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
-			logger.info("");
-			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
+			//logger.info("--------------------------------------------------");
+			//logger.info("");
 
 			logger.info("Evaluation consitency " + reasonerName);
 
@@ -663,7 +663,7 @@ public class Evaluation {
 	}
 	
 	public static void taskRealization(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
-		logger.info("Task Realization Ontology");
+		//logger.info("Task Realization Ontology");
 
 		double evaluationTime = 0;
 
@@ -673,9 +673,9 @@ public class Evaluation {
 
 			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
-			logger.info("");
-			logger.info("--------------------------------------------------");
-			logger.info("");
+			//logger.info("");
+			//logger.info("--------------------------------------------------");
+			//logger.info("");
 
 			logger.info("Evaluation realization " + reasonerName);
 
