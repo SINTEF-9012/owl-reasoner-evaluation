@@ -464,7 +464,7 @@ public class Evaluation {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation loading " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 
@@ -531,7 +531,7 @@ public class Evaluation {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation classification " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 
@@ -608,7 +608,7 @@ public class Evaluation {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation consitency " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 
@@ -675,7 +675,7 @@ public class Evaluation {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation realization " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 

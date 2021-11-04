@@ -452,7 +452,7 @@ public class EvaluationFactpp {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation loading " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 
@@ -510,7 +510,7 @@ public class EvaluationFactpp {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation classification " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 
@@ -580,7 +580,7 @@ public class EvaluationFactpp {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation consistency " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 
@@ -639,7 +639,7 @@ public class EvaluationFactpp {
 			logger.info("--------------------------------------------------");
 			logger.info("");
 
-			logger.info("Evaluation reasoner " + reasonerName);
+			logger.info("Evaluation realization " + reasonerName);
 
 			for (String source : ontologiesMap.keySet()) {
 
