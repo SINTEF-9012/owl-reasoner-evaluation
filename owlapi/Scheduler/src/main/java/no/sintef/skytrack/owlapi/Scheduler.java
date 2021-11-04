@@ -358,15 +358,15 @@ public class Scheduler {
 				
 				String command = "java -jar ";
 				
-				
+				if(reasonerName.equals(("Factpp")))
+					command = "java -Djava.library.path=" + FactppLD + " -jar ";
 				
 				if(reasonerName.equals("Factpp") ||  reasonerName.equals("Pellet")) 
 					command  = command + path2;
 				else 
 					command = command + path1;
 				
-				if(reasonerName.equals(("Factpp")))
-					command = command + " -Djava.library.path=" + FactppLD + " ";
+				
 				
 				
 				for (String source : ontologiesMap.values()) 
