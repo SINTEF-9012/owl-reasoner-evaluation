@@ -403,6 +403,23 @@ public class Scheduler {
 
 						while ((ligne = processOutput.readLine()) != null) {
 						    logger.info(ligne);
+						   
+						    if(ligne.contains("takes"))
+						    {
+						    	
+					    		timer.cancel();
+					    		timer = new Timer("Timer");
+					    		timerTask = new TimerTask() {
+						        public void run() {
+						           logger.info("Timeout: Stopping process");
+						           if(timerProcess != null && timerProcess.isAlive())
+						        	   timerProcess.destroyForcibly();
+						        }
+							        
+							    };
+							    
+							    timer.schedule(timerTask, reasonerTimeOut);
+						    }
 						}
 						
 						while ((ligne = processError.readLine()) != null) {
