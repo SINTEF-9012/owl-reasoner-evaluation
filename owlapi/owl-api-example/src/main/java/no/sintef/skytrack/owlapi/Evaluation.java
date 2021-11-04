@@ -55,7 +55,7 @@ public class Evaluation {
 	//static OWLReasonerConfiguration koncludeReasonerConfiguration;
 	static OWLReasonerConfiguration reasonerConfiguration;
 	static Process koncludeProcess;
-	static String KoncludePath = "../../../Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/";
+	//static String KoncludePath = "../../../Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/";
 
 	
 	//static Map<String, OWLReasonerConfiguration> reasonerConfigurationMap = new LinkedHashMap<String, OWLReasonerConfiguration>();
@@ -972,7 +972,7 @@ public class Evaluation {
 				koncludeProcess.destroyForcibly();
 			
 			TimeUnit.MILLISECONDS.sleep(1000);
-			koncludeProcess = Runtime.getRuntime().exec(KoncludePath + "Konclude owllinkserver -p 8080");
+			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
 			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 		
