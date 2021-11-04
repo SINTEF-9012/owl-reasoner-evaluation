@@ -301,7 +301,7 @@ public class EvaluationFactpp {
 		// Printing args
 		//------------------------------------------------------
 		
-		logger.info("");
+		/*logger.info("");
 		logger.info("--------------------------------------------------");
 		logger.info("");
 		
@@ -315,7 +315,7 @@ public class EvaluationFactpp {
 
 		logger.info("");
 		logger.info("--------------------------------------------------");
-		logger.info("");
+		logger.info("");*/
 		
 		
 		
