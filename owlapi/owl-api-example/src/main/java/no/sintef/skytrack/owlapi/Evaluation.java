@@ -504,7 +504,7 @@ public class Evaluation {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString());
+						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
 						break; 
 					}
 
@@ -596,7 +596,7 @@ public class Evaluation {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString());
+						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
 						break; 
 					}
 
@@ -683,7 +683,7 @@ public class Evaluation {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString());
+						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
 						break; 
 					}
 
@@ -776,7 +776,7 @@ public class Evaluation {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString());
+						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
 						break; 
 					}
 
