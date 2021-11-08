@@ -78,7 +78,7 @@ public class EvaluationFactpp {
 		iterations.setRequired(false);
 		options.addOption(iterations);
 
-		Option printOnt = new Option("p", "print", false, "print statistics of ontologies");
+		Option printOnt = new Option("p", "print", false, "list of the ontologies to be evaluated");
 		printOnt.setRequired(false);
 		options.addOption(printOnt);
 		

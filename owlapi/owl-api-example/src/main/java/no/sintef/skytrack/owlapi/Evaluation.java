@@ -94,7 +94,7 @@ public class Evaluation {
 		options.addOption(printOnt);
 		
 		
-		Option fileOnt = new Option("f", "file", true, "print statistics of ontologies");
+		Option fileOnt = new Option("f", "file", true, "list of the ontologies to be evaluated");
 		fileOnt.setRequired(false);
 		fileOnt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(fileOnt);

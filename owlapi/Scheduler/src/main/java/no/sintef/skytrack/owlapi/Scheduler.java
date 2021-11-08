@@ -4,14 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeSet;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -33,11 +36,7 @@ public class Scheduler {
 	
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		
-		
-		
+	
 		Map<String, String> ontologiesMap = new LinkedHashMap<String, String>();
 
 		Options options = new Options();
@@ -45,6 +44,12 @@ public class Scheduler {
 		Option input = new Option("i", "input", true, "input ontologies folder");
 		input.setRequired(false);
 		options.addOption(input);
+		
+		Option list = new Option("l", "list", true, "a txt file that lists only names of the ontologies in the input folder to be evaluated");
+		list.setRequired(false);
+		list.setArgs(Option.UNLIMITED_VALUES);
+		options.addOption(list);
+		
 
 		Option output = new Option("o", "output", true, "output folder");
 		output.setRequired(false);
@@ -69,7 +74,7 @@ public class Scheduler {
 		options.addOption(printOnt);
 		
 		
-		Option fileOnt = new Option("f", "file", true, "print statistics of ontologies");
+		Option fileOnt = new Option("f", "file", true, "list of the ontologies to be evaluated");
 		fileOnt.setRequired(false);
 		fileOnt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(fileOnt);
@@ -83,9 +88,6 @@ public class Scheduler {
 		skipOpt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(skipOpt);
 		
-		
-		
-
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;// not a good practice, it serves it purpose
@@ -132,6 +134,59 @@ public class Scheduler {
 			} else {
 				logger.error("Input Dir: " + inputFilePath + " not exist");
 				System.exit(0);
+			}
+			
+			
+			
+			
+			//------------------------------------------------------
+			// List file
+			//------------------------------------------------------
+			if(cmd.hasOption("list"))
+			{
+				String[] listFileNames = cmd.getOptionValues("list");
+				Set<String> names = new TreeSet<String>();
+				
+				for(String listFileName : listFileNames )
+				{
+					File listFile = new File(listFileName);
+					if(listFile.exists())
+					{
+						try {
+							List<String> lines =  Files.readAllLines(listFile.toPath());
+							names.addAll(lines);
+							
+						} catch (IOException e) {
+							logger.error("Error when reading file " + listFileName + " : " + e.toString());
+							continue;
+						}
+					}
+					else
+					{
+						logger.error("List File: " + listFileName + " does not exist");
+						continue;
+					}
+				}
+				
+				Map<String, String> tMap = new LinkedHashMap<String, String>();
+				for(String name : names)
+				{
+					name = name.strip();
+					if(ontologiesMap.containsKey(name))
+					{
+						String path = ontologiesMap.get(name);
+						tMap.put(name, path);
+					}
+					else
+					{
+						logger.info("Ontology: " + name + " not found in input folder");
+					}
+				}
+				ontologiesMap.clear();
+				ontologiesMap = tMap;
+				
+				logger.info("There are total " + ontologiesMap.size() + " ontologies in the list files.");
+				
 			}
 			
 			
@@ -204,7 +259,7 @@ public class Scheduler {
 		//------------------------------------------------------
 
 		
-		String processArg = String.join(" ", args);
+		
 		//List<String> cmds = new ArrayList<String>();
 		//cmds.add("java");
 		//cmds.add("-jar");
@@ -213,6 +268,9 @@ public class Scheduler {
 		
 		
 		if (cmd.hasOption("print")) {
+			
+			String processArg = String.join(" ", args);
+			
 			String command = "java -jar " + path1 + " " + processArg;
 			Process process = null;
 			try {
@@ -448,7 +506,6 @@ public class Scheduler {
 
 	}
 		
-
 	
 	private static BufferedReader getOutput(Process p) {
 	    return new BufferedReader(new InputStreamReader(p.getInputStream()));
