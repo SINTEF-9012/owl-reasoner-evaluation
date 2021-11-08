@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -168,20 +169,21 @@ public class Scheduler {
 					}
 				}
 				
+				names = names.stream().map(String::trim).collect(Collectors.toSet());
 				Map<String, String> tMap = new LinkedHashMap<String, String>();
-				for(String name : names)
+				for(String name : ontologiesMap.keySet())
 				{
-					name = name.trim();
-					if(ontologiesMap.containsKey(name))
+					if(names.contains(name))
 					{
 						String path = ontologiesMap.get(name);
 						tMap.put(name, path);
-					}
-					else
-					{
-						logger.info("Ontology: " + name + " not found in input folder");
+						names.remove(name);
 					}
 				}
+				
+				for(String name : names)
+					logger.info("Ontology: " + name + " not found in input folder");
+				
 				ontologiesMap.clear();
 				ontologiesMap = tMap;
 				
@@ -399,18 +401,18 @@ public class Scheduler {
 		logger.info("");
 		
 		
-		evaluate(ontologiesMap, reasonersName, tasksName, runs);
+		evaluate(ontologiesMap, reasonersName, tasksName, runs, outputFilePath);
 		
 		
 	}
 
-	public static void evaluate(Map<String, String> ontologiesMap, String[] reasoners,  String[] tasks, int runs) {
+	public static void evaluate(Map<String, String> ontologiesMap, String[] reasoners,  String[] tasks, int runs, String outputPath) {
 		
 		long reasonerTimeOut = 2*60*60*1000;
 
 		for(String task : tasks)
 		{
-			String processArg = "-t " + task + " -n " + runs;
+			String processArg = "-t " + task + " -n " + runs + " -o " + outputPath;
 			for (String reasonerName : reasoners) 
 			{
 				String reasonerArg = processArg + " -r " + reasonerName;
