@@ -22,6 +22,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -453,14 +455,14 @@ public class Evaluation {
 			Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		//logger.info("Task Load Ontology");
 
-		double evaluationTime = 0;
+		//double evaluationTime = 0;
 		
 		
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 			
 			logger = LogManager.getLogger(reasonerName);
 
-			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+			//Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
 			//logger.info("");
 			//logger.info("--------------------------------------------------");
@@ -470,12 +472,13 @@ public class Evaluation {
 
 			for (String source : ontologiesMap.keySet()) {
 
-				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
+				ArrayList<Double> evalResults = new ArrayList<Double>();
+				ArrayList<String> evalResultsString = new ArrayList<String>();
 
 				String filename = ontologiesMap.get(source);
 				logger.info("");
 				logger.info("Ontology: " + source);
-				evaluationTime = 0;
+				//evaluationTime = 0;
 
 
 				
@@ -496,23 +499,34 @@ public class Evaluation {
 					try {
 						double thisTimeRunResult = performLoadingReasoner(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
 						evalResults.add(thisTimeRunResult);
-						evaluationTime += thisTimeRunResult;
+						evalResultsString.add(String.valueOf(thisTimeRunResult));
+						//evaluationTime += thisTimeRunResult;
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						writeErrorToCSV(outputDir+"/" + reasonerName + "_Loading.csv", e.toString(), source);
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
 					// Calling GC
 					System.gc();
 				}
-				
 				if(evalResults.size() == runs)
-					writeListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", evalResults, source);
-				ontoEvalMap.put(source, evalResults);
+				{
+					Mean mean = new Mean();
+					Median median = new Median();
+					double[] values = evalResults.stream().mapToDouble(Double::doubleValue).toArray();
+					evalResultsString.add(String.valueOf(mean.evaluate(values)));
+					evalResultsString.add(String.valueOf(median.evaluate(values)));
+					
+					logger.info(reasonerName + " Everage Load time on: " + source + "is: " + evalResultsString.get(runs));
+					logger.info(reasonerName + " Median Load time on: " + source + "is: " + evalResultsString.get(runs+1));
+					
+				}
+				writeStringListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", evalResultsString, source);
+				//ontoEvalMap.put(source, evalResults);
 
-				logger.info(reasonerName + " Everage Load time on: " + source + "is: " + evaluationTime / (double) runs);
+				
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Load.csv", ontoEvalMap);
 		}
@@ -523,7 +537,7 @@ public class Evaluation {
 	public static void taskClassification(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		//logger.info("Task Classification Ontology");
 
-		double evaluationTime = 0;
+		//double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 			
@@ -540,12 +554,13 @@ public class Evaluation {
 
 			for (String source : ontologiesMap.keySet()) {
 
-				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
+				ArrayList<Double> evalResults = new ArrayList<Double>();
+				ArrayList<String> evalResultsString = new ArrayList<String>();
 
 				String filename = ontologiesMap.get(source);
 				logger.info("");
 				logger.info("Ontology: " + source);
-				evaluationTime = 0;
+				//evaluationTime = 0;
 
 				
 				
@@ -576,11 +591,12 @@ public class Evaluation {
 						thisTimeRunResult = performClassification(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, null);
 						
 						evalResults.add(thisTimeRunResult);
-						evaluationTime += thisTimeRunResult;
+						evalResultsString.add(String.valueOf(thisTimeRunResult));
+						//evaluationTime += thisTimeRunResult;
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						writeErrorToCSV(outputDir+"/" + reasonerName + "_Classification.csv", e.toString(), source);
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
@@ -588,10 +604,20 @@ public class Evaluation {
 					System.gc();
 				}
 				if(evalResults.size() == runs)
-					writeListToCSV(outputDir+"/" + reasonerName + "_Classification.csv", evalResults, source);
+				{
+					Mean mean = new Mean();
+					Median median = new Median();
+					double[] values = evalResults.stream().mapToDouble(Double::doubleValue).toArray();
+					evalResultsString.add(String.valueOf(mean.evaluate(values)));
+					evalResultsString.add(String.valueOf(median.evaluate(values)));
+					
+					logger.info(reasonerName + " Everage Classification time on: " + source + "is: " + evalResultsString.get(runs));
+					logger.info(reasonerName + " Median Classification time on: " + source + "is: " + evalResultsString.get(runs+1));
+				}
+				writeStringListToCSV(outputDir+"/" + reasonerName + "_Classification.csv", evalResultsString, source);
 				//ontoEvalMap.put(source, evalResults);
 
-				logger.info(reasonerName + " Everage Classification time on: " + source + "is: " + evaluationTime / (double) runs);
+				//logger.info(reasonerName + " Everage Classification time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Classification.csv", ontoEvalMap);
 		}
@@ -602,7 +628,7 @@ public class Evaluation {
 	public static void taskConsitency(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		//logger.info("Task consistency Validation Ontology");
 
-		double evaluationTime = 0;
+		//double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 			
@@ -619,12 +645,13 @@ public class Evaluation {
 
 			for (String source : ontologiesMap.keySet()) {
 
-				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
+				ArrayList<Double> evalResults = new ArrayList<Double>();
+				ArrayList<String> evalResultsString = new ArrayList<String>();
 
 				String filename = ontologiesMap.get(source);
 				logger.info("");
 				logger.info("Ontology: " + source);
-				evaluationTime = 0;
+				//evaluationTime = 0;
 
 
 				
@@ -644,13 +671,19 @@ public class Evaluation {
 					
 					
 					try {
-						double thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName);
+						double thisTimeRunResult = 0;
+						if(i == 1)
+							thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, source, outputDir+"/" + reasonerName + "_ConsistencyResult.csv");
+						else
+							thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, source, null);
+						
 						evalResults.add(thisTimeRunResult);
-						evaluationTime += thisTimeRunResult;
+						evalResultsString.add(String.valueOf(thisTimeRunResult));
+						//evaluationTime += thisTimeRunResult;
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						writeErrorToCSV(outputDir+"/" + reasonerName + "_Consistency.csv", e.toString(), source);
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
@@ -658,10 +691,21 @@ public class Evaluation {
 					System.gc();
 				}
 				if(evalResults.size() == runs)
-					writeListToCSV(outputDir+"/" + reasonerName + "_Consistency.csv", evalResults, source);
+				{
+					Mean mean = new Mean();
+					Median median = new Median();
+					double[] values = evalResults.stream().mapToDouble(Double::doubleValue).toArray();
+					evalResultsString.add(String.valueOf(mean.evaluate(values)));
+					evalResultsString.add(String.valueOf(median.evaluate(values)));
+					
+					logger.info(reasonerName + " Everage Consitency time on: " + source + "is: " + evalResultsString.get(runs));
+					logger.info(reasonerName + " Median Consitency time on: " + source + "is: " + evalResultsString.get(runs+1));
+					
+				}
+				writeStringListToCSV(outputDir+"/" + reasonerName + "_Consistency.csv", evalResultsString, source);
 				//ontoEvalMap.put(source, evalResults);
 
-				logger.info(reasonerName + " Everage Consitency Validation time on: " + source + "is: " + evaluationTime / (double) runs);
+				//logger.info(reasonerName + " Everage Consitency Validation time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Consitency.csv", ontoEvalMap);
 		}
@@ -672,7 +716,7 @@ public class Evaluation {
 	public static void taskRealization(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
 		//logger.info("Task Realization Ontology");
 
-		double evaluationTime = 0;
+		//double evaluationTime = 0;
 
 		for (String reasonerName : reasonerFactoryMap.keySet()) {
 			
@@ -688,12 +732,13 @@ public class Evaluation {
 
 			for (String source : ontologiesMap.keySet()) {
 
-				ArrayList<Double> evalResults = new ArrayList<Double>(runs);
+				ArrayList<Double> evalResults = new ArrayList<Double>();
+				ArrayList<String> evalResultsString = new ArrayList<String>();
 
 				String filename = ontologiesMap.get(source);
 				logger.info("");
 				logger.info("Ontology: " + source);
-				evaluationTime = 0;
+				//evaluationTime = 0;
 
 
 				
@@ -725,11 +770,13 @@ public class Evaluation {
 						
 						
 						evalResults.add(thisTimeRunResult);
-						evaluationTime += thisTimeRunResult;
+						evalResultsString.add(String.valueOf(thisTimeRunResult));
+						
+						//evaluationTime += thisTimeRunResult;
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						writeErrorToCSV(outputDir+"/" + reasonerName + "_Realization.csv", e.toString(), source);
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
@@ -738,10 +785,22 @@ public class Evaluation {
 				}
 				
 				if(evalResults.size() == runs)
-					writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
+				{
+					Mean mean = new Mean();
+					Median median = new Median();
+					double[] values = evalResults.stream().mapToDouble(Double::doubleValue).toArray();
+					evalResultsString.add(String.valueOf(mean.evaluate(values)));
+					evalResultsString.add(String.valueOf(median.evaluate(values)));
+					
+					logger.info(reasonerName + " Everage Realization time on: " + source + "is: " + evalResultsString.get(runs));
+					logger.info(reasonerName + " Median Realization time on: " + source + "is: " + evalResultsString.get(runs+1));
+					
+				}
+				
+				writeStringListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResultsString, source);
 				//ontoEvalMap.put(source, evalResults);
 
-				logger.info(reasonerName + " Everage Realization time on: " + source + "is: " + evaluationTime / (double) runs);
+				//logger.info(reasonerName + " Everage Realization time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
 			//writeMapToCSV(outputDir+"/" + reasonerName + "_Realization.csv", ontoEvalMap);
 		}
@@ -774,6 +833,24 @@ public class Evaluation {
 			FileWriter writer = new FileWriter(name, true);
 			writer.append(listname + ",");
 			ArrayList<Double> results = list;
+			writer.append(Stream.of(results.toArray()).map(String::valueOf).collect(Collectors.joining(",")));
+			writer.append("\n");
+			
+			writer.flush();
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private static void writeStringListToCSV(String name, ArrayList<String>  list, String listname)
+	{
+		try {
+			FileWriter writer = new FileWriter(name, true);
+			writer.append(listname + ",");
+			ArrayList<String> results = list;
 			writer.append(Stream.of(results.toArray()).map(String::valueOf).collect(Collectors.joining(",")));
 			writer.append("\n");
 			
@@ -888,10 +965,11 @@ public class Evaluation {
 		return (endTime - startTime)/1000.0;
 	}
 
-	public static double performConsistencyEvaluation(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name) throws Exception {
+	public static double performConsistencyEvaluation(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name, String ontologyName, String outputFileName) throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
+		boolean consistent = false;
 
 		if(name.equals("Konclude"))
 		{
@@ -916,19 +994,31 @@ public class Evaluation {
 	    try
 	    {
 	    	startTime = System.currentTimeMillis();
-			boolean consistent = reasoner.isConsistent();
+			consistent = reasoner.isConsistent();
 			endTime = System.currentTimeMillis();
 			
 			logger.info(
 					"Reasoner consistency validation takes " + (endTime - startTime)/1000.0 + " s. IsConsistent = " + consistent);
+			
 	    }
 		finally
 		{
+			
+			if(outputFileName != null)
+			{
+				ArrayList<String> results = new ArrayList<String>();
+				results.add(String.valueOf(consistent));
+				writeStringListToCSV(outputFileName, results, ontologyName);
+			}
+			
+			
 			timer.cancel();
 			reasoner.dispose();
 			
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
+			
+			
 		}
 
 		return (endTime - startTime)/1000.0;
