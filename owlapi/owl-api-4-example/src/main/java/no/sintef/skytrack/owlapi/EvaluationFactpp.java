@@ -481,7 +481,7 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
@@ -565,7 +565,7 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
@@ -645,7 +645,7 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
@@ -730,7 +730,7 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
-						evalResultsString.add(e.toString().replaceAll("[\\t\\n\\r]+"," "));
+						evalResultsString.add(e.toString());
 						break; 
 					}
 
@@ -786,7 +786,7 @@ public class EvaluationFactpp {
 			FileWriter writer = new FileWriter(name, true);
 			writer.append(listname + ",");
 			ArrayList<String> results = list;
-			writer.append(Stream.of(results.toArray()).map(String::valueOf).collect(Collectors.joining(",")));
+			writer.append(Stream.of(results.toArray()).map(String::valueOf).map(x -> x.replaceAll("[\\t\\n\\r,]+"," ")).collect(Collectors.joining(",")));
 			writer.append("\n");
 			
 			writer.flush();
