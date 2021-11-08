@@ -408,7 +408,7 @@ public class Scheduler {
 
 	public static void evaluate(Map<String, String> ontologiesMap, String[] reasoners,  String[] tasks, int runs, String outputPath) {
 		
-		long reasonerTimeOut = 2*60*60*1000;
+		long reasonerTimeOut = 1*60*60*1000;
 
 		for(String task : tasks)
 		{
