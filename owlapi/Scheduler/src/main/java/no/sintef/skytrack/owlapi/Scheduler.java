@@ -171,7 +171,7 @@ public class Scheduler {
 				Map<String, String> tMap = new LinkedHashMap<String, String>();
 				for(String name : names)
 				{
-					name = name.strip();
+					name = name.trim();
 					if(ontologiesMap.containsKey(name))
 					{
 						String path = ontologiesMap.get(name);
