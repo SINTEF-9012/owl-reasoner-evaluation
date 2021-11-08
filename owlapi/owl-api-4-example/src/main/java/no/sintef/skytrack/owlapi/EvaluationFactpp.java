@@ -446,7 +446,7 @@ public class EvaluationFactpp {
 			
 			logger = LogManager.getLogger(reasonerName);
 
-			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+			//Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
 			//logger.info("");
 			//logger.info("--------------------------------------------------");
@@ -477,14 +477,16 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
+						writeErrorToCSV(outputDir+"/" + reasonerName + "_Loading.csv", e.toString(), source);
 						break; 
 					}
 
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", evalResults, source);
-				ontoEvalMap.put(source, evalResults);
+				if(evalResults.size() == runs)
+					writeListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", evalResults, source);
+				//ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Load time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
@@ -504,7 +506,7 @@ public class EvaluationFactpp {
 			logger = LogManager.getLogger(reasonerName);
 			
 
-			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+			//Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
 			//logger.info("");
 			//logger.info("--------------------------------------------------");
@@ -546,14 +548,16 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
+						writeErrorToCSV(outputDir+"/" + reasonerName + "_Classification.csv", e.toString(), source);
 						break; 
 					}
 
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Classification.csv", evalResults, source);
-				ontoEvalMap.put(source, evalResults);
+				if(evalResults.size() == runs)
+					writeListToCSV(outputDir+"/" + reasonerName + "_Classification.csv", evalResults, source);
+				//ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Classification time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
@@ -574,7 +578,7 @@ public class EvaluationFactpp {
 			logger = LogManager.getLogger(reasonerName);
 			
 
-			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+			//Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
 			//logger.info("");
 			//logger.info("--------------------------------------------------");
@@ -606,14 +610,16 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
+						writeErrorToCSV(outputDir+"/" + reasonerName + "_Consistency.csv", e.toString(), source);
 						break; 
 					}
 
 					// Calling GC
 					System.gc();
 				}
-				writeListToCSV(outputDir+"/" + reasonerName + "_Consistency.csv", evalResults, source);
-				ontoEvalMap.put(source, evalResults);
+				if(evalResults.size() == runs)
+					writeListToCSV(outputDir+"/" + reasonerName + "_Consistency.csv", evalResults, source);
+				//ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Consitency Validation time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
@@ -633,7 +639,7 @@ public class EvaluationFactpp {
 			
 			logger = LogManager.getLogger(reasonerName);
 
-			Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
+			//Map<String, ArrayList<Double>> ontoEvalMap = new LinkedHashMap<>();
 
 			//logger.info("");
 			//logger.info("--------------------------------------------------");
@@ -676,6 +682,7 @@ public class EvaluationFactpp {
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
+						writeErrorToCSV(outputDir+"/" + reasonerName + "_Realization.csv", e.toString(), source);
 						break; 
 					}
 
@@ -683,8 +690,9 @@ public class EvaluationFactpp {
 					System.gc();
 				}
 				
-				writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
-				ontoEvalMap.put(source, evalResults);
+				if(evalResults.size() == runs)
+					writeListToCSV(outputDir+"/" + reasonerName + "_Realization.csv", evalResults, source);
+				//ontoEvalMap.put(source, evalResults);
 
 				logger.info(reasonerName + " Everage Realization time on: " + source + "is: " + evaluationTime / (double) runs);
 			}
@@ -720,6 +728,21 @@ public class EvaluationFactpp {
 			writer.append(listname + ",");
 			ArrayList<Double> results = list;
 			writer.append(Stream.of(results.toArray()).map(String::valueOf).collect(Collectors.joining(",")));
+			writer.append("\n");
+			
+			writer.flush();
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void writeErrorToCSV(String name, String error, String listname)
+	{
+		try {
+			FileWriter writer = new FileWriter(name, true);
+			writer.append(listname + "," + error);
 			writer.append("\n");
 			
 			writer.flush();
