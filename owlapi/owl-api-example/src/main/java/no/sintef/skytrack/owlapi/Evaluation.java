@@ -808,14 +808,14 @@ public class Evaluation {
 		logger =  LogManager.getRootLogger();
 	}
 	
-	private static void writeMapToCSV(String name, Map<String, ArrayList<Double>>  map)
+	private static void writeMapToCSV(String name, Map<String, ArrayList<String>>  map)
 	{
 		try {
 			FileWriter writer = new FileWriter(name, false);
 			for(String key : map.keySet())
 			{
 				writer.append(key + ",");
-				ArrayList<Double> results = map.get(key);
+				ArrayList<String> results = map.get(key);
 				writer.append(Stream.of(results.toArray()).map(String::valueOf).collect(Collectors.joining(",")));
 				writer.append("\n");
 			}
@@ -908,6 +908,23 @@ public class Evaluation {
 	}
 
 	public static void printOntologyStatistics(Map<String, String> ontologiesMap) {
+		
+		Map<String, ArrayList<String>>  map = new LinkedHashMap<>();
+		
+		ArrayList<String> values = new ArrayList<String>();
+		values.add("Classes");
+		values.add("Individuals");
+		values.add("Axioms");
+		values.add("Logical Axioms");
+		values.add("TBox");
+		values.add("ABox");
+		values.add("RBox");
+		values.add("Data Properties");
+		values.add("Object Properties");
+		values.add("Annotation Properties");
+	
+		map.put("Statistics", values);
+		
 		for (String name : ontologiesMap.keySet()) {
 			logger.info("");
 			logger.info("--------------------------------------------------");
@@ -915,21 +932,57 @@ public class Evaluation {
 			logger.info("Ontology: " + name);
 			String path = ontologiesMap.get(name);
 			OWLOntology onto = loadOntologyFromFile(path);
+			
+			values = new ArrayList<String>();
 
 			if (onto != null) {
 
 				logger.info("Classes: " + onto.getClassesInSignature(Imports.INCLUDED).size());
+				
+				
 				logger.info("Individuals: " + onto.getIndividualsInSignature(Imports.INCLUDED).size());
 				
 				logger.info("Axioms: " + onto.getAxiomCount(Imports.INCLUDED));
+				logger.info("Logical Axioms: " + onto.getLogicalAxiomCount(Imports.INCLUDED));
+				
+				
 				
 				logger.info("TBox: " + onto.getTBoxAxioms(Imports.INCLUDED).size());
 				logger.info("ABox: " + onto.getABoxAxioms(Imports.INCLUDED).size());
 				logger.info("RBox: " + onto.getRBoxAxioms(Imports.INCLUDED).size());
 				
+				logger.info("Data Properties: " + onto.getDataPropertiesInSignature(Imports.INCLUDED).size());
+				logger.info("Object Properties: " + onto.getObjectPropertiesInSignature(Imports.INCLUDED).size());
+				logger.info("Annotation Properties: " + onto.getAnnotationPropertiesInSignature(Imports.INCLUDED).size());
+				
+				
+				//here to write to file
+				
+				values.add(String.valueOf(onto.getClassesInSignature(Imports.INCLUDED).size()));
+				
+				
+				values.add(String.valueOf(onto.getIndividualsInSignature(Imports.INCLUDED).size()));
+				
+				values.add(String.valueOf(onto.getAxiomCount(Imports.INCLUDED)));
+				values.add(String.valueOf(onto.getLogicalAxiomCount(Imports.INCLUDED)));
+				
+				
+				
+				values.add(String.valueOf(onto.getTBoxAxioms(Imports.INCLUDED).size()));
+				values.add(String.valueOf(onto.getABoxAxioms(Imports.INCLUDED).size()));
+				values.add(String.valueOf(onto.getRBoxAxioms(Imports.INCLUDED).size()));
+				
+				values.add(String.valueOf(onto.getDataPropertiesInSignature(Imports.INCLUDED).size()));
+				values.add(String.valueOf(onto.getObjectPropertiesInSignature(Imports.INCLUDED).size()));
+				values.add(String.valueOf(onto.getAnnotationPropertiesInSignature(Imports.INCLUDED).size()));
 			}
+			
+			map.put(name, values);
 
 		}
+		
+		writeMapToCSV("Ontology_Statistics.csv", map);
+		
 	}
 
 	public static double performLoadingReasoner(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
