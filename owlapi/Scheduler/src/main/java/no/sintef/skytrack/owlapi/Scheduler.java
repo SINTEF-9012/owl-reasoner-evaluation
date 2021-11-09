@@ -394,7 +394,7 @@ public class Scheduler {
 		logger.info("iterations: " + runs);
 		logger.info("reasoner: " + Arrays.toString(reasonersName));
 		logger.info("task: " + Arrays.toString(tasksName));
-		logger.info("ontologies: " + Arrays.toString(ontologiesMap.keySet().toArray()));
+		logger.info("ontologies: " + ontologiesMap.keySet().size() + " " + Arrays.toString(ontologiesMap.keySet().toArray()));
 
 		logger.info("");
 		logger.info("--------------------------------------------------");
