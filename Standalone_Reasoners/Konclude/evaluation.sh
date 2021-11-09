@@ -2,6 +2,7 @@
 
 NEWLINE=$'\n'
 ontoDir="../../ontologies/ontologies/"
+outDir="output"
 RUN=10
 #rm -rf ./output/
 
@@ -10,9 +11,10 @@ classification_task=false
 realization_task=false
 skip_to_file=""
 
-while getopts i:j:vcr flag
+while getopts o:i:j:vcr flag
 do
     case "${flag}" in
+		o) outDir=${OPTARG};;
 		i) ontoDir=${OPTARG};;
         j) skip_to_file=${OPTARG};;
 		v) consistency_task=true;;
@@ -24,10 +26,10 @@ done
 skip_to_file_bk="$skip_to_file"
 
 
-mkdir output
-mkdir output/consistency
-mkdir output/classification
-mkdir output/realization
+mkdir "$outDir"
+mkdir "${outDir}/consistency"
+mkdir "${outDir}/classification"
+mkdir "${outDir}/realization"
 #for i in `ls -Sr ../../ontologies/*`;
 
 echo "Evaluating reasoner Konclude"
@@ -58,7 +60,7 @@ then
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude realization -i "$ontoDir$i" -o "./output/realization/realization_${i}" > ./output/realization.log
+			Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
 			end=$(date +%s.%3N)
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
@@ -66,7 +68,7 @@ then
 			echo "Realization takes ${runtime}"
 		done
 		output="${output}"
-		echo "$output" >> ./output/realization.csv
+		echo "$output" >> "./${outDir}/realization.csv"
 		
 		reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 		echo "Everage Realization time on: $i is $reasonerClassification"
@@ -100,7 +102,7 @@ then
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude classification -i "$ontoDir$i" -o "./output/classification/classification_${i}" > ./output/classification.log
+			Konclude classification -i "$ontoDir$i" -o "./${outDir}/classification/classification_${i}" > "./${outDir}/classification_${i}.log"
 			end=$(date +%s.%3N)
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
@@ -108,7 +110,7 @@ then
 			echo "Classification takes ${runtime}"
 		done
 		output="${output}"
-		echo "$output" >> ./output/classification.csv
+		echo "$output" >> "./${outDir}/classification.csv"
 		reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 		echo "Everage classification time on: $i is $reasonerClassification"
 	done
@@ -138,7 +140,7 @@ then
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude consistency -i "$ontoDir$i" -o "./output/consistency/consistency_${i}" > ./output/consistency.log
+			Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log"
 			end=$(date +%s.%3N)
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
@@ -146,7 +148,7 @@ then
 			echo "Consistency validation takes ${runtime}"
 		done
 		output="${output}"
-		echo "$output" >> ./output/consistency.csv
+		echo "$output" >> "./${outDir}/consistency.csv"
 		reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/$RUN" | bc -l)
 		echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
 	done

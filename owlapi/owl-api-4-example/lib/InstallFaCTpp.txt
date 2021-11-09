@@ -1,10 +1,4 @@
-mvn install:install-file \
-   -Dfile=FaCTpp-OWLAPI-4.x-v1.6.5.jar \
-   -DgroupId=net.sourceforge.owlapi \
-   -DartifactId=factplusplus \
-   -Dversion=1.6.5 \
-   -Dpackaging=jar \
-   -DgeneratePom=true \
+mvn install:install-file -Dfile=FaCTpp-OWLAPI-4.x-v1.6.5.jar -DgroupId=net.sourceforge.owlapi -DartifactId=factplusplus -Dversion=1.6.5 -Dpackaging=jar -DgeneratePom=true
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/anlam/SkyTrack/owlapi/owl-api-4-example/lib/FaCT++-linux-v1.6.5/64bit
 
@@ -16,3 +10,15 @@ mvn install:install-file \
    -Dversion=build2213 \
    -Dpackaging=jar \
    -DgeneratePom=true \
+
+mvn assembly:assembly -DdescriptorId=jar-with-dependencies
+
+export PATH="~/SkyTrack/Standalone_Reasoners/Konclude/Konclude-Linux/Binaries:$PATH"
+
+chmod +777 ~/SkyTrack/Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/Konclude
+
+wget https://zenodo.org/record/18578/files/ore2015_sample.zip?download=1 -O ore2015_sample.zip
+
+df -h --total
+
+du -sh *
