@@ -2,6 +2,7 @@ package no.sintef.skytrack.owlapi;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -16,6 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -429,15 +431,18 @@ public class Scheduler {
 				else 
 					command = command + path1;
 				
+				final String outFile = outputPath + "/" + reasonerName +  "_" + task.substring(0, 1).toUpperCase() + task.substring(1)  + ".csv";
+	
 				
-				
-				
-				for (String source : ontologiesMap.values()) 
+				for (String ontoName : ontologiesMap.keySet()) 
 				{
+					
+					String source = ontologiesMap.get(ontoName);
 					String ontologyArg = reasonerArg + " -f " + source;
 					String finalCommand = command + " " + ontologyArg;
 					
 					Timer timer = new Timer("Timer");
+					
 					
 					Process process = null;
 					try {
@@ -463,8 +468,12 @@ public class Scheduler {
 									} catch (Exception e) {
 										logger.error("Cannot kill Konclude: " + e.toString());
 									}
-
 								}
+								
+								writeStringListToCSV(outFile, Arrays.asList("Timeout"), ontoName);
+								
+								
+								
 							}
 
 						};
@@ -497,6 +506,8 @@ public class Scheduler {
 											}
 
 										}
+										
+										writeStringListToCSV(outFile, Arrays.asList("Timeout"), ontoName);
 
 									}
 
@@ -529,6 +540,25 @@ public class Scheduler {
 
 	}
 		
+	
+	
+	private static void writeStringListToCSV(String name, List<String> list, String listname)
+	{
+		try {
+			FileWriter writer = new FileWriter(name, true);
+			writer.append(listname + ",");
+			List<String> results = list;
+			writer.append(Stream.of(results.toArray()).map(String::valueOf).map(x -> x.replaceAll("[\\t\\n\\r,]+"," ")).collect(Collectors.joining(",")));
+			
+			writer.append("\n");
+			
+			writer.flush();
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private static BufferedReader getOutput(Process p) {
 	    return new BufferedReader(new InputStreamReader(p.getInputStream()));
