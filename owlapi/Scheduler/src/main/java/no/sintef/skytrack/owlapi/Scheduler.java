@@ -450,14 +450,24 @@ public class Scheduler {
 						
 						
 						final Process timerProcess = process;
+						
 						TimerTask timerTask = new TimerTask() {
-					        public void run() {
-					           logger.info("Timeout: Stopping process");
-					           if(timerProcess != null && timerProcess.isAlive())
-					        	   timerProcess.destroyForcibly();
-					        }
-					        
-					    };
+							public void run() {
+								logger.info("Timeout: Stopping process");
+								if (timerProcess != null && timerProcess.isAlive())
+									timerProcess.destroyForcibly();
+
+								if (reasonerName.equals("Konclude")) {
+									try {
+										Runtime.getRuntime().exec("killall Konclude");
+									} catch (Exception e) {
+										logger.error("Cannot kill Konclude: " + e.toString());
+									}
+
+								}
+							}
+
+						};
 					    
 					    timer.schedule(timerTask, reasonerTimeOut);
 					    
@@ -472,14 +482,25 @@ public class Scheduler {
 						    	
 					    		timer.cancel();
 					    		timer = new Timer("Timer");
-					    		timerTask = new TimerTask() {
-						        public void run() {
-						           logger.info("Timeout: Stopping process");
-						           if(timerProcess != null && timerProcess.isAlive())
-						        	   timerProcess.destroyForcibly();
-						        }
-							        
-							    };
+					    		
+								timerTask = new TimerTask() {
+									public void run() {
+										logger.info("Timeout: Stopping process");
+										if (timerProcess != null && timerProcess.isAlive())
+											timerProcess.destroyForcibly();
+
+										if (reasonerName.equals("Konclude")) {
+											try {
+												Runtime.getRuntime().exec("killall Konclude");
+											} catch (Exception e) {
+												logger.error("Cannot kill Konclude: " + e.toString());
+											}
+
+										}
+
+									}
+
+								};
 							    
 							    timer.schedule(timerTask, reasonerTimeOut);
 						    }
