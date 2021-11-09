@@ -59,7 +59,8 @@ public class Evaluation {
 	//static OWLReasonerConfiguration koncludeReasonerConfiguration;
 	static OWLReasonerConfiguration reasonerConfiguration;
 	static Process koncludeProcess;
-	//static String KoncludePath = "../../../Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/";
+	static String koncludePath = "~/SkyTrack/Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/Konclude";
+	static String koncludeCommand = koncludePath + " owllinkserver -p 8080";
 
 	
 	//static Map<String, OWLReasonerConfiguration> reasonerConfigurationMap = new LinkedHashMap<String, OWLReasonerConfiguration>();
@@ -1017,7 +1018,7 @@ public class Evaluation {
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
 			TimeUnit.MILLISECONDS.sleep(1000);
-			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
 			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 	
@@ -1052,7 +1053,7 @@ public class Evaluation {
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
 			TimeUnit.MILLISECONDS.sleep(1000);
-			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
 			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 		
@@ -1109,7 +1110,7 @@ public class Evaluation {
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
 			TimeUnit.MILLISECONDS.sleep(1000);
-			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
 			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 		
@@ -1163,7 +1164,7 @@ public class Evaluation {
 				koncludeProcess.destroyForcibly();
 			
 			TimeUnit.MILLISECONDS.sleep(1000);
-			koncludeProcess = Runtime.getRuntime().exec("Konclude owllinkserver -p 8080");
+			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
 			TimeUnit.MILLISECONDS.sleep(1000);
 		}
 		
