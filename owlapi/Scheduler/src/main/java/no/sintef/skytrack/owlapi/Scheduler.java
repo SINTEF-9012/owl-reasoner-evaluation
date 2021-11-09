@@ -395,7 +395,7 @@ public class Scheduler {
 		if(cmd.hasOption("time"))
 		{
 			try {
-				runs = Integer.valueOf(cmd.getOptionValue("time"));
+				minutes = Integer.valueOf(cmd.getOptionValue("time"));
 			} catch (Exception e1) {
 				logger.info(e1.toString());
 				minutes = 60;
