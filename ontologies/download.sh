@@ -24,7 +24,7 @@ ontoArr["pr.xml"]="https://data.bioontology.org/ontologies/PR/download?apikey=8b
 ontoArr["cco.xml"]="https://data.bioontology.org/ontologies/CCO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf"
 
 for key in "${!ontoArr[@]}"; do
-	if [ -f "$key" ]; then
+	if [ -f ${ontoArr[$key]} ]; then
 		continue
 	fi
 	
