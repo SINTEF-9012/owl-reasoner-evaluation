@@ -10,9 +10,10 @@ classification_task=false
 realization_task=false
 skip_to_file=""
 
-while getopts j:vcr flag
+while getopts i:j:vcr flag
 do
     case "${flag}" in
+		i) ontoDir=${OPTARG};;
         j) skip_to_file=${OPTARG};;
 		v) consistency_task=true;;
 		c) classification_task=true;;

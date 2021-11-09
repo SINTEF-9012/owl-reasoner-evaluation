@@ -243,3 +243,4 @@ Standalone_Reasoners/Konclude/test.sh
 ontologies/ochv.owl
 ontologies/upheno.xml
 ontologies/pr.xml
+owlapi/owl-api-example/Ontology_Statistics.csv

@@ -36,6 +36,8 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.owllink.OWLlinkHTTPXMLReasonerFactory;
 import org.semanticweb.owlapi.owllink.OWLlinkReasonerConfigurationImpl;
+import org.semanticweb.owlapi.profiles.OWLProfileReport;
+import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.FreshEntityPolicy;
 import org.semanticweb.owlapi.reasoner.IndividualNodeSetPolicy;
 import org.semanticweb.owlapi.reasoner.InferenceType;
@@ -906,6 +908,18 @@ public class Evaluation {
 		}
 		
 	}
+	
+    public static String checkAllProfiles(OWLOntology o) {
+        String result = "";
+        for (Profiles p : Profiles.values()) {
+        
+        	OWLProfileReport report = p.checkOntology(o);
+        	if (report.isInProfile()) {
+        		result = result.isEmpty() ? p.name() : result + " - " + p.name();
+        	}
+        }
+        return result;
+    }
 
 	public static void printOntologyStatistics(Map<String, String> ontologiesMap) {
 		
@@ -922,6 +936,7 @@ public class Evaluation {
 		values.add("Data Properties");
 		values.add("Object Properties");
 		values.add("Annotation Properties");
+		values.add("Profiles");
 	
 		map.put("Statistics", values);
 		
@@ -956,6 +971,11 @@ public class Evaluation {
 				logger.info("Annotation Properties: " + onto.getAnnotationPropertiesInSignature(Imports.INCLUDED).size());
 				
 				
+				
+				String profiles = checkAllProfiles(onto);
+				
+				logger.info("Profiles: " + profiles);
+				
 				//here to write to file
 				
 				values.add(String.valueOf(onto.getClassesInSignature(Imports.INCLUDED).size()));
@@ -975,6 +995,8 @@ public class Evaluation {
 				values.add(String.valueOf(onto.getDataPropertiesInSignature(Imports.INCLUDED).size()));
 				values.add(String.valueOf(onto.getObjectPropertiesInSignature(Imports.INCLUDED).size()));
 				values.add(String.valueOf(onto.getAnnotationPropertiesInSignature(Imports.INCLUDED).size()));
+				
+				values.add (profiles);
 			}
 			
 			map.put(name, values);
