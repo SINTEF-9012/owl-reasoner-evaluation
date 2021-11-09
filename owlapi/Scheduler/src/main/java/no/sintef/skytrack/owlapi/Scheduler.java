@@ -37,6 +37,7 @@ public class Scheduler {
 	static String path2 = "../../owl-api-4-example/target/owl-api-4-example-0.0.1-SNAPSHOT-jar-with-dependencies.jar";
 	static String FactppLD = "../../owl-api-4-example/lib/FaCT++-linux-v1.6.5/64bit";
 	
+	static Integer minutes = 60;
 	
 	public static void main(String[] args) {
 	
@@ -90,6 +91,11 @@ public class Scheduler {
 		skipOpt.setRequired(false);
 		skipOpt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(skipOpt);
+		
+		Option time = new Option("m", "time", true, "timeout in minutes");
+		time.setRequired(false);
+		time.setArgs(Option.UNLIMITED_VALUES);
+		options.addOption(time);
 		
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -383,6 +389,24 @@ public class Scheduler {
 			runs = 10;
 		
 		//------------------------------------------------------
+		// timeout
+		//------------------------------------------------------
+		
+		if(cmd.hasOption("time"))
+		{
+			try {
+				runs = Integer.valueOf(cmd.getOptionValue("time"));
+			} catch (Exception e1) {
+				logger.info(e1.toString());
+				minutes = 60;
+
+			}
+		}
+
+		if (minutes == null)
+			minutes = 60;
+		
+		//------------------------------------------------------
 		// Printing args
 		//------------------------------------------------------
 		
@@ -396,6 +420,7 @@ public class Scheduler {
 		logger.info("iterations: " + runs);
 		logger.info("reasoner: " + Arrays.toString(reasonersName));
 		logger.info("task: " + Arrays.toString(tasksName));
+		logger.info("timeout: " + minutes + " mins");
 		logger.info("ontologies: " + ontologiesMap.keySet().size() + " " + Arrays.toString(ontologiesMap.keySet().toArray()));
 
 		logger.info("");
@@ -410,7 +435,7 @@ public class Scheduler {
 
 	public static void evaluate(Map<String, String> ontologiesMap, String[] reasoners,  String[] tasks, int runs, String outputPath) {
 		
-		long reasonerTimeOut = 30*60*1000; //30 minutes
+		long reasonerTimeOut = minutes*60*1000; 
 
 		for(String task : tasks)
 		{
