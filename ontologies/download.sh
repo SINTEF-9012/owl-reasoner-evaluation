@@ -18,13 +18,14 @@ ontoArr["MESH.owl"]="https://data.bioontology.org/ontologies/MESH/submissions/22
 ontoArr["dron.xml"]="https://data.bioontology.org/ontologies/DRON/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf"
 ontoArr["loinc.owl"]="https://data.bioontology.org/ontologies/LOINC/submissions/21/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
 ontoArr["chebi.xml"]="https://data.bioontology.org/ontologies/CHEBI/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf"
-ontoArr["ncbitaxon.owl"]"https://data.bioontology.org/ontologies/NCBITAXON/submissions/17/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
+ontoArr["ncbitaxon.owl"]="https://data.bioontology.org/ontologies/NCBITAXON/submissions/17/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
 ontoArr["gaz.xml"]="https://data.bioontology.org/ontologies/GAZ/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf"
 ontoArr["pr.xml"]="https://data.bioontology.org/ontologies/PR/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf"
 ontoArr["cco.xml"]="https://data.bioontology.org/ontologies/CCO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf"
 
 for key in "${!ontoArr[@]}"; do
-	if [ -f ${ontoArr[$key]} ]; then
+	if [ -f $key ]; then
+		echo "$key exists"
 		continue
 	fi
 	
