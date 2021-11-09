@@ -59,7 +59,7 @@ public class Evaluation {
 	//static OWLReasonerConfiguration koncludeReasonerConfiguration;
 	static OWLReasonerConfiguration reasonerConfiguration;
 	static Process koncludeProcess;
-	static String koncludePath = "~/SkyTrack/Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/Konclude";
+	static String koncludePath = "/home/ubuntu/SkyTrack/Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/Konclude";
 	static String koncludeCommand = koncludePath + " owllinkserver -p 8080";
 
 	
