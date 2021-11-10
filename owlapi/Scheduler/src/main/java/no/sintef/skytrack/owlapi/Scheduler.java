@@ -590,6 +590,8 @@ public class Scheduler {
 		    	FileWriter writer = new FileWriter(name, true);
 				writer.append(listname + "," + "Error: " + errorCode);
 				
+				writer.append("\n");
+				
 				writer.flush();
 				writer.close();
 		    }
