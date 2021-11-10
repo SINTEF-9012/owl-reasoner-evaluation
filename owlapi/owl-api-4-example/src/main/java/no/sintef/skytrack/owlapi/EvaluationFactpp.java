@@ -214,15 +214,7 @@ public class EvaluationFactpp {
 			}
 			
 		}
-		
-		//------------------------------------------------------
-		// Printing Statistics of ontologies and exit
-		//------------------------------------------------------
 
-		if (cmd.hasOption("print")) {
-			printOntologyStatistics(ontologiesMap);
-			System.exit(0);
-		}
 
 		
 		//------------------------------------------------------
@@ -856,26 +848,7 @@ public class EvaluationFactpp {
 		
 	}
 
-	public static void printOntologyStatistics(Map<String, String> ontologiesMap) {
-		for (String name : ontologiesMap.keySet()) {
-			logger.info("");
-			logger.info("--------------------------------------------------");
-			logger.info("");
-			logger.info("Ontology: " + name);
-			String path = ontologiesMap.get(name);
-			OWLOntology onto = loadOntologyFromFile(path);
-
-			if (onto != null) {
-
-				logger.info("Classes:" + onto.getClassesInSignature(Imports.INCLUDED).size());
-				logger.info("Individuals: " + onto.getIndividualsInSignature(Imports.INCLUDED).size());
-				logger.info("Axioms: " + onto.getAxiomCount());
-
-			}
-
-		}
-	}
-
+	
 	public static double performLoadingReasoner(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name)
 			throws Exception {
 		long startTime, endTime;

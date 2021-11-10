@@ -545,7 +545,9 @@ public class Scheduler {
 						while ((ligne = processError.readLine()) != null) {
 						    logger.error(ligne);
 						}
-						process.waitFor();
+						int return_value = process.waitFor();
+						
+						logger.info("Return Value=" + return_value);
 						
 					} catch (Exception e) {
 						
@@ -561,8 +563,6 @@ public class Scheduler {
 
 			}
 		}
-		
-
 	}
 		
 	
