@@ -459,6 +459,7 @@ public class Scheduler {
 					command = command + path1;
 				
 				final String outFile = outputPath + "/" + reasonerName +  "_" + task.substring(0, 1).toUpperCase() + task.substring(1)  + ".csv";
+				final String outLoadingFile = outputPath + "/" + reasonerName +  "_LoadingTimeout.csv";
 	
 				
 				for (String ontoName : ontologiesMap.keySet()) 
@@ -483,7 +484,7 @@ public class Scheduler {
 						
 						final Process timerProcess = process;
 						
-						TimerTask timerTask = new TimerTask() {
+						/*TimerTask timerTask = new TimerTask() {
 							public void run() {
 								logger.info("Timeout: Stopping process");
 								if (timerProcess != null && timerProcess.isAlive())
@@ -503,7 +504,7 @@ public class Scheduler {
 
 						};
 					    
-					    timer.schedule(timerTask, reasonerTimeOut);
+					    timer.schedule(timerTask, reasonerTimeOut); */
 					    
 					    
 						String ligne = "";
@@ -511,13 +512,13 @@ public class Scheduler {
 						while ((ligne = processOutput.readLine()) != null) {
 						    logger.info(ligne);
 						   
-						    if(ligne.contains("takes"))
+						    if(ligne.contains("Starting Evaluation"))
 						    {
 						    	
 					    		timer.cancel();
 					    		timer = new Timer("Timer");
 					    		
-								timerTask = new TimerTask() {
+					    		TimerTask timerTask = new TimerTask() {
 									public void run() {
 										logger.info("Timeout: Stopping process");
 										if (timerProcess != null && timerProcess.isAlive())
@@ -533,6 +534,12 @@ public class Scheduler {
 										}
 										
 										writeStringListToCSV(outFile, Arrays.asList("Timeout"), ontoName);
+										
+										if(task.equals("consistency"))
+										{
+											writeStringListToCSV(outLoadingFile, new ArrayList<String>(), ontoName);
+										}
+											
 
 									}
 
@@ -607,7 +614,11 @@ public class Scheduler {
 	{
 		try {
 			FileWriter writer = new FileWriter(name, true);
-			writer.append(listname + ",");
+			writer.append(listname);
+			
+			if(!list.isEmpty())
+				writer.append(",");
+			
 			List<String> results = list;
 			writer.append(Stream.of(results.toArray()).map(String::valueOf).map(x -> x.replaceAll("[\\t\\n\\r,]+"," ")).collect(Collectors.joining(",")));
 			

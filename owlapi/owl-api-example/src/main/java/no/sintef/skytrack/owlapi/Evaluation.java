@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -648,6 +649,11 @@ public class Evaluation {
 
 			for (String source : ontologiesMap.keySet()) {
 
+				List<Double> loadingTime = new ArrayList<Double>();
+				ArrayList<Double> loadingEvalResults = new ArrayList<Double>();
+				ArrayList<String> loadingEvalResultsString = new ArrayList<String>();
+				
+				
 				ArrayList<Double> evalResults = new ArrayList<Double>();
 				ArrayList<String> evalResultsString = new ArrayList<String>();
 
@@ -675,24 +681,57 @@ public class Evaluation {
 					
 					try {
 						double thisTimeRunResult = 0;
+						loadingTime = new ArrayList<Double>();
 						if(i == 1)
-							thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, source, outputDir+"/" + reasonerName + "_ConsistencyResult.csv");
+							thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, source, outputDir+"/" + reasonerName + "_ConsistencyResult.csv", loadingTime);
 						else
-							thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, source, null);
+							thisTimeRunResult = performConsistencyEvaluation(ontology, reasonerFactoryMap.get(reasonerName), reasonerName, source, null, loadingTime);
 						
 						evalResults.add(thisTimeRunResult);
 						evalResultsString.add(String.valueOf(thisTimeRunResult));
+						
+						loadingEvalResults.add(loadingTime.get(0));
+						loadingEvalResultsString.add(String.valueOf(loadingTime.get(0)));
+						
+						
+						
 						//evaluationTime += thisTimeRunResult;
 					} catch (Exception | Error e) {
 						logger.info(reasonerName + " running error. Ontology:" + source);
 						logger.info(e.toString());
 						evalResultsString.add(e.toString());
-						break; 
+						
+						if(loadingTime.isEmpty())
+						{
+							loadingEvalResultsString.add(e.toString());
+							break; 
+						}
+						else
+						{
+							loadingEvalResults.add(loadingTime.get(0));
+							loadingEvalResultsString.add(String.valueOf(loadingTime.get(0)));
+						}
+							
 					}
 
 					// Calling GC
 					System.gc();
 				}
+				
+				if(loadingEvalResults.size() == runs)
+				{
+					Mean mean = new Mean();
+					Median median = new Median();
+					double[] values = loadingEvalResults.stream().mapToDouble(Double::doubleValue).toArray();
+					loadingEvalResultsString.add(String.valueOf(mean.evaluate(values)));
+					loadingEvalResultsString.add(String.valueOf(median.evaluate(values)));
+					
+					logger.info(reasonerName + " Everage Load time on: " + source + "is: " + loadingEvalResultsString.get(runs));
+					logger.info(reasonerName + " Median Load time on: " + source + "is: " + loadingEvalResultsString.get(runs+1));
+				}
+				writeStringListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", loadingEvalResultsString, source);
+				
+				
 				if(evalResults.size() == runs)
 				{
 					Mean mean = new Mean();
@@ -1024,6 +1063,7 @@ public class Evaluation {
 	
 		try
 		{
+			logger.info("Starting Evaluation");
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 			endTime = System.currentTimeMillis();
@@ -1042,7 +1082,7 @@ public class Evaluation {
 		return (endTime - startTime)/1000.0;
 	}
 
-	public static double performConsistencyEvaluation(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name, String ontologyName, String outputFileName) throws Exception {
+	public static double performConsistencyEvaluation(OWLOntology ontology, OWLReasonerFactory reasonerFactory, String name, String ontologyName, String outputFileName, List<Double> loadingTime) throws Exception {
 		long startTime, endTime;
 		OWLReasoner reasoner;
 
@@ -1057,7 +1097,13 @@ public class Evaluation {
 			TimeUnit.MILLISECONDS.sleep(500);
 		}
 		
+		startTime = System.currentTimeMillis();
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
+		endTime = System.currentTimeMillis();
+		loadingTime.add((endTime - startTime)/1000.0);
+		
+		logger.info("Loading Time: " + (endTime - startTime)/1000.0 + " s.");
+		
 		
 		TimerTask task = new TimerTask() {
 	        public void run() {
@@ -1070,6 +1116,7 @@ public class Evaluation {
 	    
 	    try
 	    {
+	    	logger.info("Starting Evaluation");
 	    	startTime = System.currentTimeMillis();
 			consistent = reasoner.isConsistent();
 			endTime = System.currentTimeMillis();
@@ -1128,6 +1175,7 @@ public class Evaluation {
 		
 		try
 		{
+			logger.info("Starting Evaluation");
 			startTime = System.currentTimeMillis();
 			reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.DATA_PROPERTY_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
 			endTime = System.currentTimeMillis();
@@ -1182,6 +1230,7 @@ public class Evaluation {
 	    
 	    try
 	    {
+	    	logger.info("Starting Evaluation");
 	    	startTime = System.currentTimeMillis();
 			reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS, InferenceType.DATA_PROPERTY_ASSERTIONS, InferenceType.OBJECT_PROPERTY_ASSERTIONS);
 			endTime = System.currentTimeMillis();
