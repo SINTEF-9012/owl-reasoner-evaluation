@@ -1017,9 +1017,9 @@ public class Evaluation {
 		{
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
-			TimeUnit.MILLISECONDS.sleep(1000);
+			//TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
-			TimeUnit.MILLISECONDS.sleep(1000);
+			TimeUnit.MILLISECONDS.sleep(500);
 		}
 	
 		try
@@ -1052,9 +1052,9 @@ public class Evaluation {
 		{
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
-			TimeUnit.MILLISECONDS.sleep(1000);
+			//TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
-			TimeUnit.MILLISECONDS.sleep(1000);
+			TimeUnit.MILLISECONDS.sleep(500);
 		}
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
@@ -1109,9 +1109,9 @@ public class Evaluation {
 		{
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
-			TimeUnit.MILLISECONDS.sleep(1000);
+			//TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
-			TimeUnit.MILLISECONDS.sleep(1000);
+			TimeUnit.MILLISECONDS.sleep(500);
 		}
 		
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
@@ -1163,9 +1163,9 @@ public class Evaluation {
 			if(koncludeProcess != null)
 				koncludeProcess.destroyForcibly();
 			
-			TimeUnit.MILLISECONDS.sleep(1000);
+			//TimeUnit.MILLISECONDS.sleep(1000);
 			koncludeProcess = Runtime.getRuntime().exec(koncludeCommand);
-			TimeUnit.MILLISECONDS.sleep(1000);
+			TimeUnit.MILLISECONDS.sleep(500);
 		}
 		
 		
