@@ -2,6 +2,8 @@ package no.sintef.skytrack.owlapi;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -497,8 +499,6 @@ public class Scheduler {
 								
 								writeStringListToCSV(outFile, Arrays.asList("Timeout"), ontoName);
 								
-								
-								
 							}
 
 						};
@@ -546,8 +546,10 @@ public class Scheduler {
 						    logger.error(ligne);
 						}
 						int return_value = process.waitFor();
+						logger.info("Return Value = " + return_value);
 						
-						logger.info("Return Value=" + return_value);
+						if(return_value != 0)
+							checkAndWriteErrorToCSV(outFile, return_value, ontoName);
 						
 					} catch (Exception e) {
 						
@@ -566,6 +568,38 @@ public class Scheduler {
 	}
 		
 	
+	private static void checkAndWriteErrorToCSV(String name, int errorCode, String listname)
+	{
+		try {
+			BufferedReader input = new BufferedReader(new FileReader(name));
+		    String line;
+		    boolean found = false;
+
+		    while ((line = input.readLine()) != null) { 
+		        if(line.startsWith(listname))
+		        {
+		        	found = true;
+		        	break;
+		        }
+		    }
+		    
+		    input.close();
+		    
+		    if(!found)
+		    {
+		    	FileWriter writer = new FileWriter(name, true);
+				writer.append(listname + "," + "Error: " + errorCode);
+				
+				writer.flush();
+				writer.close();
+		    }
+		    
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
 	
 	private static void writeStringListToCSV(String name, List<String> list, String listname)
 	{
