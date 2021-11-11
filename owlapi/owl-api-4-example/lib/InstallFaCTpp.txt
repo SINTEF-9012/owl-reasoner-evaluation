@@ -23,4 +23,4 @@ df -h --total
 
 du -sh *
 
- java -jar Scheduler-0.0.1-SNAPSHOT-jar-with-dependencies.jar -i ../../../ontologies/pool_sample/files/ -r Konclude -t loading consistency classification -n 10 -m 30 -o ore2015 &
+ java -jar Scheduler-0.0.1-SNAPSHOT-jar-with-dependencies.jar -i ../../../ontologies/pool_sample/files/ -r Konclude -t consistency classification -n 10 -m 30 -o ore2015New &

@@ -281,9 +281,13 @@ public class Scheduler {
 		
 		if (cmd.hasOption("print")) {
 			
-			String processArg = String.join(" ", args);
+			//String processArg = String.join(" ", args);
 			
-			String command = "java -jar " + path1 + " " + processArg;
+			
+			
+			String fileArg = String.join(" ", ontologiesMap.values());
+			String command = "java -jar " + path1 + " -p  -f " + fileArg;
+			
 			Process process = null;
 			try {
 				//ProcessBuilder pb = new ProcessBuilder("java", "-jar", path1, args).inheritIO();
