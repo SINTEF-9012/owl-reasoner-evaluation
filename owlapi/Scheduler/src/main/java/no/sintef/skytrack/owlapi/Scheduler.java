@@ -516,7 +516,7 @@ public class Scheduler {
 						while ((ligne = processOutput.readLine()) != null) {
 						    logger.info(ligne);
 						   
-						    if(ligne.contains("Starting Evaluation"))
+						    if(ligne.contains("Starting Evaluation") || ligne.contains("Starting Loading Reasoner"))
 						    {
 						    	
 					    		timer.cancel();

@@ -889,7 +889,7 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 	
-		logger.info("Starting Evaluation");
+		logger.info("Starting Loading Reasoner");
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 			endTime = System.currentTimeMillis();
@@ -908,7 +908,7 @@ public class EvaluationFactpp {
 
 		boolean consistent = false;
 		
-		
+		logger.info("Starting Loading Reasoner");
 		startTime = System.currentTimeMillis();
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		endTime = System.currentTimeMillis();
@@ -964,7 +964,7 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 
-		
+		logger.info("Starting Loading Reasoner");
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
 		TimerTask task = new TimerTask() {
@@ -1008,7 +1008,7 @@ public class EvaluationFactpp {
 		OWLReasoner reasoner;
 
 
-		
+		logger.info("Starting Loading Reasoner");
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
 		TimerTask task = new TimerTask() {

@@ -1063,7 +1063,7 @@ public class Evaluation {
 	
 		try
 		{
-			logger.info("Starting Evaluation");
+			logger.info("Starting Loading Reasoner");
 			startTime = System.currentTimeMillis();
 			reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 			endTime = System.currentTimeMillis();
@@ -1097,6 +1097,7 @@ public class Evaluation {
 			TimeUnit.MILLISECONDS.sleep(500);
 		}
 		
+		logger.info("Starting Loading Reasoner");
 		startTime = System.currentTimeMillis();
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		endTime = System.currentTimeMillis();
@@ -1161,6 +1162,7 @@ public class Evaluation {
 			TimeUnit.MILLISECONDS.sleep(500);
 		}
 		
+		logger.info("Starting Loading Reasoner");
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
 		TimerTask task = new TimerTask() {
@@ -1216,7 +1218,7 @@ public class Evaluation {
 			TimeUnit.MILLISECONDS.sleep(500);
 		}
 		
-		
+		logger.info("Starting Loading Reasoner");
 		reasoner = reasonerFactory.createReasoner(ontology, reasonerConfiguration);
 		
 		TimerTask task = new TimerTask() {
