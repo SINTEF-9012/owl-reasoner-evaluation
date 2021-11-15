@@ -560,7 +560,15 @@ public class Scheduler {
 						logger.info("Return Value = " + return_value);
 						
 						if(return_value != 0)
+						{
 							checkAndWriteErrorToCSV(outFile, return_value, ontoName);
+							if(task.equals("consistency"))
+							{
+								writeStringListToCSV(outLoadingFile, new ArrayList<String>(), ontoName);
+							}
+							
+						}
+							
 						
 					} catch (Exception e) {
 						
