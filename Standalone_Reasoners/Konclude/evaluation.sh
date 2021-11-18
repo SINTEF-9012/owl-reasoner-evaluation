@@ -61,6 +61,7 @@ then
 	   do 
 			start=$(date +%s.%3N)
 			timeout $min $Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log" 
+			end=$(date +%s.%3N)
 			EXIT_STATUS=$?
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			
