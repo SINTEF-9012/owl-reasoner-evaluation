@@ -59,7 +59,10 @@ then
 	   reasonerConsistencyTime=0
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
-			start=$(date +%s.%3N) && timeout $min $Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log" && runtime=$( echo "scale=3; $end - $start" | bc -l )
+			start=$(date +%s.%3N)
+			timeout $min $Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log" 
+			EXIT_STATUS=$?
+			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			
 			EXIT_STATUS=$?
 			if [ $EXIT_STATUS -eq 124 ]
