@@ -64,9 +64,6 @@ then
 			EXIT_STATUS=$?
 			end=$(date +%s.%3N)
 			
-			runtime=$( echo "scale=3; $end - $start" | bc -l )
-			
-			echo $EXIT_STATUS
 			if [ $EXIT_STATUS -eq 124 ]
 			then
 				echo 'Process Timed Out!'
@@ -76,7 +73,7 @@ then
 				break
 			fi
 			
-			
+			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
 			
 			result=$(cat "./${outDir}/consistency/consistency_${i}")
@@ -122,8 +119,19 @@ then
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude classification -i "$ontoDir$i" -o "./${outDir}/classification/classification_${i}" > "./${outDir}/classification_${i}.log"
+			timeout $min $Konclude classification -i "$ontoDir$i" -o "./${outDir}/classification/classification_${i}" > "./${outDir}/classification_${i}.log"
 			end=$(date +%s.%3N)
+			
+			if [ $EXIT_STATUS -eq 124 ]
+			then
+				echo 'Process Timed Out!'
+				killall  Konclude
+				runtime="Timeout"
+				output="${output},${runtime}"
+				break
+			fi
+			
+			
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
 			reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
@@ -164,8 +172,19 @@ then
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
+			timeout $min $Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
 			end=$(date +%s.%3N)
+			
+			if [ $EXIT_STATUS -eq 124 ]
+			then
+				echo 'Process Timed Out!'
+				killall  Konclude
+				runtime="Timeout"
+				output="${output},${runtime}"
+				break
+			fi
+			
+			
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
 			reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
