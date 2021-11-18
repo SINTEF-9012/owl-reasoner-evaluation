@@ -62,7 +62,7 @@ then
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
 			
-			result = $(cat "./${outDir}/consistency/consistency_${i}")
+			result = `cat "./${outDir}/consistency/consistency_${i}"`
 			consistencyResult="${consistencyResult},${result}"
 			
 			reasonerConsistencyTime=$(echo "scale=3; $runtime + $reasonerConsistencyTime" | bc -l)
