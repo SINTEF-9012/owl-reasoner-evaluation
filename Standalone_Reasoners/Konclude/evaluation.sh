@@ -26,10 +26,10 @@ done
 skip_to_file_bk="$skip_to_file"
 
 
-mkdir "$outDir"
-mkdir "${outDir}/consistency"
-mkdir "${outDir}/classification"
-mkdir "${outDir}/realization"
+mkdir -p "$outDir"
+mkdir -p "${outDir}/consistency"
+mkdir -p "${outDir}/classification"
+mkdir -p "${outDir}/realization"
 #for i in `ls -Sr ../../ontologies/*`;
 
 echo "Evaluating reasoner Konclude"
