@@ -4,6 +4,7 @@ NEWLINE=$'\n'
 ontoDir="../../ontologies/ontologies/"
 outDir="output"
 RUN=10
+Konclude="/home/ubuntu/SkyTrack/Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/Konclude"
 #rm -rf ./output/
 
 consistency_task=false
@@ -59,7 +60,7 @@ then
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			timeout $min Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log" 
+			timeout $min $Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log" 
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			
 			EXIT_STATUS=$?
