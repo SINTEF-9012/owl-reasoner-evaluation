@@ -52,6 +52,7 @@ then
 	   echo "$i"
 	   echo
 	   output="$i"
+	   consistencyResult="$i"
 	   reasonerConsistencyTime=0
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
@@ -60,11 +61,18 @@ then
 			end=$(date +%s.%3N)
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
+			
+			result = $(cat "./${outDir}/consistency/consistency_${i}")
+			consistencyResult="${consistencyResult},${result}"
+			
 			reasonerConsistencyTime=$(echo "scale=3; $runtime + $reasonerConsistencyTime" | bc -l)
 			echo "Consistency validation takes ${runtime}"
 		done
 		output="${output}"
+		consistencyResult="${consistencyResult}"
+		
 		echo "$output" >> "./${outDir}/KoncludeCLI_Consistency.csv"
+		echo "$consistencyResult" >> "./${outDir}/KoncludeCLI_ConsistencyResult.csv"
 		reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/$RUN" | bc -l)
 		echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
 	done
