@@ -34,17 +34,13 @@ mkdir "${outDir}/realization"
 
 echo "Evaluating reasoner Konclude"
 
-
-if [ "$realization_task" = true ];
+if [ "$consistency_task" = true ] ;
 then
 	echo
-	echo "Evaluating Reasoner Realization"
+	echo "Evaluating Reasoner consistency validation"
 	echo
-
 	for i in `ls -Sr ${ontoDir}`;
 	do
-	  
-	   
 	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file" ]; 
 	   then
 			continue
@@ -56,25 +52,24 @@ then
 	   echo "$i"
 	   echo
 	   output="$i"
-	   reasonerClassification=0
+	   reasonerConsistencyTime=0
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
+			Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log"
 			end=$(date +%s.%3N)
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
-			reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
-			echo "Realization takes ${runtime}"
+			reasonerConsistencyTime=$(echo "scale=3; $runtime + $reasonerConsistencyTime" | bc -l)
+			echo "Consistency validation takes ${runtime}"
 		done
 		output="${output}"
-		echo "$output" >> "./${outDir}/realization.csv"
-		
-		reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
-		echo "Everage Realization time on: $i is $reasonerClassification"
+		echo "$output" >> "./${outDir}/KoncludeCLI_Consistency.csv"
+		reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/$RUN" | bc -l)
+		echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
 	done
-fi
 
+fi
 
 skip_to_file="$skip_to_file_bk"
 
@@ -110,21 +105,25 @@ then
 			echo "Classification takes ${runtime}"
 		done
 		output="${output}"
-		echo "$output" >> "./${outDir}/classification.csv"
+		echo "$output" >> "./${outDir}/KoncludeCLI_Classification.csv"
 		reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
 		echo "Everage classification time on: $i is $reasonerClassification"
 	done
 fi
 
+
 skip_to_file="$skip_to_file_bk"
 
-if [ "$consistency_task" = true ] ;
+if [ "$realization_task" = true ];
 then
 	echo
-	echo "Evaluating Reasoner consistency validation"
+	echo "Evaluating Reasoner Realization"
 	echo
+
 	for i in `ls -Sr ${ontoDir}`;
 	do
+	  
+	   
 	   if [ ! -z "$skip_to_file" ] && [ "$i" != "$skip_to_file" ]; 
 	   then
 			continue
@@ -136,24 +135,30 @@ then
 	   echo "$i"
 	   echo
 	   output="$i"
-	   reasonerConsistencyTime=0
+	   reasonerClassification=0
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log"
+			Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
 			end=$(date +%s.%3N)
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
-			reasonerConsistencyTime=$(echo "scale=3; $runtime + $reasonerConsistencyTime" | bc -l)
-			echo "Consistency validation takes ${runtime}"
+			reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
+			echo "Realization takes ${runtime}"
 		done
 		output="${output}"
-		echo "$output" >> "./${outDir}/consistency.csv"
-		reasonerConsistencyTime=$(echo "scale=3; $reasonerConsistencyTime/$RUN" | bc -l)
-		echo "Everage consistency validation time on: $i is $reasonerConsistencyTime"
+		echo "$output" >> "./${outDir}/KoncludeCLI_Realization.csv"
+		
+		reasonerClassification=$(echo "scale=3; $reasonerClassification/$RUN" | bc -l)
+		echo "Everage Realization time on: $i is $reasonerClassification"
 	done
-
 fi
+
+
+
+
+
+
 
 
 
