@@ -10,10 +10,12 @@ consistency_task=false
 classification_task=false
 realization_task=false
 skip_to_file=""
+min="30m"
 
-while getopts o:i:j:vcr flag
+while getopts m:o:i:j:vcr flag
 do
     case "${flag}" in
+		m) min=${OPTARG};;
 		o) outDir=${OPTARG};;
 		i) ontoDir=${OPTARG};;
         j) skip_to_file=${OPTARG};;
@@ -56,10 +58,20 @@ then
 	   reasonerConsistencyTime=0
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
-			start=$(date +%s.%3N)
-			Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log"
-			end=$(date +%s.%3N)
-			runtime=$( echo "scale=3; $end - $start" | bc -l )
+			
+			timeout $min start=$(date +%s.%3N) && Konclude consistency -i "$ontoDir$i" -o "./${outDir}/consistency/consistency_${i}" > "./${outDir}/consistency_${i}.log" && runtime=$( echo "scale=3; $end - $start" | bc -l )
+			
+			EXIT_STATUS=$?
+			if [ $EXIT_STATUS -eq 124 ]
+			then
+				echo 'Process Timed Out!'
+				killall  Konclude
+				runtime="Timeout"
+				output="${output},${runtime}"
+				break
+			fi
+			
+			
 			output="${output},${runtime}"
 			
 			result=$(cat "./${outDir}/consistency/consistency_${i}")
