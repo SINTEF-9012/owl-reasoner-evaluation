@@ -64,7 +64,7 @@ then
 			EXIT_STATUS=$?
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			
-			EXIT_STATUS=$?
+			echo $EXIT_STATUS
 			if [ $EXIT_STATUS -eq 124 ]
 			then
 				echo 'Process Timed Out!'
