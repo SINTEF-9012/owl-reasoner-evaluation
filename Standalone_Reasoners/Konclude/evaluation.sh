@@ -69,7 +69,7 @@ then
 				echo 'Process Timed Out!'
 				killall  Konclude
 				runtime="Timeout"
-				output="${output},${runtime}"
+				output="${i},${runtime}"
 				break
 			fi
 			
@@ -128,7 +128,7 @@ then
 				echo 'Process Timed Out!'
 				killall  Konclude
 				runtime="Timeout"
-				output="${output},${runtime}"
+				output="${i},${runtime}"
 				break
 			fi
 			
@@ -182,7 +182,7 @@ then
 				echo 'Process Timed Out!'
 				killall  Konclude
 				runtime="Timeout"
-				output="${output},${runtime}"
+				output="${i},${runtime}"
 				break
 			fi
 			
