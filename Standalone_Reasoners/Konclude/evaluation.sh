@@ -120,6 +120,7 @@ then
 	   do 
 			start=$(date +%s.%3N)
 			timeout $min $Konclude classification -i "$ontoDir$i" -o "./${outDir}/classification/classification_${i}" > "./${outDir}/classification_${i}.log"
+			EXIT_STATUS=$?
 			end=$(date +%s.%3N)
 			
 			if [ $EXIT_STATUS -eq 124 ]
@@ -173,6 +174,7 @@ then
 	   do 
 			start=$(date +%s.%3N)
 			timeout $min $Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
+			EXIT_STATUS=$?
 			end=$(date +%s.%3N)
 			
 			if [ $EXIT_STATUS -eq 124 ]

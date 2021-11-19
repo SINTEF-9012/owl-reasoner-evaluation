@@ -5,16 +5,19 @@ ontoDir="../../ontologies/ontologies/"
 outDir="output"
 RUN=10
 #rm -rf ./output/
+Konclude="/home/ubuntu/SkyTrack/Standalone_Reasoners/Konclude/Konclude-Linux/Binaries/Konclude"
 
 consistency_task=false
 classification_task=false
 realization_task=true
 skip_to_file=""
 listFile=""
+min="30m"
 
-while getopts o:i:j:l: flag
+while getopts m:o:i:j:l: flag
 do
     case "${flag}" in
+		m) min=${OPTARG};;
 		o) outDir=${OPTARG};;
 		i) ontoDir=${OPTARG};;
         j) skip_to_file=${OPTARG};;
@@ -26,8 +29,6 @@ skip_to_file_bk="$skip_to_file"
 
 
 mkdir -p "$outDir"
-mkdir -p "${outDir}/consistency"
-mkdir -p "${outDir}/classification"
 mkdir -p "${outDir}/realization"
 #for i in `ls -Sr ../../ontologies/*`;
 
@@ -75,8 +76,20 @@ then
 	   for (( runC=1; runC<=$RUN; runC++ )) 
 	   do 
 			start=$(date +%s.%3N)
-			Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
+			timeout $min $Konclude realization -i "$ontoDir$i" -o "./${outDir}/realization/realization_${i}" > "./${outDir}/realization_${i}.log"
+			EXIT_STATUS=$?
 			end=$(date +%s.%3N)
+			
+			if [ $EXIT_STATUS -eq 124 ]
+			then
+				echo 'Process Timed Out!'
+				killall  Konclude
+				runtime="Timeout"
+				output="${output},${runtime}"
+				break
+			fi
+			
+			
 			runtime=$( echo "scale=3; $end - $start" | bc -l )
 			output="${output},${runtime}"
 			reasonerClassification=$(echo "scale=3; $runtime + $reasonerClassification" | bc -l)
