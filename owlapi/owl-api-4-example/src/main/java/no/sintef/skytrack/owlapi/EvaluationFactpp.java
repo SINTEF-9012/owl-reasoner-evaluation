@@ -678,7 +678,7 @@ public class EvaluationFactpp {
 					logger.info(reasonerName + " Median Load time on: " + source + "is: " + loadingEvalResultsString.get(runs+1));
 				}
 				
-				if(loadingEvalResults.isEmpty())
+				if(loadingEvalResultsString.isEmpty())
 				{
 					String outLoadingFile = outputDir + "/" + reasonerName +  "_LoadingTimeout.csv";
 					writeStringListToCSV(outLoadingFile, new ArrayList<String>(), source);
