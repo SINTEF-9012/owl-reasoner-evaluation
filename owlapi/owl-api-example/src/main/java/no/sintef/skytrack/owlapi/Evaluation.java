@@ -708,8 +708,9 @@ public class Evaluation {
 						}
 						else
 						{
-							loadingEvalResults.add(loadingTime.get(0));
-							loadingEvalResultsString.add(String.valueOf(loadingTime.get(0)));
+							
+							loadingEvalResultsString.clear();
+							break;
 						}
 							
 					}
@@ -729,7 +730,18 @@ public class Evaluation {
 					logger.info(reasonerName + " Everage Load time on: " + source + "is: " + loadingEvalResultsString.get(runs));
 					logger.info(reasonerName + " Median Load time on: " + source + "is: " + loadingEvalResultsString.get(runs+1));
 				}
-				writeStringListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", loadingEvalResultsString, source);
+				
+				if(loadingEvalResults.isEmpty())
+				{
+					String outLoadingFile = outputDir + "/" + reasonerName +  "_LoadingTimeout.csv";
+					writeStringListToCSV(outLoadingFile, new ArrayList<String>(), source);
+				}
+				else
+				{
+					writeStringListToCSV(outputDir+"/" + reasonerName + "_Loading.csv", loadingEvalResultsString, source);
+				}
+					
+				
 				
 				
 				if(evalResults.size() == runs)
@@ -891,7 +903,12 @@ public class Evaluation {
 	{
 		try {
 			FileWriter writer = new FileWriter(name, true);
-			writer.append(listname + ",");
+			writer.append(listname);
+			
+			if(!list.isEmpty())
+				writer.append(",");
+			
+			
 			ArrayList<String> results = list;
 			writer.append(Stream.of(results.toArray()).map(String::valueOf).map(x -> x.replaceAll("[\\t\\n\\r,]+"," ")).collect(Collectors.joining(",")));
 			
