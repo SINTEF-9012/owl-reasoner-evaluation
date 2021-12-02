@@ -557,6 +557,8 @@ public class Scheduler {
 						    logger.error(ligne);
 						}
 						int return_value = process.waitFor();
+						
+						
 						logger.info("Return Value = " + return_value);
 						
 						if(return_value != 0)
@@ -570,7 +572,8 @@ public class Scheduler {
 						}
 							
 						
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						
 						logger.error("Error: " + e.toString());
 					}
@@ -579,6 +582,15 @@ public class Scheduler {
 						timer.cancel();
 						 if(process != null)
 							 process.destroyForcibly();
+						 
+						 if (reasonerName.equals("Konclude")) {
+								try {
+									Runtime.getRuntime().exec("killall Konclude");
+								} catch (Exception e) {
+									logger.error("Cannot kill Konclude: " + e.toString());
+								}
+
+							}
 					}
 				}
 
