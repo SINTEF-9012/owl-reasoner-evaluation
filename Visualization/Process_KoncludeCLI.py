@@ -46,18 +46,24 @@ if __name__ == '__main__':
     input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015\\"
     output_folder = "./output/"
 
+    #ore2015_statistics_file: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\BioOntology_Statistics.csv"
+    #input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\Bio\\"
+    #output_folder = "./output/Bio/"
+
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
+
     columns = ["Ontology", "Run1", "Run2", "Run3", "Run4", "Run5", "Run6" ,"Run7" ,"Run8" ,"Run9" ,"Run10", "Mean", "Median"]
 
     reasoner = "KoncludeCLI"
     task_name = ["Consistency", "Classification", "Realization"]
     #task_name = ["Classification", "Realization"]
 
-    filelist = {"Classification": "classification.list", "Realization":"realization.list"}
+    filelist = {"Classification": "KoncludeCLI_classification.list", "Realization":"KoncludeCLI_realization.list"}
 
     constency_dict = {}
 
     for task in task_name:
-        file_name = input_folder + reasoner + "_" + task + ".csv"
+        file_name = input_folder + reasoner + "_" + task + "_old.csv"
 
         full_data = pd.read_csv(file_name, header=None)
         full_data.columns = columns
@@ -104,7 +110,7 @@ if __name__ == '__main__':
             #print(new_full_data)
 
         else:
-            list_successfull_ont = pd.read_csv(input_folder + filelist[task])
+            list_successfull_ont = pd.read_csv(input_folder + filelist[task], header=None)
             list_successfull_ont.columns = ["Ontology"]
 
             new_success_data = success_data.merge(list_successfull_ont, on="Ontology", how="inner").iloc[:, 0:13].copy()

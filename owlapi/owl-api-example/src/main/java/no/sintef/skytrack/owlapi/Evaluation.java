@@ -277,7 +277,7 @@ public class Evaluation {
 		//------------------------------------------------------
 		
 		ArrayList<String> supportTasks = new ArrayList<String>(
-				Arrays.asList("loading", "consistency", "classification", "realization"));
+				Arrays.asList("loadOntology", "loading", "consistency", "classification", "realization"));
 
 		String[] tasksName = cmd.getOptionValues("task");
 		if (tasksName == null) {
@@ -450,6 +450,20 @@ public class Evaluation {
 			logger.info("--------------------------------------------------");
 			//logger.info("");
 			taskRealization(ontologiesMap, reasonerFactoryMap, outputFilePath, runs);
+		}
+		
+		
+		//------------------------------------------------------
+		// Task Load ontology
+		//------------------------------------------------------
+		
+
+		if(taskNameList.contains("loadOntology"))
+		{
+			//logger.info("");
+			logger.info("--------------------------------------------------");
+			//logger.info("");
+			taskLoadOntology(ontologiesMap, outputFilePath, runs);
 		}
 		
 		
@@ -627,6 +641,63 @@ public class Evaluation {
 		}
 		
 		logger =  LogManager.getRootLogger();
+	}
+	
+	
+	public static void taskLoadOntology(Map<String, String> ontologiesMap, String outputDir, int runs) {
+		
+
+			for (String source : ontologiesMap.keySet()) {
+
+				ArrayList<Double> evalResults = new ArrayList<Double>();
+				ArrayList<String> evalResultsString = new ArrayList<String>();
+
+				String filename = ontologiesMap.get(source);
+				logger.info("");
+				logger.info("Ontology: " + source);
+				//evaluationTime = 0;
+
+				
+				
+				for (int i = 1; i <= runs; i++) {
+					
+					try {
+
+
+						double thisTimeRunResult = performLoadingOntologyEvaluation(filename);
+						
+						evalResults.add(thisTimeRunResult);
+						evalResultsString.add(String.valueOf(thisTimeRunResult));
+						
+					} catch (Exception | Error e) {
+						logger.info("Error during loading ontology:" + source);
+						logger.info(e.toString());
+						evalResultsString.clear();
+						evalResultsString.add(e.toString());
+						break; 
+					}
+
+					// Calling GC
+					System.gc();
+				}
+				if(evalResults.size() == runs)
+				{
+					Mean mean = new Mean();
+					Median median = new Median();
+					double[] values = evalResults.stream().mapToDouble(Double::doubleValue).toArray();
+					evalResultsString.add(String.valueOf(mean.evaluate(values)));
+					evalResultsString.add(String.valueOf(median.evaluate(values)));
+					
+					logger.info("Everage loading time on: " + source + "is: " + evalResultsString.get(runs));
+					logger.info("Median loading time on: " + source + "is: " + evalResultsString.get(runs+1));
+				}
+				writeStringListToCSV(outputDir+"/"  + "Ontology_Loading.csv", evalResultsString, source);
+	
+			}
+			
+		
+		
+		
 	}
 	
 	public static void taskConsitency(Map<String, String> ontologiesMap, Map<String, OWLReasonerFactory> reasonerFactoryMap, String outputDir, int runs) {
@@ -1309,23 +1380,20 @@ public class Evaluation {
 		return ontology;
 	}
 
-	public static double loadOntologyEvaluation(String source, String filename) {
+	public static double performLoadingOntologyEvaluation(String filename) {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		IRI iri = IRI.create(source);
-
-		if (filename != null) {
-			iri = IRI.create(new File(filename));
-		}
-
+		manager.getOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+		
+		
 		long startTime = 0, endTime = 0;
 
 		OWLOntology ontology = null;
 
 		try {
 
-			// logger.info("Loading the ontology " + source);
+			logger.info("Starting Loading Ontology");
 			startTime = System.currentTimeMillis();
-			ontology = manager.loadOntology(iri);
+			ontology = manager.loadOntologyFromOntologyDocument(new File(filename));
 			endTime = System.currentTimeMillis();
 
 			logger.info("Loading takes " + (endTime - startTime)/1000.0 + " s");
@@ -1334,9 +1402,6 @@ public class Evaluation {
 
 			e.printStackTrace();
 		}
-
-		//int numClassses = ontology.getClassesInSignature(Imports.INCLUDED).size();
-		// System.out.println("Number of Classes " + numClassses);
 
 		return (endTime - startTime)/1000.0;
 	}

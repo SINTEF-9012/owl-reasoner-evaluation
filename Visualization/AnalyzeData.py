@@ -30,7 +30,11 @@ def load_consistency_result(filename):
     return data
 
 def load_evaluation_csv(file_name):
-    data = pd.read_csv(file_name, header=None)
+    columns = ["Ontology", "Run1", "Run2", "Run3", "Run4", "Run5", "Run6", "Run7", "Run8", "Run9", "Run10", "Mean",
+               "Median"]
+
+
+    data = pd.read_csv(file_name, header=None, names=columns)
 
     total = data.shape[0]
 
@@ -59,9 +63,13 @@ def load_evaluation_csv(file_name):
     return new_data, total, time_count, inconstent_count, mem_count
 
 if __name__ == '__main__':
-
+    stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015_Statistics.csv"
     input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015\\"
     output_folder = "./output/"
+
+    #stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\BioOntology_Statistics.csv"
+    ##output_folder = "./output/Bio"
+
     Path(output_folder).mkdir(parents=True, exist_ok=True)
     reasoner_name = ["Factpp", "HermiT", "JFact", "Konclude", "Openllet", "Pellet", "KoncludeCLI"]
     task_name = [ "Loading", "Consistency", "Classification", "Realization"]
@@ -69,8 +77,10 @@ if __name__ == '__main__':
 
 
 
-    stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015_Statistics.csv"
+
     stats = pd.read_csv(stat_csv_file)
+
+    loading_data = stats.copy().rename(columns={"Statistics": "Ontology"})
 
 
     data_map = {}
@@ -78,7 +88,7 @@ if __name__ == '__main__':
     for task in task_name:
         task_map = {}
         task_success = []
-        task_fail = []
+        task_other_error = []
         task_timeout=[]
         task_total = []
         task_mean = []
@@ -88,7 +98,12 @@ if __name__ == '__main__':
         #value_vars = []
         task_inconsistent_error = []
         task_mem = []
+        task_total_fail = []
+
         stats_temp = stats.copy().rename(columns={"Statistics": "Ontology"})
+
+
+
         #print(stats_temp)
         for reasoner in reasoner_name:
             file_name = input_folder + reasoner + "_" + task + ".csv"
@@ -103,20 +118,25 @@ if __name__ == '__main__':
 
             data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(file_name)
             success = data.shape[0]
-            fail = total - success - timeout
+
+            total_fail = total - success
+
+            other_error = total - success - timeout
 
             if task == "Classification" or task == "Realization":
-                fail = fail - inconsistent_error_count
+                other_error = other_error - inconsistent_error_count
 
-            fail = fail - mem
+            other_error = other_error - mem
 
             task_success.append(success)
-            task_fail.append(fail)
+            task_total_fail.append(total_fail)
+            task_other_error.append(other_error)
             task_total.append(total)
             task_timeout.append(timeout)
             task_inconsistent_error.append(inconsistent_error_count)
             task_mem.append(mem)
             task_map[reasoner] = data
+
 
             mean = data.iloc[:, 11].mean()
             sum = data.iloc[:, 11].sum()
@@ -139,21 +159,61 @@ if __name__ == '__main__':
 
                 consitency_result = consitency_result.groupby(by="IsConsitency").count().reset_index()
                 consitency_result = consitency_result[consitency_result['IsConsitency'] == False]
-                task_consistent.append(consitency_result.iat[0, 1])
 
-
+                if(consitency_result.empty):
+                    task_consistent.append(0)
+                else:
+                    task_consistent.append(consitency_result.iat[0, 1])
 
         stats_temp.to_csv(output_folder + "/" + task + "_mean.csv", index=False)
 
+
+        if task == "Loading":
+            extract_column_names = ["Ontology"]
+            for reasoner in reasoner_name:
+                loading_column_name = reasoner + "_Loading"
+                if loading_column_name in stats_temp.columns:
+                    extract_column_names.append(loading_column_name)
+
+            loading_data = stats_temp.loc[:, extract_column_names].copy()
+        else:
+            stats_temp_copy = stats_temp.copy().merge(loading_data, on="Ontology", how="inner")
+
+            for reasoner in reasoner_name:
+                task_column_name = reasoner + "_" + task
+                loading_column_name =  reasoner + "_Loading"
+                new_column_name = reasoner + "_" + task + "_LoadingAdded"
+                if loading_column_name in stats_temp_copy.columns and task_column_name in stats_temp_copy.columns:
+                    stats_temp_copy[new_column_name] = stats_temp_copy[task_column_name] + stats_temp_copy[loading_column_name]
+
+                if reasoner == "KoncludeCLI":
+                    stats_temp_copy[new_column_name] = stats_temp_copy[task_column_name]
+
+            stats_temp_copy.to_csv(output_folder + "/" + task + "_mean_LoadingAdded.csv", index=False)
+
+
+
+
+
         data_map[task] = task_map
 
-        temp_data = {"Reasoners": resoners, "Success" : task_success, "Other Error": task_fail, "OutOfMemory": task_mem, "Timeout": task_timeout, "Total": task_total, "Mean": task_mean, "Sum" : task_sum}
+        temp_data = {"Reasoners": resoners, "Success" : task_success, "Total": task_total, "OutOfMemory": task_mem, "Timeout": task_timeout}
 
-        if (task == "Consistency"):
-            temp_data["Inconstent"] = task_consistent
+
 
         if task == "Classification" or task == "Realization":
             temp_data["Inconsistent Error"] = task_inconsistent_error
+
+        temp_data["Other Error"] = task_other_error
+
+        temp_data["Total Error"] = task_total_fail
+
+        if (task == "Consistency"):
+            temp_data["Inconstent Ontologies"] = task_consistent
+
+        temp_data["Mean"] = task_mean
+        temp_data["Sum"] = task_sum
+
 
         df = pd.DataFrame(temp_data)
         df = df.sort_values(['Success', "Mean"], ascending=[False, True])

@@ -357,7 +357,7 @@ public class Scheduler {
 		//------------------------------------------------------
 		
 		ArrayList<String> supportTasks = new ArrayList<String>(
-				Arrays.asList("loading", "consistency", "classification", "realization"));
+				Arrays.asList("loadOntology", "loading", "consistency", "classification", "realization"));
 
 		String[] tasksName = cmd.getOptionValues("task");
 		if (tasksName == null) {
@@ -434,6 +434,49 @@ public class Scheduler {
 		logger.info("");
 		
 		
+		
+		List<String> tTasks = Arrays.asList(tasksName);
+		if(tTasks.contains("loadOntology"))
+		{
+			String processArg = "  -t loadOntology" + " -n " + runs + " -o " + outputFilePath;
+			
+			String fileArg = String.join(" ", ontologiesMap.values());
+			String command = "java -jar " + path1 + processArg + " -f " + fileArg;
+			
+			Process process = null;
+			try {
+				//ProcessBuilder pb = new ProcessBuilder("java", "-jar", path1, args).inheritIO();
+				process = Runtime.getRuntime().exec(command);
+				BufferedReader processOutput = getOutput(process);
+				BufferedReader processError = getError(process);
+				String ligne = "";
+
+				while ((ligne = processOutput.readLine()) != null) {
+				    logger.info(ligne);
+				    
+				}
+				
+				while ((ligne = processError.readLine()) != null) {
+				    logger.error(ligne);
+				    
+				}
+				process.waitFor();
+		        
+				
+			} catch (Exception e) {
+				
+				logger.error("Error: " + e.toString());
+			}
+			finally
+			{
+				process.destroy();
+			}
+			
+			tTasks.remove("loadOntology");
+			tasksName =  (String[]) tTasks.toArray();
+		}
+		
+		
 		evaluate(ontologiesMap, reasonersName, tasksName, runs, outputFilePath);
 		
 		
@@ -446,6 +489,8 @@ public class Scheduler {
 		for(String task : tasks)
 		{
 			String processArg = "-t " + task + " -n " + runs + " -o " + outputPath;
+			
+			
 			for (String reasonerName : reasoners) 
 			{
 				String reasonerArg = processArg + " -r " + reasonerName;
