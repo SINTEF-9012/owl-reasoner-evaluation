@@ -10,7 +10,7 @@ def show_values_on_bars(axs, h_v="v", space=1):
         if h_v == "v":
             for p in ax.patches:
                 _x = p.get_x() + p.get_width() / 2
-                _y = p.get_y() + p.get_height()
+                _y = p.get_y() + p.get_height() + float(space)
                 try:
                     value = int(p.get_height())
                 except:
@@ -94,39 +94,65 @@ if __name__ == '__main__':
     print(rore2015_profiles)
     print(bio_profiles)
 
-    sns.set(style="whitegrid")
-    fig, axes = plt.subplots(1, 3, sharex=True, sharey=True)
+    #sns.set(style="whitegrid")
+    sns.set_color_codes("muted")
+    fig, axes = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(11, 6.7))
 
-    sns.barplot(ax=axes[0], x="Size", y="Ontologies", data=ore2015_profiles, order=["Very Small", "Small", "Medium", "Large", "Very Large", "Huge"])
+    sns.barplot(ax=axes[0], x="Size", y="Ontologies", data=ore2015_profiles, order=["Very Small", "Small", "Medium", "Large", "Very Large", "Huge"], color="b")
     #axes[0].set_yscale("log")
     axes[0].set_title("ORE 2015 Ontologies \n (Loading, Consistency, Classification)")
     axes[0].grid(False)
     axes[0].set_ylabel('Number of Ontologies')
     axes[0].set_xlabel('')
-    show_values_on_bars(axes[0])
+
+    axes[0].tick_params(left=False, bottom=False)
+    axes[0].set(yticklabels=[])
+
+    axes[0].tick_params(axis='x', rotation=25)
+
+    show_values_on_bars(axes[0], space=10)
 
 
-    sns.barplot(ax=axes[1], x="Size", y="Ontologies", data=rore2015_profiles, order=["Very Small", "Small", "Medium", "Large", "Very Large", "Huge"])
+    sns.barplot(ax=axes[1], x="Size", y="Ontologies", data=rore2015_profiles, order=["Very Small", "Small", "Medium", "Large", "Very Large", "Huge"], color="b")
     #axes[1].set_yscale("log")
     axes[1].set_title("ORE 2015 Ontologies \n (Realization)")
     axes[1].set_ylabel('')
-    axes[1].set_xlabel('')
+    axes[1].set_xlabel('Size of Ontologies')
     axes[1].grid(False)
 
-    show_values_on_bars(axes[1])
+    axes[1].tick_params(left=False, bottom=False)
+    axes[1].set(yticklabels=[])
+
+    axes[1].tick_params(axis='x', rotation=25)
+
+    show_values_on_bars(axes[1], space=10)
 
     sns.barplot(ax=axes[2], x="Size", y="Ontologies", data=bio_profiles,
-                order=["Very Small", "Small", "Medium", "Large", "Very Large", "Huge"])
+                order=["Very Small", "Small", "Medium", "Large", "Very Large", "Huge"], color="b")
 
     #axes[2].set_yscale("log")
     axes[2].set_title("NCBO Bio-ontologies")
     axes[2].set_ylabel('')
     axes[2].set_xlabel('')
     axes[2].grid(False)
-    show_values_on_bars(axes[2])
+
+    axes[2].tick_params(left=False, bottom=False)
+    axes[2].set(yticklabels=[])
+
+    axes[2].tick_params(axis='x', rotation=25)
+
+
+    show_values_on_bars(axes[2], space=10)
     fig.legend()
 
-    axes[2].legend(labels=["Very Small: #Axioms < 10E3", "Small: #Axioms < 10E4", "Medium: #Axioms < 10E5", "Large: #Axioms < 10E6", "Very Large: #Axioms < 10E7", "Huge: #Axioms > 10E7"], handlelength=0, handletextpad=0)
+
+
+    #axes[2].legend(labels=["Very Small: #Axioms < 10E3", "Small: #Axioms < 10E4", "Medium: #Axioms < 10E5", "Large: #Axioms < 10E6", "Very Large: #Axioms < 10E7", "Huge: #Axioms > 10E7"], handlelength=0, handletextpad=0)
+    output_folder = "./output/"
+    plt.savefig(output_folder + "/onto_stat.pdf", bbox_inches='tight')
+    plt.savefig(output_folder + "/onto_stat.png", bbox_inches='tight')
+
+
 
     plt.show()
 

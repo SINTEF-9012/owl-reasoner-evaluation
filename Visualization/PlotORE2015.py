@@ -8,16 +8,18 @@ from pathlib import Path
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib import ticker
 
+
 def load_analyze_csv(file_name):
     data = pd.read_csv(file_name)
 
     isNumeric = data.iloc[:, 13:].copy()
-    isNumeric = isNumeric.apply(lambda s: pd.to_numeric(s, errors='coerce').notnull().all(), axis=1)
 
-    isNumeric = isNumeric.index[isNumeric].tolist()
 
-    #isNumeric = isNumeric.dropna(how='all')
-    #isNumeric = isNumeric.index.tolist()
+    #isNumeric = isNumeric.apply(lambda s: pd.to_numeric(s, errors='coerce').notnull().all(), axis=1)
+    #isNumeric = isNumeric.index[isNumeric].tolist()
+
+    isNumeric = isNumeric.dropna(how='all')
+    isNumeric = isNumeric.index.tolist()
 
 
 
@@ -61,8 +63,8 @@ def plot_multi(data, value_vars, task, hue_order, ax):
     #sns.set_theme(style="whitegrid")
 
     ax.grid(False)
-    sns.set_color_codes("dark")
-    sns.color_palette("dark")
+    #sns.set_color_codes("dark")
+    #sns.color_palette("dark")
 
     g = sns.lineplot(ax=ax, data=stats_temp, x="Index", y = task, hue="Reasoner", hue_order=hue_order)
 
@@ -75,8 +77,10 @@ def plot_multi(data, value_vars, task, hue_order, ax):
     ax.legend().set_visible(False)
 
     g.set(ylabel=None)
-    g.set(xlabel=task)
+    g.set_title(task)
+    g.set(xlabel=None)
     g.set(xticklabels=[])
+    g.tick_params(bottom=False)
 
     #plt.savefig(output_folder + "/" + task + "_mean.pdf")
     #plt.show()
@@ -121,9 +125,7 @@ def plot(data, value_vars, task, hue_order):
     #plt.savefig(output_folder + "/" + task + "_mean.pdf")
     plt.show()
 
-def plot_mean_data():
-    input_folder: str = "./output/"
-    output_folder = "./output/"
+def plot_mean_data(input_folder, output_folder):
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     reasoner_name = ["Factpp","HermiT",  "JFact", "Konclude", "KoncludeCLI", "Pellet" , "Openllet"]
@@ -148,7 +150,7 @@ def plot_mean_data():
             i = i + 1
 
 
-    sns.move_legend(axes[1], "lower center", bbox_to_anchor=(.5, 1), ncol=7, title=None, frameon=False)
+    sns.move_legend(axes[1], "upper center",  bbox_to_anchor=(1, 0), ncol=7, title=None, frameon=False)
 
 
 
@@ -156,12 +158,15 @@ def plot_mean_data():
     axes[2].set(yticklabels=[])
     axes[3].set(yticklabels=[])
 
-    plt.savefig(output_folder + "/mean.pdf")
+    axes[0].set(ylabel="Reasoning Time (seconds)")
+    #axes[1].set(xlabel="Number of Reasoners")
+
+    plt.savefig(output_folder + "/mean.pdf", bbox_inches='tight')
+    plt.savefig(output_folder + "/mean.png", bbox_inches='tight')
     #plt.show()
 
-def plot_mean_data_added_loading():
-        input_folder: str = "./output/"
-        output_folder = "./output/"
+def plot_mean_data_added_loading(input_folder, output_folder):
+
         Path(output_folder).mkdir(parents=True, exist_ok=True)
 
         reasoner_name = ["Factpp", "HermiT", "JFact", "Konclude", "KoncludeCLI", "Pellet", "Openllet"]
@@ -170,7 +175,7 @@ def plot_mean_data_added_loading():
         # task_name = ["Loading"]
 
         i = 0
-        fig, axes = plt.subplots(1, 3, figsize=(11, 5))
+        fig, axes = plt.subplots(1, 3, figsize=(8, 5))
 
         for task in task_name:
             file_name = input_folder + task + "_mean_LoadingAdded.csv"
@@ -184,15 +189,63 @@ def plot_mean_data_added_loading():
 
             i = i + 1
 
-        sns.move_legend(axes[1], "lower center", bbox_to_anchor=(.5, 1), ncol=7, title=None, frameon=False)
+        sns.move_legend(axes[1], "upper center", bbox_to_anchor=(0.5, 0), ncol=7, title=None, frameon=False)
 
         axes[1].set(yticklabels=[])
         axes[2].set(yticklabels=[])
 
-        plt.savefig(output_folder + "/mean_loading_added.pdf")
+        axes[0].set(ylabel="Reasoning Time (seconds)")
+
+        plt.savefig(output_folder + "/mean_loading_added.pdf", bbox_inches='tight')
+        plt.savefig(output_folder + "/mean_loading_added.png", bbox_inches='tight')
         #plt.show()
         #break;
 
+
+def plot_mean_data_added_all_loading(input_folder, output_folder):
+
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
+
+    reasoner_name = ["Factpp", "HermiT", "JFact", "Konclude", "KoncludeCLI", "Pellet", "Openllet"]
+    task_name = ["Consistency", "Classification", "Realization"]
+
+
+
+    i = 0
+    fig, axes = plt.subplots(1, 3, figsize=(8, 5))
+
+
+
+    for task in task_name:
+        file_name = input_folder + task + "_mean_AllLoadingAdded.csv"
+        data = load_analyze_csv(file_name)
+        # print(data)
+        new_data, value_vars = process_data(data, reasoner_name, task + "_AllLoadingAdded")
+
+        plot_multi(new_data, value_vars, task, reasoner_name, axes[i])
+
+        axes[i].set(ylim=(0.001, 1800))
+
+        i = i + 1
+
+    sns.move_legend(axes[1], "upper center", bbox_to_anchor=(.5, 0), ncol=7, title=None, frameon=False)
+
+    axes[1].set(yticklabels=[])
+    axes[2].set(yticklabels=[])
+
+    axes[0].set(ylabel="Reasoning Time (seconds)")
+
+    plt.savefig(output_folder + "/mean_all_loading_added.pdf", bbox_inches='tight')
+    plt.savefig(output_folder + "/mean_all_loading_added.png", bbox_inches='tight')
+
+
 if __name__ == '__main__':
-    plot_mean_data()
-    plot_mean_data_added_loading()
+    input="./output/"
+    output="./output"
+
+    #input="./output/Bio/"
+    #output="./output/Bio/"
+
+    plot_mean_data(input, output)
+    plot_mean_data_added_loading(input, output)
+    plot_mean_data_added_all_loading(input, output)

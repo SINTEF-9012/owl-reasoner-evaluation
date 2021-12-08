@@ -50,35 +50,66 @@ def load_evaluation_csv(file_name):
     time_count = timeout.shape[0]
 
 
+
+    #data = data.apply(lambda x: "Timeout" if 'timeout' in str(x).lower() and  x.name in ["Mean"] else x, axis=1)
+
+
     inconstent = data.applymap(lambda x: 'inconsistentontology' in str(x).lower()).any(axis=1)
     inconstent = data[inconstent].copy()
     inconstent_count = inconstent.shape[0]
+
+    #data = data.apply(lambda x: "Inconsistent Error" if 'inconsistentontology' in str(x).lower() and x.name in ["Mean"] else x, axis=1)
 
     mem = data.applymap(lambda x: 'outofmemory' in str(x).lower()).any(axis=1)
     mem = data[mem].copy()
     mem_count = mem.shape[0]
 
+    #data = data.apply(lambda x: "Inconsistent Error" if 'outofmemory' in str(x).lower() and x.name in ["Mean"] else x, axis=1)
+
+    #data = data.apply(lambda x: "Other Error" if np.isnan(x["Mean"] and x.name in ["Mean"]) else x, axis=1)
+
+    new_column = data.apply(lambda x: x["Run1"] if np.isnan(x["Mean"]) else x["Mean"], axis=1)
+
+    new_column = new_column.apply(lambda x: "OutOfMemeory" if 'outofmemory' in str( x).lower()  else x)
+    new_column = new_column.apply(lambda x: "Inconsistent Error" if 'inconsistentontology' in str(x).lower() else x)
+    new_column = new_column.apply(lambda x: "Timeout" if 'timeout' in str(x).lower() else x)
+
+    new_column = new_column.apply(lambda x: "Other Error" if 'timeout' not in str(x).lower() and 'inconsistentontology' not in str(x).lower() and 'outofmemory' not in str(x).lower() and not np.isreal(x) else x)
+
+    data["Mean"] = new_column
+
+
     new_data = data.iloc[isNumeric].copy()
 
-    return new_data, total, time_count, inconstent_count, mem_count
+    return new_data, data, total, time_count, inconstent_count, mem_count
 
 if __name__ == '__main__':
-    stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015_Statistics.csv"
-    input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015\\"
-    output_folder = "./output/"
+    #stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015_Statistics.csv"
+    stat_realization_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015_Realization_Ontology_Statistics.csv"
+    #input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015\\"
+   # output_folder = "./output/"
+    #ore2015=True
 
-    #stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\BioOntology_Statistics.csv"
-    ##output_folder = "./output/Bio"
+    stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\BioOntology_Statistics.csv"
+    input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\Bio\\"
+    output_folder = "./output/Bio/"
+    ore2015 = False
 
     Path(output_folder).mkdir(parents=True, exist_ok=True)
     reasoner_name = ["Factpp", "HermiT", "JFact", "Konclude", "Openllet", "Pellet", "KoncludeCLI"]
     task_name = [ "Loading", "Consistency", "Classification", "Realization"]
 
-
-
+    ontology_loading_file = input_folder + "Ontology_Loading.csv"
+    t_ontology_loading, old_data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(ontology_loading_file)
+    ontology_loading = t_ontology_loading[["Ontology", "Mean"]].copy()
+    ontology_loading.columns = ["Ontology", "Ontology Loading"]
 
 
     stats = pd.read_csv(stat_csv_file)
+
+
+    if ore2015:
+        stats_realization = pd.read_csv(stat_realization_csv_file).rename(columns={"Statistics": "Ontology"}).iloc[:, 0].copy()
 
     loading_data = stats.copy().rename(columns={"Statistics": "Ontology"})
 
@@ -102,6 +133,8 @@ if __name__ == '__main__':
 
         stats_temp = stats.copy().rename(columns={"Statistics": "Ontology"})
 
+        combine_data = stats.copy().rename(columns={"Statistics": "Ontology"})
+
 
 
         #print(stats_temp)
@@ -116,7 +149,7 @@ if __name__ == '__main__':
 
             resoners.append(reasoner)
 
-            data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(file_name)
+            data, old_data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(file_name)
             success = data.shape[0]
 
             total_fail = total - success
@@ -152,6 +185,11 @@ if __name__ == '__main__':
             #value_vars.append(reasoner + " Mean")
 
 
+            old_data = old_data.iloc[:, [0,11]].copy()
+            old_data.columns = ["Ontology", reasoner]
+            combine_data = combine_data.merge(old_data, on="Ontology", how="outer")
+
+
             if(task == "Consistency"):
                 consistency_result_file = input_folder + reasoner + "_ConsistencyResult.csv"
                 consitency_result = load_consistency_result(consistency_result_file)
@@ -165,7 +203,13 @@ if __name__ == '__main__':
                 else:
                     task_consistent.append(consitency_result.iat[0, 1])
 
+
+        if task == "Realization" and ore2015:
+            stats_temp = stats_temp.merge(stats_realization, on="Ontology", how="inner")
+
         stats_temp.to_csv(output_folder + "/" + task + "_mean.csv", index=False)
+
+        combine_data.to_csv(output_folder + "/" + task + "_mean_combine_error.csv", index=False)
 
 
         if task == "Loading":
@@ -177,8 +221,11 @@ if __name__ == '__main__':
 
             loading_data = stats_temp.loc[:, extract_column_names].copy()
         else:
+
+
             stats_temp_copy = stats_temp.copy().merge(loading_data, on="Ontology", how="inner")
 
+            ## Adding reasoner loading time
             for reasoner in reasoner_name:
                 task_column_name = reasoner + "_" + task
                 loading_column_name =  reasoner + "_Loading"
@@ -192,7 +239,19 @@ if __name__ == '__main__':
             stats_temp_copy.to_csv(output_folder + "/" + task + "_mean_LoadingAdded.csv", index=False)
 
 
+            ## Adding ontology loading time
+            data_added_loadingOntology = stats_temp_copy.merge(ontology_loading, on="Ontology", how="inner")
+            loading_column_name = "Ontology Loading"
+            for reasoner in reasoner_name:
+                task_column_name = reasoner + "_" + task + "_LoadingAdded"
+                new_column_name = reasoner + "_" + task + "_AllLoadingAdded"
+                if task_column_name in data_added_loadingOntology.columns:
+                    data_added_loadingOntology[new_column_name] = data_added_loadingOntology[task_column_name] + data_added_loadingOntology[loading_column_name]
 
+                if reasoner == "KoncludeCLI":
+                    data_added_loadingOntology[new_column_name] = data_added_loadingOntology[task_column_name]
+
+            data_added_loadingOntology.to_csv(output_folder + "/" + task + "_mean_AllLoadingAdded.csv", index=False)
 
 
         data_map[task] = task_map
