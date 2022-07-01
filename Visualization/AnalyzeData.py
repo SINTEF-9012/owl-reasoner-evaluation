@@ -70,11 +70,11 @@ def load_evaluation_csv(file_name):
 
     new_column = data.apply(lambda x: x["Run1"] if np.isnan(x["Mean"]) else x["Mean"], axis=1)
 
-    new_column = new_column.apply(lambda x: "OutOfMemeory" if 'outofmemory' in str( x).lower()  else x)
-    new_column = new_column.apply(lambda x: "Inconsistent Error" if 'inconsistentontology' in str(x).lower() else x)
-    new_column = new_column.apply(lambda x: "Timeout" if 'timeout' in str(x).lower() else x)
+    new_column = new_column.apply(lambda x: "MEM" if 'outofmemory' in str( x).lower()  else x)
+    new_column = new_column.apply(lambda x: "IC" if 'inconsistentontology' in str(x).lower() else x)
+    new_column = new_column.apply(lambda x: "TO" if 'timeout' in str(x).lower() else x)
 
-    new_column = new_column.apply(lambda x: "Other Error" if 'timeout' not in str(x).lower() and 'inconsistentontology' not in str(x).lower() and 'outofmemory' not in str(x).lower() and not np.isreal(x) else x)
+    new_column = new_column.apply(lambda x: "ERR" if 'TO' not in str(x) and 'IC' not in str(x) and 'MEM' not in str(x) and not np.isreal(x) else x)
 
     data["Mean"] = new_column
 
