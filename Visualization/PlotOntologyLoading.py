@@ -41,15 +41,38 @@ def process_ontoloy_loading_data(file_name):
 
 
 if __name__ == '__main__':
-    input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015\\"
+    ore_input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015\\"
     output_folder = "./output"
     bio=False
 
-    #input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\Bio\\"
-    #output_folder = "./output/Bio"
-    #bio=True
 
-    ontology_loading_file = input_folder + "Ontology_Loading.csv"
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+
+    ontology_loading_file = ore_input_folder + "Ontology_Loading.csv"
+
+    flatten_data, mean_data = process_ontoloy_loading_data(ontology_loading_file)
+
+
+
+    ax = sns.lineplot(ax=axes[0], data=mean_data, x = "Ontology", y = "Loading Time")
+
+    if bio==False:
+        ax.tick_params(bottom=False)
+        ax.set(xticklabels=[])
+        ax.set(xlabel="ORE 2015 Ontologies")
+        ax.set(ylabel="Ontology Loading Time (seconds)")
+        ax.set_title("(a) ORE 2015 ontologies")
+
+
+
+
+    bio_input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\Bio\\"
+    # output_folder = "./output/Bio"
+    bio=True
+
+    ontology_loading_file = bio_input_folder + "Ontology_Loading.csv"
 
     flatten_data, mean_data = process_ontoloy_loading_data(ontology_loading_file)
 
@@ -58,21 +81,16 @@ if __name__ == '__main__':
         #sns.set_style("whitegrid")
         mean_data = mean_data.apply(lambda x: x.str[0:-4].str.upper() if x.name in ["Ontology"] else x)
 
-    ax = sns.lineplot(data=mean_data, x = "Ontology", y = "Loading Time")
-
-    if bio==False:
-        ax.tick_params(bottom=False)
-        ax.set(xticklabels=[])
-        ax.set(xlabel="Ontologies")
-
+    ax = sns.lineplot(ax=axes[1], data=mean_data, x="Ontology", y="Loading Time")
 
     if bio==True:
         ax.xaxis.grid(True)
         ax.yaxis.grid(True)
-        ax.tick_params(axis='x', rotation=30, labelsize=7)
+        ax.tick_params(axis='x', rotation=90, labelsize=7)
+        ax.set(xlabel="", ylabel="")
+        ax.set_title("(b) NCBO Bio-ontologies")
 
 
-    ax.set(ylabel="Loading Time (seconds)")
 
     plt.savefig(output_folder + "/ontology_loading.pdf", bbox_inches='tight')
     plt.savefig(output_folder + "/ontology_loading.png", bbox_inches='tight')

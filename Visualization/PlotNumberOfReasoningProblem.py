@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     #task_name = ["Consistency"]
     i = 0
-    fig, axes = plt.subplots(1, 3, sharey=True, figsize=(11,5))
+    fig, axes = plt.subplots(1, 3, sharey=True, figsize=(11,4))
 
     for task in task_name:
         file_name = input_folder + task + "_mean.csv"

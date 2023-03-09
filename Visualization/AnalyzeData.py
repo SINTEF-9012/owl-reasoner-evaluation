@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from os.path import exists
 from pathlib import Path
+from scipy import stats as stats_scipy
 
 from scipy.constants import value
 
@@ -29,7 +30,7 @@ def load_consistency_result(filename):
     data.columns = ["Ontology", "IsConsitency"]
     return data
 
-def load_evaluation_csv(file_name):
+def load_evaluation_csv(file_name, ore2015):
     columns = ["Ontology", "Run1", "Run2", "Run3", "Run4", "Run5", "Run6", "Run7", "Run8", "Run9", "Run10", "Mean",
                "Median"]
 
@@ -68,18 +69,28 @@ def load_evaluation_csv(file_name):
 
     #data = data.apply(lambda x: "Other Error" if np.isnan(x["Mean"] and x.name in ["Mean"]) else x, axis=1)
 
+    if ore2015:
+        data["AdjustedMean"] = data.apply(lambda x: 3600 if np.isnan(x["Mean"]) else x["Mean"], axis=1)
+    else:
+        data["AdjustedMean"] = data.apply(lambda x: 3600*2 if np.isnan(x["Mean"]) else x["Mean"], axis=1)
+
     new_column = data.apply(lambda x: x["Run1"] if np.isnan(x["Mean"]) else x["Mean"], axis=1)
 
-    new_column = new_column.apply(lambda x: "MEM" if 'outofmemory' in str( x).lower()  else x)
-    new_column = new_column.apply(lambda x: "IC" if 'inconsistentontology' in str(x).lower() else x)
+    new_column = new_column.apply(lambda x: "OOM" if 'outofmemory' in str( x).lower()  else x)
+    new_column = new_column.apply(lambda x: "IE" if 'inconsistentontology' in str(x).lower() else x)
     new_column = new_column.apply(lambda x: "TO" if 'timeout' in str(x).lower() else x)
 
-    new_column = new_column.apply(lambda x: "ERR" if 'TO' not in str(x) and 'IC' not in str(x) and 'MEM' not in str(x) and not np.isreal(x) else x)
+    new_column = new_column.apply(lambda x: "OE" if 'TO' not in str(x) and 'IE' not in str(x) and 'OOM' not in str(x) and not np.isreal(x) else x)
+    new_column = new_column.apply(
+        lambda x: "OE" if  "Exception" in str(x) else x)
 
     data["Mean"] = new_column
 
 
     new_data = data.iloc[isNumeric].copy()
+
+
+
 
     return new_data, data, total, time_count, inconstent_count, mem_count
 
@@ -87,7 +98,7 @@ if __name__ == '__main__':
     #stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015_Statistics.csv"
     stat_realization_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015_Realization_Ontology_Statistics.csv"
     #input_folder: str = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\ORE2015\\"
-   # output_folder = "./output/"
+    #output_folder = "./output/"
     #ore2015=True
 
     stat_csv_file = "C:\\Users\\anl\\SINTEF\\Skytrack@SINTEF - Documents\\General\\Task T1.3\\EvaluationResult\\BioOntology_Statistics.csv"
@@ -100,7 +111,7 @@ if __name__ == '__main__':
     task_name = [ "Loading", "Consistency", "Classification", "Realization"]
 
     ontology_loading_file = input_folder + "Ontology_Loading.csv"
-    t_ontology_loading, old_data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(ontology_loading_file)
+    t_ontology_loading, old_data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(ontology_loading_file, ore2015)
     ontology_loading = t_ontology_loading[["Ontology", "Mean"]].copy()
     ontology_loading.columns = ["Ontology", "Ontology Loading"]
 
@@ -123,6 +134,14 @@ if __name__ == '__main__':
         task_timeout=[]
         task_total = []
         task_mean = []
+        task_amean = []
+        task_gmean = []
+
+        adjusted_task_amean = []
+        adjusted_task_gmean = []
+
+        task_min = []
+        task_max = []
         task_sum = []
         task_consistent = []
         resoners = []
@@ -149,7 +168,7 @@ if __name__ == '__main__':
 
             resoners.append(reasoner)
 
-            data, old_data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(file_name)
+            data, old_data, total, timeout, inconsistent_error_count, mem = load_evaluation_csv(file_name,ore2015)
             success = data.shape[0]
 
             total_fail = total - success
@@ -173,8 +192,19 @@ if __name__ == '__main__':
 
             mean = data.iloc[:, 11].mean()
             sum = data.iloc[:, 11].sum()
+
             task_mean.append(mean)
             task_sum.append(sum)
+
+            min = data.iloc[:, 11].min()
+            max = data.iloc[:, 11].max()
+            task_max.append(max)
+            task_min.append(min)
+
+            amean = old_data["AdjustedMean"].mean()
+            gmean = stats_scipy.gmean(old_data["AdjustedMean"])
+            task_amean.append(amean)
+            task_gmean.append(gmean)
 
 
             data_temp = data.iloc[:, [0,11]].copy()
@@ -251,7 +281,25 @@ if __name__ == '__main__':
                 if reasoner == "KoncludeCLI":
                     data_added_loadingOntology[new_column_name] = data_added_loadingOntology[task_column_name]
 
+
+                ### Adjusted mean computation
+                if ore2015:
+                    new_column = data_added_loadingOntology[new_column_name].apply(
+                        lambda x: 3600 if np.isnan(x) else x)
+                else:
+                    new_column = data_added_loadingOntology[new_column_name].apply(
+                        lambda x: 3600 * 2 if np.isnan(x) else x)
+
+                amean_adjusted = new_column.mean()
+                gmean_ajdusted = stats_scipy.gmean(new_column)
+
+                adjusted_task_amean.append(amean_adjusted)
+                adjusted_task_gmean.append(gmean_ajdusted)
+
+
             data_added_loadingOntology.to_csv(output_folder + "/" + task + "_mean_AllLoadingAdded.csv", index=False)
+
+
 
 
         data_map[task] = task_map
@@ -273,6 +321,15 @@ if __name__ == '__main__':
         temp_data["Mean"] = task_mean
         temp_data["Sum"] = task_sum
 
+        temp_data["Amean"] = task_amean
+        temp_data["Gmean"] = task_gmean
+
+        temp_data["Max"] = task_max
+        temp_data["Min"] = task_min
+
+        if task != "Loading":
+            temp_data["Amean_adjusted"] = adjusted_task_amean
+            temp_data["Gmean_adjusted"] = adjusted_task_gmean
 
         df = pd.DataFrame(temp_data)
         df = df.sort_values(['Success', "Mean"], ascending=[False, True])
