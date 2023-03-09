@@ -8,7 +8,7 @@ This repository contains analysis and supplementary infromation for the paper **
 | **Directory**   | **Description**                                                                                                                                       |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | EvaluationResult| The raw results of the evaluations.                                                                                            						  |
-| AnalyzedResults | The combined and processed results which was used to present in the paper  																			  |
+| AnalyzedResult  | The combined and processed results which was used to present in the paper  																			  |
 | Scripts         | The Java programs and Python scripts to download ontologies, process and plot results.                                                                |
 
 
