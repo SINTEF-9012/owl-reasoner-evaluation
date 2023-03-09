@@ -1,0 +1,21 @@
+gallen.owl,java.lang.StackOverflowError
+ochv.owl,Timeout
+snmi.owl,Timeout
+reto.owl,Timeout
+rexo.owl,Timeout
+gexo.owl,Timeout
+iobc.owl,org.semanticweb.owlapi.reasoner.InconsistentOntologyException: Ontology is inconsistent
+rhmesh.owl,Timeout
+hoom.xml,Timeout
+fma.owl,java.lang.StackOverflowError
+nifstd.xml,Timeout
+upheno.xml,java.lang.StackOverflowError
+ncit.owl,Timeout
+dron.xml,Timeout
+loinc.owl,Timeout
+chebi.xml,Timeout
+MESH.owl,Timeout
+ncbitaxon.owl,Timeout
+gaz.xml,Timeout
+pr.xml,Timeout
+cco.xml,Timeout

@@ -1,3 +1,0 @@
-Cython
-Owlready2
-rdflib

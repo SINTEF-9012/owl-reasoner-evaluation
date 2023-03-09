@@ -1,0 +1,21 @@
+gallen.owl,java.lang.OutOfMemoryError: Java heap space,,,,,,,,,,,
+ochv.owl,27.027,27.823,28,28.579,28.861,28.339,28.482,27.681,28.138,27.301,28.0231,28.069
+snmi.owl,226.058,226.001,225.622,225.037,224.591,225.989,225.854,225.267,225.078,224.511,225.4008,225.4445
+reto.owl,12.15,11.748,11.62,11.747,11.604,11.287,11.348,11.21,11.273,11.476,11.5463,11.54
+rexo.owl,12.853,12.08,11.999,12.195,12.131,12.087,12.035,12.017,11.744,12.234,12.1375,12.0835
+gexo.owl,13.073,13.142,12.618,12.497,12.49,13.182,12.889,12.369,12.91,12.361,12.7531,12.7535
+iobc.owl,259.152,239.645,259.544,289.65,234.58,248.546,266.745,234.883,254.442,276.896,256.4083,256.797
+rhmesh.owl,24.151,24.557,24.375,23.83,23.562,23.689,23.716,23.83,23.392,23.492,23.8594,23.773
+hoom.xml,Timeout,,,,,,,,,,,
+fma.owl,Timeout,,,,,,,,,,,
+nifstd.xml,java.lang.IllegalArgumentException: Non-simple property '<http://purl.obolibrary.org/obo/pr#has_part>' or its inverse appears in the cardinality restriction 'ObjectMaxCardinality(1 <http://purl.obolibrary.org/obo/pr#has_part> <http://purl.obolibrary.org/obo/PR_000027173>)'.,,,,,,,,,,,
+upheno.xml,java.lang.OutOfMemoryError: Java heap space: failed reallocation of scalar replaced objects,,,,,,,,,,,
+ncit.owl,150.866,151.151,149.696,157.187,160.034,160.051,162.533,160.553,161.496,159.705,157.3272,159.8695
+dron.xml,Timeout,,,,,,,,,,,
+loinc.owl,1867.572,1914.237,1887.961,1883.033,1880.624,1941.07,1924.665,1949.466,1923.631,1913.538,1908.5797,1913.8875
+chebi.xml,137.295,136.297,137.559,137.489,135.784,132.366,136.828,138.163,134.683,131.278,135.7742,136.5625
+MESH.owl,Timeout,,,,,,,,,,,
+ncbitaxon.owl,java.lang.OutOfMemoryError: Java heap space,,,,,,,,,,,
+gaz.xml,1205.413,1253.447,1238.209,1278.087,1272.141,1232.784,1291.127,1296.171,1244.057,1292.282,1260.3718,1262.794
+pr.xml,Timeout,,,,,,,,,,,
+cco.xml,java.lang.OutOfMemoryError: Java heap space,,,,,,,,,,,

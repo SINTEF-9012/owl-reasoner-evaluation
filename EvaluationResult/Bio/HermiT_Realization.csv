@@ -1,0 +1,21 @@
+gallen.owl,0.002,0.0,0.0,0.0,0.001,0.0,0.0,0.0,0.0,0.0,3.0000000000000003E-4,0.0
+ochv.owl,0.003,0.001,0.001,0.001,0.001,0.001,0.001,0.0,0.0,0.001,0.0010000000000000002,0.001
+snmi.owl,1442.227,1436.533,1464.621,1467.438,1475.638,1444.441,1510.877,1507.658,1433.404,1475.56,1465.8397,1466.0295
+reto.owl,18.457,17.965,18.258,18.178,18.006,17.81,18.897,18.452,19.599,19.787,18.5409,18.355
+rexo.owl,22.312,20.683,21.302,21.295,18.719,19.46,19.362,19.72,19.431,19.618,20.1902,19.668999999999997
+gexo.owl,20.558,19.765,19.878,19.684,19.669,19.686,19.694,19.246,20.048,20.078,19.8306,19.7295
+iobc.owl,1268.557,1216.112,1231.452,1207.43,1197.561,1215.896,1238.963,1191.503,1161.545,1235.416,1216.4435,1216.004
+rhmesh.owl,0.002,0.001,0.0,0.0,0.0,0.0,0.0,0.001,0.0,0.001,5.0E-4,0.0
+hoom.xml,Timeout
+fma.owl,Timeout
+nifstd.xml,java.lang.IllegalArgumentException: Non-simple property '<http://purl.obolibrary.org/obo/pr#has_part>' or its inverse appears in the cardinality restriction 'ObjectMaxCardinality(1 <http://purl.obolibrary.org/obo/pr#has_part> <http://purl.obolibrary.org/obo/PR_000026364>)'.
+upheno.xml,java.lang.OutOfMemoryError: Java heap space
+ncit.owl,0.003,0.0,0.0,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001
+dron.xml,Timeout
+loinc.owl,Timeout
+chebi.xml,155.893,151.763,152.564,150.976,151.704,150.913,151.182,150.761,152.872,155.37,152.3998,151.7335
+MESH.owl,Timeout
+ncbitaxon.owl,java.lang.OutOfMemoryError: Java heap space
+gaz.xml,Timeout
+pr.xml,Timeout
+cco.xml,java.lang.OutOfMemoryError: Java heap space
