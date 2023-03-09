@@ -9,7 +9,6 @@ This repository contains analysis and supplementary infromation for the paper **
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | EvaluationResult| The raw results of the evaluations.                                                                                            						  |
 | AnalyzedResults | The combined and processed results which was used to present in the paper  																			  |
-| Queries         | The queries of the two benchmarks                                                                                                                     |
 | Scripts         | The Java programs and Python scripts to download ontologies, process and plot results.                                                                |
 
 
