@@ -1,4 +1,4 @@
-# Evaluation of a representative collection of SPARQL query engines
+# A Performance Evaluation of OWL 2 DL Reasoners using ORE 2015 and Very Large Bio Ontologies
 
 
 This repository contains analysis and supplementary infromation for the paper **A Performance Evaluation of OWL 2 DL Reasoners using ORE 2015 and Very Large Bio Ontologies**
