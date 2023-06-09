@@ -14,12 +14,16 @@ This repository contains analysis and supplementary infromation for the paper **
 
 ### 🏦 Funding
 This work has been funded by the following projects:
-|       **Project**      |  **No** |
-|:----------------------:|:-------:|
-| DataBench-Norway (NFR) | 310134  |
-| SkyTrack (NFR)         | 309714  |
-| DataBench (EU 2020)    | 780966  |
-| VesselAI (EU H2020)    | 957237  |
+|       **Project**      | **Grant Agreement No** |
+|------------------------|------------------------|
+| DataBench-Norway (NFR) |         310134         |
+| SkyTrack (NFR)         |         309714         |
+| DataBench (EU 2020)    |         780966         |
+| VesselAI (EU H2020)    |         957237         |
+| Iliad (EU H2020)       |        101037643       |
+| enRichMyData (HEU)     |        101070284       |
+| Graph-Massivizer (HEU) |        101093202       |
+| Circular TwAIn (HEU)   |        101058585       |
 
 ### :email: Contact
 - An Lam <an.lam@sintef.no>
